@@ -1,0 +1,19 @@
+# This file is managed by sanejs
+#
+# DO NOT MODIFY
+
+.cache
+.idea
+.vscode
+node_modules
+flow-typed
+flow
+coverage
+build
+static
+package.json
+.eslintrc.js
+.prettierrc.js
+__sandbox__
+.sanejs-stats.json
+wallaby.config.js

@@ -1,0 +1,17 @@
+# This file is managed by sanejs
+#
+# DO NOT MODIFY
+
+/config
+/coverage
+.DS_Store
+node_modules
+!**/__sandbox__/**/node_modules
+*.swp
+*.log
+.env
+build
+*.ignore
+.idea
+.vscode
+.cache

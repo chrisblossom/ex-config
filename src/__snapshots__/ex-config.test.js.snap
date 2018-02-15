@@ -1,0 +1,635 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExConfig adds dirname to all lifecycles 1`] = `
+Object {
+  "overridePreprocessor": Array [
+    "/normalized/root/path/node_modules/preset-02/node_modules/preset-03",
+    "/normalized/root/path/node_modules/preset-02",
+    "/normalized/root/path/node_modules/preset-01",
+    "/normalized/root/path",
+  ],
+  "overrideProcessor": Array [
+    "/normalized/root/path/node_modules/preset-02/node_modules/preset-03",
+    "/normalized/root/path/node_modules/preset-02",
+    "/normalized/root/path/node_modules/preset-01",
+    "/normalized/root/path",
+  ],
+  "overrideValidator": Array [
+    "/normalized/root/path/node_modules/preset-02/node_modules/preset-03",
+    "/normalized/root/path/node_modules/preset-02",
+    "/normalized/root/path/node_modules/preset-01",
+    "/normalized/root/path",
+  ],
+  "postProcessor": Array [
+    "/normalized/root/path",
+  ],
+  "preprocessor": Array [
+    "/normalized/root/path",
+    "/normalized/root/path/node_modules/preset-01",
+    "/normalized/root/path/node_modules/preset-02",
+    "/normalized/root/path/node_modules/preset-02/node_modules/preset-03",
+  ],
+  "processor": Array [
+    "/normalized/root/path/node_modules/preset-02/node_modules/preset-03",
+    "/normalized/root/path/node_modules/preset-02/node_modules/preset-03",
+    "/normalized/root/path/node_modules/preset-02/node_modules/preset-03",
+    "/normalized/root/path/node_modules/preset-02",
+    "/normalized/root/path/node_modules/preset-02",
+    "/normalized/root/path/node_modules/preset-01",
+    "/normalized/root/path/node_modules/preset-01",
+    "/normalized/root/path",
+    "/normalized/root/path",
+  ],
+  "validator": Array [
+    "/normalized/root/path",
+    "/normalized/root/path/node_modules/preset-01",
+    "/normalized/root/path/node_modules/preset-02",
+    "/normalized/root/path/node_modules/preset-02/node_modules/preset-03",
+  ],
+}
+`;
+
+exports[`ExConfig allows builtin processor 1`] = `
+Object {
+  "example": Array [
+    1,
+    2,
+    3,
+  ],
+  "inside": Array [
+    1,
+    3,
+  ],
+  "object": Array [
+    Object {
+      "array": Array [
+        1,
+      ],
+      "one": true,
+      "preset": 1,
+    },
+    Object {
+      "array": Array [
+        2,
+      ],
+      "preset": 2,
+      "two": true,
+    },
+    Object {
+      "array": Array [
+        3,
+      ],
+      "preset": 1,
+      "three": true,
+    },
+  ],
+  "other": Array [
+    1,
+    2,
+    3,
+  ],
+}
+`;
+
+exports[`ExConfig allows builtin processor override 1`] = `
+Object {
+  "example": Array [
+    1,
+    2,
+    3,
+  ],
+  "inside": Array [
+    3,
+    1,
+  ],
+  "object": Object {
+    "array": Array [
+      3,
+      2,
+      1,
+    ],
+    "one": true,
+    "preset": 1,
+    "three": true,
+    "two": true,
+  },
+  "other": 1,
+}
+`;
+
+exports[`ExConfig allows custom preset and plugin name 1`] = `
+Object {
+  "customPlugin": Array [
+    Object {
+      "imported": Array [
+        "imported plugin-01",
+      ],
+    },
+  ],
+  "example": Array [
+    1,
+  ],
+  "inside": Array [
+    1,
+  ],
+  "object": Object {
+    "array": Array [
+      1,
+    ],
+    "one": true,
+    "preset": 1,
+  },
+  "other": 1,
+  "presets": Array [
+    "preset-02",
+  ],
+}
+`;
+
+exports[`ExConfig allows custom processor 1`] = `
+Object {
+  "example": Array [
+    0,
+  ],
+  "inside": Array [
+    0,
+  ],
+  "object": Object {
+    "array": Array [
+      1,
+    ],
+    "one": true,
+    "preset": 1,
+  },
+  "other": 1,
+}
+`;
+
+exports[`ExConfig allows custom processor override 1`] = `
+Object {
+  "example": Array [
+    0,
+  ],
+  "inside": Array [
+    3,
+    0,
+  ],
+  "object": Object {
+    "array": Array [
+      3,
+      2,
+      1,
+    ],
+    "one": true,
+    "preset": 1,
+    "three": true,
+    "two": true,
+  },
+  "other": 1,
+}
+`;
+
+exports[`ExConfig allows disabling presets and plugins 1`] = `
+Object {
+  "inside": Array [
+    1,
+  ],
+  "plugins": Array [
+    "plugin-one",
+  ],
+  "presets": Array [
+    "one",
+  ],
+}
+`;
+
+exports[`ExConfig allows post processing 1`] = `
+Object {
+  "example": Array [
+    6,
+    4,
+    2,
+    0,
+  ],
+  "inside": Array [
+    3,
+  ],
+  "object": Object {
+    "array": Array [
+      3,
+      2,
+      1,
+    ],
+    "one": true,
+    "preset": 1,
+    "three": true,
+    "two": true,
+  },
+  "other": 1,
+}
+`;
+
+exports[`ExConfig allows post processing error 1`] = `
+Object {
+  "Error": "postProcessor error 3,2,1,0
+found in path: /normalized/root/path",
+}
+`;
+
+exports[`ExConfig allows preprocessing 1`] = `
+Object {
+  "example": Array [
+    "3",
+    "2",
+    "1",
+    "0",
+  ],
+  "inside": Array [
+    3,
+  ],
+  "object": Object {
+    "array": Array [
+      3,
+      2,
+      1,
+    ],
+    "one": true,
+    "preset": 1,
+    "three": true,
+    "two": true,
+  },
+  "other": 1,
+}
+`;
+
+exports[`ExConfig allows preprocessing override 1`] = `
+Object {
+  "example": Array [
+    "3",
+    "2",
+    "1",
+    "0",
+  ],
+  "inside": Array [
+    3,
+  ],
+  "object": Object {
+    "array": Array [
+      3,
+      2,
+      1,
+    ],
+    "one": true,
+    "preset": 1,
+    "three": true,
+    "two": true,
+  },
+  "other": 1,
+}
+`;
+
+exports[`ExConfig catches error custom processor override 1`] = `
+Object {
+  "Error": "bad value: 3
+invalid key: example
+found in path: /normalized/root/path/node_modules/preset-02/node_modules/preset-03/index.js",
+}
+`;
+
+exports[`ExConfig does not mutate original config 1`] = `
+Object {
+  "inside": Array [
+    Array [
+      3,
+      6,
+      3,
+    ],
+    Array [
+      1,
+      2,
+      3,
+    ],
+  ],
+  "plugins": Array [
+    Array [
+      Object {
+        "imported": Array [
+          "imported plugin-02",
+          "mutated imported plugin-02",
+        ],
+      },
+      3,
+    ],
+    Array [
+      Object {
+        "imported": Array [
+          "imported plugin-01",
+          "mutated imported plugin-01",
+        ],
+      },
+      3,
+    ],
+  ],
+}
+`;
+
+exports[`ExConfig extends must be a string - nested 1`] = `
+Object {
+  "Error": "{
+  \\"presets\\": [
+    { [31m[1][0m
+      \\"example\\": [
+        1
+      ],
+      \\"other\\": 1,
+      \\"presets\\": [
+        \\"preset-02\\"
+      ],
+      \\"object\\": {
+        \\"array\\": [
+          1
+        ],
+        \\"one\\": true,
+        \\"preset\\": 1
+      }
+    }
+  ]
+}
+[31m
+[1] \\"0\\" must be a string[0m
+extends key must be a module expressed as a string
+found in path: /normalized/root/path/node_modules/invalid-preset-01/index.js",
+}
+`;
+
+exports[`ExConfig extends must be a string 1`] = `
+Object {
+  "Error": "{
+  \\"presets\\": [
+    { [31m[1][0m
+      \\"example\\": [
+        1
+      ],
+      \\"other\\": 1,
+      \\"presets\\": [
+        \\"preset-02\\"
+      ],
+      \\"object\\": {
+        \\"array\\": [
+          1
+        ],
+        \\"one\\": true,
+        \\"preset\\": 1
+      }
+    }
+  ]
+}
+[31m
+[1] \\"0\\" must be a string[0m
+extends key must be a module expressed as a string",
+}
+`;
+
+exports[`ExConfig mergeObject processor 1`] = `
+Object {
+  "example": Array [
+    3,
+    2,
+    1,
+  ],
+  "inside": Array [
+    3,
+    1,
+  ],
+  "object": Object {
+    "array": Array [
+      3,
+      2,
+      1,
+      0,
+    ],
+    "one": true,
+    "preset": 1,
+    "three": true,
+    "two": true,
+    "zero": true,
+  },
+  "other": 1,
+}
+`;
+
+exports[`ExConfig merges deep nested presets 1`] = `
+Object {
+  "example": Array [
+    3,
+    2,
+    1,
+  ],
+  "inside": Array [
+    3,
+    1,
+  ],
+  "object": Object {
+    "array": Array [
+      3,
+      2,
+      1,
+    ],
+    "one": true,
+    "preset": 1,
+    "three": true,
+    "two": true,
+  },
+  "other": 1,
+  "plugins": Array [
+    Object {
+      "imported": Array [
+        "imported plugin-01",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`ExConfig merges deep with custom prefix resolution 1`] = `
+Object {
+  "example": Array [
+    3,
+    2,
+    1,
+  ],
+  "inside": Array [
+    3,
+    1,
+  ],
+  "object": Object {
+    "array": Array [
+      3,
+      2,
+      1,
+    ],
+    "one": true,
+    "preset": 1,
+    "three": true,
+    "two": true,
+  },
+  "other": 1,
+  "plugins": Array [
+    "imported sanejs-plugin-01",
+  ],
+}
+`;
+
+exports[`ExConfig plugins processor can be overridden 1`] = `
+Object {
+  "example": false,
+  "inside": false,
+  "object": Object {
+    "array": Array [
+      1,
+    ],
+    "one": true,
+    "preset": 1,
+  },
+  "other": 1,
+  "plugins": Array [
+    Object {
+      "imported": Array [
+        "imported plugin-01",
+      ],
+    },
+    Object {
+      "imported": Array [
+        "imported plugin-02",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`ExConfig preprocessing error 1`] = `
+Object {
+  "Error": "preprocessor 0
+found in path: /normalized/root/path",
+}
+`;
+
+exports[`ExConfig preprocessing override error 1`] = `
+Object {
+  "Error": "preprocessor 3
+invalid key: example",
+}
+`;
+
+exports[`ExConfig preset object order matter does not matter 1`] = `
+Object {
+  "example": Array [
+    3,
+    2,
+    1,
+  ],
+  "inside": Array [
+    3,
+    1,
+  ],
+  "object": Object {
+    "array": Array [
+      3,
+      2,
+      1,
+    ],
+    "one": true,
+    "preset": 1,
+    "three": true,
+    "two": true,
+  },
+  "other": 1,
+  "plugins": Array [
+    Object {
+      "imported": Array [
+        "imported plugin-01",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`ExConfig resolve must be a string - nested 1`] = `
+Object {
+  "Error": "{
+  \\"plugins\\": [
+    { [31m[1][0m
+      \\"imported\\": [
+        \\"imported plugin-01\\"
+      ]
+    }
+  ]
+}
+[31m
+[1] \\"0\\" must be a string[0m
+extends key must be a module expressed as a string
+found in path: /normalized/root/path/node_modules/invalid-preset-02/index.js",
+}
+`;
+
+exports[`ExConfig resolve must be a string 1`] = `
+Object {
+  "Error": "{
+  \\"plugins\\": [
+    { [31m[1][0m
+      \\"imported\\": [
+        \\"imported plugin-01\\"
+      ]
+    }
+  ]
+}
+[31m
+[1] \\"0\\" must be a string[0m
+extends key must be a module expressed as a string",
+}
+`;
+
+exports[`ExConfig validates config 1`] = `
+[Error: {
+  "string" [31m[1][0m: 1
+}
+[31m
+[1] "string" must be a string[0m]
+`;
+
+exports[`ExConfig validates nested config 1`] = `
+Object {
+  "Error": "{
+  \\"example\\": [
+    1
+  ],
+  \\"presets\\": [
+    \\"preset-02\\"
+  ],
+  \\"object\\": {
+    \\"array\\": [
+      1
+    ],
+    \\"one\\": true,
+    \\"preset\\": 1
+  },
+  \\"other\\" [31m[1][0m: 1
+}
+[31m
+[1] \\"other\\" must be a string[0m
+invalid nested config: /normalized/root/path/node_modules/preset-01/index.js",
+}
+`;
+
+exports[`ExConfig validates nested override config 1`] = `
+Object {
+  "Error": "\\"value\\" must be a string
+invalid key: other
+found in path: /normalized/root/path/node_modules/preset-02/node_modules/preset-03/index.js",
+}
+`;
+
+exports[`ExConfig validates override config 1`] = `
+[Error: "value" must be a string
+invalid key: string]
+`;

@@ -1,8 +1,22 @@
 {
   "name": "ex-config",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Extendable configuration processor.",
-  "keywords": [],
+  "keywords": [
+    "config",
+    "configuration",
+    "extend",
+    "extendable",
+    "cosmiconfig",
+    "rc",
+    "resolve",
+    "prefix",
+    "require",
+    "resolve string",
+    "require string",
+    "string config",
+    "string configuration"
+  ],
   "license": "ISC",
   "author": "Chris Blossom",
   "repository": "chrisblossom/ex-config",
@@ -38,10 +52,10 @@
     "babel-preset-flow": "^6.23.0",
     "concurrently": "^3.5.1",
     "del-cli": "^1.1.0",
-    "eslint": "^4.17.0",
-    "flow-bin": "^0.65.0",
+    "eslint": "^4.18.0",
+    "flow-bin": "^0.66.0",
     "flow-copy-source": "^1.3.0",
-    "jest": "^22.3.0",
+    "jest": "^22.4.0",
     "prettier": "^1.10.2"
   },
   "dependencies": {

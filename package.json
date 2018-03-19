@@ -33,7 +33,8 @@
     "build.flow": "NODE_ENV=production flow-copy-source --ignore \"**/*.test.js\" --ignore \"**/__sandbox__/**/*\" src build",
     "dev": "npm run clean && concurrently \"npm run dev.babel\" \"npm run dev.flow\"",
     "dev.babel": "NODE_ENV=development babel -w src/ -d build/ --ignore test.js,__sandbox__/ --source-maps",
-    "dev.flow": "NODE_ENV=development flow-copy-source -w --ignore \"**/*.test.js\" --ignore \"**/__sandbox__/**/*\" src build"
+    "dev.flow": "NODE_ENV=development flow-copy-source -w --ignore \"**/*.test.js\" --ignore \"**/__sandbox__/**/*\" src build",
+    "precommit": "lint-staged"
   },
   "lint-staged": {
     "*.{js,md,json}": [

@@ -3,14 +3,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 const wallaby = (wallabyConfig) => {
-    /**
-     * Needed for monorepo
-     */
-    process.env.NODE_PATH = require('path').join(
-        wallabyConfig.localProjectDir,
-        '../../node_modules'
-    );
-
     return {
         files: [
             { pattern: 'src/**/__sandbox__/**/*', instrument: false },

@@ -203,5 +203,5 @@ module.exports = result;
 
 This package was created with the great work / lessons learned from:
 
-* [babel](https://github.com/babel/babel/)
-* [eslint](https://github.com/eslint/eslint)
+*   [babel](https://github.com/babel/babel/)
+*   [eslint](https://github.com/eslint/eslint)

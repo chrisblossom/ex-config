@@ -1,5 +1,9 @@
 # ex-config
 
+[![Linux Build Status](https://img.shields.io/circleci/project/github/chrisblossom/ex-config/master.svg?label=linux%20build)](https://circleci.com/gh/chrisblossom/ex-config/tree/master)
+[![Windows Build Status](https://img.shields.io/appveyor/ci/chrisblossom/ex-config/master.svg?label=windows%20build)](https://ci.appveyor.com/project/chrisblossom/ex-config/branch/master)
+[![Code Coverage](https://img.shields.io/coveralls/github/chrisblossom/ex-config/master.svg)](https://coveralls.io/github/chrisblossom/ex-config?branch=master)
+
 ## About
 
 ex-config is an extendable configuration processor. It is used to merge multiple configurations together like [babel](https://github.com/babel/babel/) and [eslint](https://github.com/eslint/eslint/) configurations do.

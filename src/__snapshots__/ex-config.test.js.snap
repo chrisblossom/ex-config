@@ -573,20 +573,18 @@ found in path: /normalized/root/path/node_modules/invalid-preset-02/index.js",
 `;
 
 exports[`ExConfig resolve must be a string 1`] = `
-Object {
-  "Error": "{
-  \\"plugins\\": [
+[Error: {
+  "plugins": [
     { [31m[1][0m
-      \\"imported\\": [
-        \\"imported plugin-01\\"
+      "imported": [
+        "imported plugin-01"
       ]
     }
   ]
 }
 [31m
-[1] \\"0\\" must be a string[0m
-extends key must be a module expressed as a string",
-}
+[1] "0" must be a string[0m
+extends key must be a module expressed as a string]
 `;
 
 exports[`ExConfig validates config 1`] = `

@@ -383,7 +383,7 @@ describe('ExConfig', () => {
         });
 
         try {
-            expect.assertions(1);
+            expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
             expect(normalizeRootPath(error)).toMatchSnapshot();
@@ -441,7 +441,7 @@ describe('ExConfig', () => {
         });
 
         try {
-            expect.assertions(1);
+            expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
             expect(error).toMatchSnapshot();
@@ -474,7 +474,7 @@ describe('ExConfig', () => {
         });
 
         try {
-            expect.assertions(1);
+            expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
             expect(normalizeRootPath(error)).toMatchSnapshot();
@@ -508,7 +508,7 @@ describe('ExConfig', () => {
         });
 
         try {
-            expect.assertions(1);
+            expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
             expect(error).toMatchSnapshot();
@@ -543,7 +543,7 @@ describe('ExConfig', () => {
         });
 
         try {
-            expect.assertions(1);
+            expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
             expect(normalizeRootPath(error)).toMatchSnapshot();
@@ -595,7 +595,7 @@ describe('ExConfig', () => {
         });
 
         try {
-            expect.assertions(1);
+            expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
             expect(normalizeRootPath(error)).toMatchSnapshot();
@@ -672,7 +672,7 @@ describe('ExConfig', () => {
         });
 
         try {
-            expect.assertions(1);
+            expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
             expect(normalizeRootPath(error)).toMatchSnapshot();
@@ -750,7 +750,7 @@ describe('ExConfig', () => {
         });
 
         try {
-            expect.assertions(1);
+            expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
             expect(normalizeRootPath(error)).toMatchSnapshot();
@@ -771,7 +771,7 @@ describe('ExConfig', () => {
         const exConfig = new ExConfig();
 
         try {
-            expect.assertions(1);
+            expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
             expect(normalizeRootPath(error)).toMatchSnapshot();
@@ -789,7 +789,7 @@ describe('ExConfig', () => {
         const exConfig = new ExConfig();
 
         try {
-            expect.assertions(1);
+            expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
             expect(normalizeRootPath(error)).toMatchSnapshot();
@@ -810,10 +810,10 @@ describe('ExConfig', () => {
         const exConfig = new ExConfig();
 
         try {
-            expect.assertions(1);
+            expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
-            expect(normalizeRootPath(error)).toMatchSnapshot();
+            expect(error).toMatchSnapshot();
         }
     });
 
@@ -828,7 +828,7 @@ describe('ExConfig', () => {
         const exConfig = new ExConfig();
 
         try {
-            expect.assertions(1);
+            expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
             expect(normalizeRootPath(error)).toMatchSnapshot();

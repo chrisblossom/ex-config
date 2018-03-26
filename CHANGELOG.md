@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+*   cherry pick lodash functions
 *   refactor tests to remove normalizeRootPath
 
 ## [1.0.2] - 2018-03-18

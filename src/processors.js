@@ -1,6 +1,7 @@
 /* @flow */
 
-import { isPlainObject, mergeWith } from 'lodash';
+import mergeWith from 'lodash.mergewith';
+import isPlainObject from 'lodash.isplainobject';
 
 import type { Args, Processor } from './ex-config';
 

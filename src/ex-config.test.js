@@ -1,7 +1,7 @@
 /* @flow */
 
 import path from 'path';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash.clonedeep';
 import Joi from 'joi';
 import ExConfig from './ex-config';
 

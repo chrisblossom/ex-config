@@ -3,7 +3,7 @@
 /* eslint-disable no-useless-concat,no-nested-ternary */
 
 import path from 'path';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash.clonedeep';
 import ResolveWithPrefix, { type Resolve } from 'resolve-with-prefix';
 import type { ResolveWithPrefixOptions as PrefixOptions } from 'resolve-with-prefix';
 import { generateResolveValidator, validateResolveKeys } from './validate';

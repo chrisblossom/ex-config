@@ -3,7 +3,6 @@
 import path from 'path';
 import { cloneDeep } from 'lodash';
 import Joi from 'joi';
-import { normalizeRootPath } from '@chrisblossom/test-utils';
 import ExConfig from './ex-config';
 
 describe('ExConfig', () => {
@@ -149,7 +148,7 @@ describe('ExConfig', () => {
 
         exConfig.load(config);
 
-        expect(normalizeRootPath(result)).toMatchSnapshot();
+        expect(result).toMatchSnapshot();
     });
 
     it('preset object order matter does not matter', () => {
@@ -386,7 +385,7 @@ describe('ExConfig', () => {
             expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
-            expect(normalizeRootPath(error)).toMatchSnapshot();
+            expect(error).toMatchSnapshot();
         }
     });
 
@@ -477,7 +476,7 @@ describe('ExConfig', () => {
             expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
-            expect(normalizeRootPath(error)).toMatchSnapshot();
+            expect(error).toMatchSnapshot();
         }
     });
 
@@ -546,7 +545,7 @@ describe('ExConfig', () => {
             expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
-            expect(normalizeRootPath(error)).toMatchSnapshot();
+            expect(error).toMatchSnapshot();
         }
     });
 
@@ -598,7 +597,7 @@ describe('ExConfig', () => {
             expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
-            expect(normalizeRootPath(error)).toMatchSnapshot();
+            expect(error).toMatchSnapshot();
         }
     });
 
@@ -675,7 +674,7 @@ describe('ExConfig', () => {
             expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
-            expect(normalizeRootPath(error)).toMatchSnapshot();
+            expect(error).toMatchSnapshot();
         }
     });
 
@@ -753,7 +752,7 @@ describe('ExConfig', () => {
             expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
-            expect(normalizeRootPath(error)).toMatchSnapshot();
+            expect(error).toMatchSnapshot();
         }
     });
 
@@ -774,7 +773,7 @@ describe('ExConfig', () => {
             expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
-            expect(normalizeRootPath(error)).toMatchSnapshot();
+            expect(error).toMatchSnapshot();
         }
     });
 
@@ -792,7 +791,7 @@ describe('ExConfig', () => {
             expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
-            expect(normalizeRootPath(error)).toMatchSnapshot();
+            expect(error).toMatchSnapshot();
         }
     });
 
@@ -831,7 +830,7 @@ describe('ExConfig', () => {
             expect.hasAssertions();
             exConfig.load(config);
         } catch (error) {
-            expect(normalizeRootPath(error)).toMatchSnapshot();
+            expect(error).toMatchSnapshot();
         }
     });
 });

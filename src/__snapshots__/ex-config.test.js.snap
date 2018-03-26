@@ -3,48 +3,48 @@
 exports[`ExConfig adds dirname to all lifecycles 1`] = `
 Object {
   "overridePreprocessor": Array [
-    "/normalized/root/path/node_modules/preset-02/node_modules/preset-03",
-    "/normalized/root/path/node_modules/preset-02",
-    "/normalized/root/path/node_modules/preset-01",
-    "/normalized/root/path",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-01",
+    "<PROJECT_ROOT>/src/__sandbox__/app1",
   ],
   "overrideProcessor": Array [
-    "/normalized/root/path/node_modules/preset-02/node_modules/preset-03",
-    "/normalized/root/path/node_modules/preset-02",
-    "/normalized/root/path/node_modules/preset-01",
-    "/normalized/root/path",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-01",
+    "<PROJECT_ROOT>/src/__sandbox__/app1",
   ],
   "overrideValidator": Array [
-    "/normalized/root/path/node_modules/preset-02/node_modules/preset-03",
-    "/normalized/root/path/node_modules/preset-02",
-    "/normalized/root/path/node_modules/preset-01",
-    "/normalized/root/path",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-01",
+    "<PROJECT_ROOT>/src/__sandbox__/app1",
   ],
   "postProcessor": Array [
-    "/normalized/root/path",
+    "<PROJECT_ROOT>/src/__sandbox__/app1",
   ],
   "preprocessor": Array [
-    "/normalized/root/path",
-    "/normalized/root/path/node_modules/preset-01",
-    "/normalized/root/path/node_modules/preset-02",
-    "/normalized/root/path/node_modules/preset-02/node_modules/preset-03",
+    "<PROJECT_ROOT>/src/__sandbox__/app1",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-01",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03",
   ],
   "processor": Array [
-    "/normalized/root/path/node_modules/preset-02/node_modules/preset-03",
-    "/normalized/root/path/node_modules/preset-02/node_modules/preset-03",
-    "/normalized/root/path/node_modules/preset-02/node_modules/preset-03",
-    "/normalized/root/path/node_modules/preset-02",
-    "/normalized/root/path/node_modules/preset-02",
-    "/normalized/root/path/node_modules/preset-01",
-    "/normalized/root/path/node_modules/preset-01",
-    "/normalized/root/path",
-    "/normalized/root/path",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-01",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-01",
+    "<PROJECT_ROOT>/src/__sandbox__/app1",
+    "<PROJECT_ROOT>/src/__sandbox__/app1",
   ],
   "validator": Array [
-    "/normalized/root/path",
-    "/normalized/root/path/node_modules/preset-01",
-    "/normalized/root/path/node_modules/preset-02",
-    "/normalized/root/path/node_modules/preset-02/node_modules/preset-03",
+    "<PROJECT_ROOT>/src/__sandbox__/app1",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-01",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02",
+    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03",
   ],
 }
 `;
@@ -230,10 +230,8 @@ Object {
 `;
 
 exports[`ExConfig allows post processing error 1`] = `
-Object {
-  "Error": "postProcessor error 3,2,1,0
-found in path: /normalized/root/path",
-}
+[Error: postProcessor error 3,2,1,0
+found in path: <PROJECT_ROOT>/src/__sandbox__/app1]
 `;
 
 exports[`ExConfig allows preprocessing 1`] = `
@@ -289,11 +287,9 @@ Object {
 `;
 
 exports[`ExConfig catches error custom processor override 1`] = `
-Object {
-  "Error": "bad value: 3
+[Error: bad value: 3
 invalid key: example
-found in path: /normalized/root/path/node_modules/preset-02/node_modules/preset-03/index.js",
-}
+found in path: <PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03/index.js]
 `;
 
 exports[`ExConfig does not mutate original config 1`] = `
@@ -334,60 +330,56 @@ Object {
 `;
 
 exports[`ExConfig extends must be a string - nested 1`] = `
-Object {
-  "Error": "{
-  \\"presets\\": [
+[Error: {
+  "presets": [
     { [31m[1][0m
-      \\"example\\": [
+      "example": [
         1
       ],
-      \\"other\\": 1,
-      \\"presets\\": [
-        \\"preset-02\\"
+      "other": 1,
+      "presets": [
+        "preset-02"
       ],
-      \\"object\\": {
-        \\"array\\": [
+      "object": {
+        "array": [
           1
         ],
-        \\"one\\": true,
-        \\"preset\\": 1
+        "one": true,
+        "preset": 1
       }
     }
   ]
 }
 [31m
-[1] \\"0\\" must be a string[0m
+[1] "0" must be a string[0m
 extends key must be a module expressed as a string
-found in path: /normalized/root/path/node_modules/invalid-preset-01/index.js",
-}
+found in path: <PROJECT_ROOT>/src/__sandbox__/app1/node_modules/invalid-preset-01/index.js]
 `;
 
 exports[`ExConfig extends must be a string 1`] = `
-Object {
-  "Error": "{
-  \\"presets\\": [
+[Error: {
+  "presets": [
     { [31m[1][0m
-      \\"example\\": [
+      "example": [
         1
       ],
-      \\"other\\": 1,
-      \\"presets\\": [
-        \\"preset-02\\"
+      "other": 1,
+      "presets": [
+        "preset-02"
       ],
-      \\"object\\": {
-        \\"array\\": [
+      "object": {
+        "array": [
           1
         ],
-        \\"one\\": true,
-        \\"preset\\": 1
+        "one": true,
+        "preset": 1
       }
     }
   ]
 }
 [31m
-[1] \\"0\\" must be a string[0m
-extends key must be a module expressed as a string",
-}
+[1] "0" must be a string[0m
+extends key must be a module expressed as a string]
 `;
 
 exports[`ExConfig mergeObject processor 1`] = `
@@ -508,17 +500,13 @@ Object {
 `;
 
 exports[`ExConfig preprocessing error 1`] = `
-Object {
-  "Error": "preprocessor 0
-found in path: /normalized/root/path",
-}
+[Error: preprocessor 0
+found in path: <PROJECT_ROOT>/src/__sandbox__/app1]
 `;
 
 exports[`ExConfig preprocessing override error 1`] = `
-Object {
-  "Error": "preprocessor 3
-invalid key: example",
-}
+[Error: preprocessor 3
+invalid key: example]
 `;
 
 exports[`ExConfig preset object order matter does not matter 1`] = `
@@ -555,21 +543,19 @@ Object {
 `;
 
 exports[`ExConfig resolve must be a string - nested 1`] = `
-Object {
-  "Error": "{
-  \\"plugins\\": [
+[Error: {
+  "plugins": [
     { [31m[1][0m
-      \\"imported\\": [
-        \\"imported plugin-01\\"
+      "imported": [
+        "imported plugin-01"
       ]
     }
   ]
 }
 [31m
-[1] \\"0\\" must be a string[0m
+[1] "0" must be a string[0m
 extends key must be a module expressed as a string
-found in path: /normalized/root/path/node_modules/invalid-preset-02/index.js",
-}
+found in path: <PROJECT_ROOT>/src/__sandbox__/app1/node_modules/invalid-preset-02/index.js]
 `;
 
 exports[`ExConfig resolve must be a string 1`] = `
@@ -596,35 +582,31 @@ exports[`ExConfig validates config 1`] = `
 `;
 
 exports[`ExConfig validates nested config 1`] = `
-Object {
-  "Error": "{
-  \\"example\\": [
+[Error: {
+  "example": [
     1
   ],
-  \\"presets\\": [
-    \\"preset-02\\"
+  "presets": [
+    "preset-02"
   ],
-  \\"object\\": {
-    \\"array\\": [
+  "object": {
+    "array": [
       1
     ],
-    \\"one\\": true,
-    \\"preset\\": 1
+    "one": true,
+    "preset": 1
   },
-  \\"other\\" [31m[1][0m: 1
+  "other" [31m[1][0m: 1
 }
 [31m
-[1] \\"other\\" must be a string[0m
-invalid nested config: /normalized/root/path/node_modules/preset-01/index.js",
-}
+[1] "other" must be a string[0m
+invalid nested config: <PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-01/index.js]
 `;
 
 exports[`ExConfig validates nested override config 1`] = `
-Object {
-  "Error": "\\"value\\" must be a string
+[Error: "value" must be a string
 invalid key: other
-found in path: /normalized/root/path/node_modules/preset-02/node_modules/preset-03/index.js",
-}
+found in path: <PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03/index.js]
 `;
 
 exports[`ExConfig validates override config 1`] = `

@@ -8,6 +8,7 @@ const jest = {
     testEnvironment: 'node',
     collectCoverage: false,
     coveragePathIgnorePatterns: ['/__sandbox__/'],
+    snapshotSerializers: ['jest-serializer-path'],
 
     /**
      * Automatically reset mock state between every test.

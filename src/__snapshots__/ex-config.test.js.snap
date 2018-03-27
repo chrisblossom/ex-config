@@ -3,48 +3,48 @@
 exports[`ExConfig adds dirname to all lifecycles 1`] = `
 Object {
   "overridePreprocessor": Array [
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-01",
-    "<PROJECT_ROOT>/src/__sandbox__/app1",
+    "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
+    "<PROJECT_ROOT>/node_modules/preset-02",
+    "<PROJECT_ROOT>/node_modules/preset-01",
+    "<PROJECT_ROOT>",
   ],
   "overrideProcessor": Array [
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-01",
-    "<PROJECT_ROOT>/src/__sandbox__/app1",
+    "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
+    "<PROJECT_ROOT>/node_modules/preset-02",
+    "<PROJECT_ROOT>/node_modules/preset-01",
+    "<PROJECT_ROOT>",
   ],
   "overrideValidator": Array [
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-01",
-    "<PROJECT_ROOT>/src/__sandbox__/app1",
+    "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
+    "<PROJECT_ROOT>/node_modules/preset-02",
+    "<PROJECT_ROOT>/node_modules/preset-01",
+    "<PROJECT_ROOT>",
   ],
   "postProcessor": Array [
-    "<PROJECT_ROOT>/src/__sandbox__/app1",
+    "<PROJECT_ROOT>",
   ],
   "preprocessor": Array [
-    "<PROJECT_ROOT>/src/__sandbox__/app1",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-01",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03",
+    "<PROJECT_ROOT>",
+    "<PROJECT_ROOT>/node_modules/preset-01",
+    "<PROJECT_ROOT>/node_modules/preset-02",
+    "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
   ],
   "processor": Array [
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-01",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-01",
-    "<PROJECT_ROOT>/src/__sandbox__/app1",
-    "<PROJECT_ROOT>/src/__sandbox__/app1",
+    "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
+    "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
+    "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
+    "<PROJECT_ROOT>/node_modules/preset-02",
+    "<PROJECT_ROOT>/node_modules/preset-02",
+    "<PROJECT_ROOT>/node_modules/preset-01",
+    "<PROJECT_ROOT>/node_modules/preset-01",
+    "<PROJECT_ROOT>",
+    "<PROJECT_ROOT>",
   ],
   "validator": Array [
-    "<PROJECT_ROOT>/src/__sandbox__/app1",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-01",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02",
-    "<PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03",
+    "<PROJECT_ROOT>",
+    "<PROJECT_ROOT>/node_modules/preset-01",
+    "<PROJECT_ROOT>/node_modules/preset-02",
+    "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
   ],
 }
 `;
@@ -231,7 +231,7 @@ Object {
 
 exports[`ExConfig allows post processing error 1`] = `
 [Error: postProcessor error 3,2,1,0
-found in path: <PROJECT_ROOT>/src/__sandbox__/app1]
+found in path: <PROJECT_ROOT>]
 `;
 
 exports[`ExConfig allows preprocessing 1`] = `
@@ -289,7 +289,7 @@ Object {
 exports[`ExConfig catches error custom processor override 1`] = `
 [Error: bad value: 3
 invalid key: example
-found in path: <PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03/index.js]
+found in path: <PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03/index.js]
 `;
 
 exports[`ExConfig does not mutate original config 1`] = `
@@ -353,7 +353,7 @@ exports[`ExConfig extends must be a string - nested 1`] = `
 [31m
 [1] "0" must be a string[0m
 extends key must be a module expressed as a string
-found in path: <PROJECT_ROOT>/src/__sandbox__/app1/node_modules/invalid-preset-01/index.js]
+found in path: <PROJECT_ROOT>/node_modules/invalid-preset-01/index.js]
 `;
 
 exports[`ExConfig extends must be a string 1`] = `
@@ -501,7 +501,7 @@ Object {
 
 exports[`ExConfig preprocessing error 1`] = `
 [Error: preprocessor 0
-found in path: <PROJECT_ROOT>/src/__sandbox__/app1]
+found in path: <PROJECT_ROOT>]
 `;
 
 exports[`ExConfig preprocessing override error 1`] = `
@@ -555,7 +555,7 @@ exports[`ExConfig resolve must be a string - nested 1`] = `
 [31m
 [1] "0" must be a string[0m
 extends key must be a module expressed as a string
-found in path: <PROJECT_ROOT>/src/__sandbox__/app1/node_modules/invalid-preset-02/index.js]
+found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js]
 `;
 
 exports[`ExConfig resolve must be a string 1`] = `
@@ -600,13 +600,13 @@ exports[`ExConfig validates nested config 1`] = `
 }
 [31m
 [1] "other" must be a string[0m
-invalid nested config: <PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-01/index.js]
+invalid nested config: <PROJECT_ROOT>/node_modules/preset-01/index.js]
 `;
 
 exports[`ExConfig validates nested override config 1`] = `
 [Error: "value" must be a string
 invalid key: other
-found in path: <PROJECT_ROOT>/src/__sandbox__/app1/node_modules/preset-02/node_modules/preset-03/index.js]
+found in path: <PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03/index.js]
 `;
 
 exports[`ExConfig validates override config 1`] = `

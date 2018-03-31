@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.3] - 2018-03-31
+
 ### Changed
 
 *   cherry pick lodash functions

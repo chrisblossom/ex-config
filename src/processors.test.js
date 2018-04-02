@@ -3,7 +3,7 @@
 import { mergeDeep } from './processors';
 
 describe('mergeDeep', () => {
-    it('deep merges objects', () => {
+    test('deep merges objects', () => {
         const obj1 = {
             all: 1,
             one: 1,

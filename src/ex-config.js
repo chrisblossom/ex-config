@@ -10,10 +10,11 @@ import { generateResolveValidator, validateResolveKeys } from './validate';
 import { extendError } from './extend-error';
 import { getProcessor } from './processors';
 
+// eslint-disable-next-line flowtype/require-exact-type
 export type Config = {};
 export type ResolveSchema = Object | null;
 
-export type Args = {
+export type Args = $Shape<{
     // actionable item
     value: any,
     // current value of actionable item
@@ -22,34 +23,29 @@ export type Args = {
     config?: any,
     // current config directory
     dirname: string,
-
-    [any]: empty,
-};
+}>;
 
 type Validator = (args: Args) => void;
 type PostProcessor = (args: Args) => any;
 type Preprocessor = (args: Args) => any;
 export type Processor = (args: Args) => any;
-export type Overrides = {
-    [key: string]: {
-        resolve?: PrefixOptions,
-        processor?: Processor | string,
-        validator?: Validator,
-        preprocessor?: Preprocessor,
-        [any]: empty,
-    },
-};
 
-type Options = {
+export type Overrides = $Shape<{
+    resolve?: PrefixOptions,
+    processor?: Processor | string,
+    validator?: Validator,
+    preprocessor?: Preprocessor,
+}>;
+
+type Options = $Shape<{
     presets?: string | false,
     plugins?: string | false,
     preprocessor?: Preprocessor,
     processor?: Processor | string,
     validator?: Validator,
     postProcessor?: PostProcessor,
-    overrides?: Overrides,
-    [any]: empty,
-};
+    overrides?: { [key: string]: Overrides },
+}>;
 
 class ExConfig {
     presets: string | false;
@@ -60,7 +56,7 @@ class ExConfig {
     validator: ?Validator;
     preprocessor: ?Preprocessor;
     postProcessor: ?PostProcessor;
-    overrides: Overrides;
+    overrides: { [key: string]: Overrides };
     resolveSchema: ResolveSchema;
     loaded: boolean;
 
@@ -86,10 +82,10 @@ class ExConfig {
         this.loaded = false;
     }
 
-    getResolveFn(key: string, prefix: PrefixOptions) {
+    getResolveFn(key: string, prefixOptions: PrefixOptions) {
         let resolve = this.resolve[key];
         if (!resolve) {
-            this.resolve[key] = new ResolveWithPrefix(prefix);
+            this.resolve[key] = new ResolveWithPrefix(prefixOptions);
 
             resolve = this.resolve[key];
         }
@@ -180,7 +176,6 @@ class ExConfig {
             // eslint-disable-next-line no-param-reassign
             delete config[this.presets];
 
-            // $FlowIgnore
             const overrides: Overrides = this.overrides[this.presets] || {};
             const resolve = this.getResolveFn(this.presets, overrides.resolve);
 
@@ -256,7 +251,11 @@ class ExConfig {
     /**
      * Handle extendable configs
      */
-    extend(packageIds: string | string[], resolve: Resolve, dirname: string) {
+    extend(
+        packageIds: string | $ReadOnlyArray<string>,
+        resolve: Resolve,
+        dirname: string,
+    ) {
         const toArray = Array.isArray(packageIds) ? packageIds : [packageIds];
 
         toArray.forEach((packageId) => {
@@ -319,4 +318,5 @@ class ExConfig {
     }
 }
 
+// eslint-disable-next-line import/no-default-export
 export default ExConfig;

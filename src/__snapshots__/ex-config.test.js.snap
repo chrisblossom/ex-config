@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ExConfig adds dirname to all lifecycles 1`] = `
+exports[`adds dirname to all lifecycles 1`] = `
 Object {
   "overridePreprocessor": Array [
     "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
@@ -49,7 +49,7 @@ Object {
 }
 `;
 
-exports[`ExConfig allows builtin processor 1`] = `
+exports[`allows builtin processor 1`] = `
 Object {
   "example": Array [
     1,
@@ -91,7 +91,7 @@ Object {
 }
 `;
 
-exports[`ExConfig allows builtin processor override 1`] = `
+exports[`allows builtin processor override 1`] = `
 Object {
   "example": Array [
     1,
@@ -117,7 +117,7 @@ Object {
 }
 `;
 
-exports[`ExConfig allows custom preset and plugin name 1`] = `
+exports[`allows custom preset and plugin name 1`] = `
 Object {
   "customPlugin": Array [
     Object {
@@ -146,7 +146,7 @@ Object {
 }
 `;
 
-exports[`ExConfig allows custom processor 1`] = `
+exports[`allows custom processor 1`] = `
 Object {
   "example": Array [
     0,
@@ -165,7 +165,7 @@ Object {
 }
 `;
 
-exports[`ExConfig allows custom processor override 1`] = `
+exports[`allows custom processor override 1`] = `
 Object {
   "example": Array [
     0,
@@ -189,7 +189,7 @@ Object {
 }
 `;
 
-exports[`ExConfig allows disabling presets and plugins 1`] = `
+exports[`allows disabling presets and plugins 1`] = `
 Object {
   "inside": Array [
     1,
@@ -203,7 +203,7 @@ Object {
 }
 `;
 
-exports[`ExConfig allows post processing 1`] = `
+exports[`allows post processing 1`] = `
 Object {
   "example": Array [
     6,
@@ -229,12 +229,12 @@ Object {
 }
 `;
 
-exports[`ExConfig allows post processing error 1`] = `
+exports[`allows post processing error 1`] = `
 [Error: postProcessor error 3,2,1,0
 found in path: <PROJECT_ROOT>]
 `;
 
-exports[`ExConfig allows preprocessing 1`] = `
+exports[`allows preprocessing 1`] = `
 Object {
   "example": Array [
     "3",
@@ -260,7 +260,7 @@ Object {
 }
 `;
 
-exports[`ExConfig allows preprocessing override 1`] = `
+exports[`allows preprocessing override 1`] = `
 Object {
   "example": Array [
     "3",
@@ -286,13 +286,13 @@ Object {
 }
 `;
 
-exports[`ExConfig catches error custom processor override 1`] = `
+exports[`catches error custom processor override 1`] = `
 [Error: bad value: 3
 invalid key: example
 found in path: <PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03/index.js]
 `;
 
-exports[`ExConfig does not mutate original config 1`] = `
+exports[`does not mutate original config 1`] = `
 Object {
   "inside": Array [
     Array [
@@ -329,7 +329,7 @@ Object {
 }
 `;
 
-exports[`ExConfig extends must be a string - nested 1`] = `
+exports[`extends must be a string - nested 1`] = `
 [Error: {
   "presets": [
     { [31m[1][0m
@@ -356,7 +356,7 @@ extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-01/index.js]
 `;
 
-exports[`ExConfig extends must be a string 1`] = `
+exports[`extends must be a string 1`] = `
 [Error: {
   "presets": [
     { [31m[1][0m
@@ -382,7 +382,7 @@ exports[`ExConfig extends must be a string 1`] = `
 extends key must be a module expressed as a string]
 `;
 
-exports[`ExConfig mergeObject processor 1`] = `
+exports[`mergeObject processor 1`] = `
 Object {
   "example": Array [
     3,
@@ -410,7 +410,7 @@ Object {
 }
 `;
 
-exports[`ExConfig merges deep nested presets 1`] = `
+exports[`merges deep nested presets 1`] = `
 Object {
   "example": Array [
     3,
@@ -443,7 +443,7 @@ Object {
 }
 `;
 
-exports[`ExConfig merges deep with custom prefix resolution 1`] = `
+exports[`merges deep with custom prefix resolution 1`] = `
 Object {
   "example": Array [
     3,
@@ -472,7 +472,7 @@ Object {
 }
 `;
 
-exports[`ExConfig plugins processor can be overridden 1`] = `
+exports[`plugins processor can be overridden 1`] = `
 Object {
   "example": false,
   "inside": false,
@@ -499,17 +499,17 @@ Object {
 }
 `;
 
-exports[`ExConfig preprocessing error 1`] = `
+exports[`preprocessing error 1`] = `
 [Error: preprocessor 0
 found in path: <PROJECT_ROOT>]
 `;
 
-exports[`ExConfig preprocessing override error 1`] = `
+exports[`preprocessing override error 1`] = `
 [Error: preprocessor 3
 invalid key: example]
 `;
 
-exports[`ExConfig preset object order matter does not matter 1`] = `
+exports[`preset object order matter does not matter 1`] = `
 Object {
   "example": Array [
     3,
@@ -542,7 +542,7 @@ Object {
 }
 `;
 
-exports[`ExConfig resolve must be a string - nested 1`] = `
+exports[`resolve must be a string - nested 1`] = `
 [Error: {
   "plugins": [
     { [31m[1][0m
@@ -558,7 +558,7 @@ extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js]
 `;
 
-exports[`ExConfig resolve must be a string 1`] = `
+exports[`resolve must be a string 1`] = `
 [Error: {
   "plugins": [
     { [31m[1][0m
@@ -573,7 +573,7 @@ exports[`ExConfig resolve must be a string 1`] = `
 extends key must be a module expressed as a string]
 `;
 
-exports[`ExConfig validates config 1`] = `
+exports[`validates config 1`] = `
 [Error: {
   "string" [31m[1][0m: 1
 }
@@ -581,7 +581,7 @@ exports[`ExConfig validates config 1`] = `
 [1] "string" must be a string[0m]
 `;
 
-exports[`ExConfig validates nested config 1`] = `
+exports[`validates nested config 1`] = `
 [Error: {
   "example": [
     1
@@ -603,13 +603,13 @@ exports[`ExConfig validates nested config 1`] = `
 invalid nested config: <PROJECT_ROOT>/node_modules/preset-01/index.js]
 `;
 
-exports[`ExConfig validates nested override config 1`] = `
+exports[`validates nested override config 1`] = `
 [Error: "value" must be a string
 invalid key: other
 found in path: <PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03/index.js]
 `;
 
-exports[`ExConfig validates override config 1`] = `
+exports[`validates override config 1`] = `
 [Error: "value" must be a string
 invalid key: string]
 `;

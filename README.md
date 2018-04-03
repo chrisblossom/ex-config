@@ -207,7 +207,7 @@ module.exports = result;
 
 A `preset` or `plugin` needs to export an `object` or `function`.
 
-When using `ES Modules`, only default exports are supported.
+Only `export default` is supported when using es modules.
 
 If a `function` is used it will be invoked with the following argument:
 

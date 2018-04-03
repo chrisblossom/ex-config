@@ -369,6 +369,11 @@ Object {
 }
 `;
 
+exports[`es modules must use a default export 1`] = `
+[Error: <PROJECT_ROOT>/node_modules/invalid-preset-03/index.js must use export default with es modules
+found in path: <PROJECT_ROOT>]
+`;
+
 exports[`extends must be a string - nested 1`] = `
 [Error: {
   "presets": [
@@ -420,6 +425,22 @@ exports[`extends must be a string 1`] = `
 [31m
 [1] "presets" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string]
+`;
+
+exports[`handles es module default exports 1`] = `
+Object {
+  "inside": Array [
+    3,
+    6,
+  ],
+  "plugins": Array [
+    Object {
+      "imported": Array [
+        "imported plugin-04",
+      ],
+    },
+  ],
+}
 `;
 
 exports[`mergeObject processor 1`] = `

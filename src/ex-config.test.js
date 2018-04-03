@@ -850,6 +850,24 @@ test('resolve must be a string - nested - works as array', () => {
     }
 });
 
+test('es modules must use a default export', () => {
+    const dir = path.resolve(__dirname, '__sandbox__/app1/');
+    process.chdir(dir);
+
+    const config = {
+        presets: ['invalid-preset-03'],
+    };
+
+    const exConfig = new ExConfig();
+
+    try {
+        expect.hasAssertions();
+        exConfig.load(config);
+    } catch (error) {
+        expect(error).toMatchSnapshot();
+    }
+});
+
 test('calls presets and plugins as a function with default options = {}', () => {
     const dir = path.resolve(__dirname, '__sandbox__/app1/');
     process.chdir(dir);
@@ -873,6 +891,22 @@ test('calls presets and plugins as a function with specified options', () => {
     const config = {
         presets: [['preset-05', { special: 'options 05' }]],
         plugins: [['plugin-03', { special: 'options 03' }]],
+    };
+
+    const exConfig = new ExConfig();
+
+    const result = exConfig.load(config);
+
+    expect(result).toMatchSnapshot();
+});
+
+test('handles es module default exports', () => {
+    const dir = path.resolve(__dirname, '__sandbox__/app1/');
+    process.chdir(dir);
+
+    const config = {
+        presets: ['preset-06'],
+        plugins: ['plugin-04'],
     };
 
     const exConfig = new ExConfig();

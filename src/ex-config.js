@@ -111,6 +111,19 @@ class ExConfig {
 
             let module = require(packagePath);
 
+            /**
+             * Handle ES Modules
+             */
+            if (typeof module === 'object' && module.__esModule) {
+                if (module.default) {
+                    module = module.default;
+                } else {
+                    throw new Error(
+                        `${packagePath} must use export default with es modules`,
+                    );
+                }
+            }
+
             if (typeof module === 'function') {
                 const args: RequireArgs = {
                     options,

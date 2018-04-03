@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 *   `presets` and `plugins` can now be expressed as `['PACKAGE_ID', OPTIONS]`.
+*   handle es module default exports
 
 ## [1.0.4] - 2018-04-02
 

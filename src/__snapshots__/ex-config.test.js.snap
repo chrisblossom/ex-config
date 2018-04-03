@@ -286,6 +286,46 @@ Object {
 }
 `;
 
+exports[`calls presets and plugins as a function with default options = {} 1`] = `
+Object {
+  "plugins": Array [
+    Object {
+      "imported": "plugin-03",
+      "plugin03Args": Object {
+        "dirname": "<PROJECT_ROOT>",
+        "options": Object {},
+      },
+    },
+  ],
+  "preset05Args": Object {
+    "dirname": "<PROJECT_ROOT>",
+    "options": Object {},
+  },
+}
+`;
+
+exports[`calls presets and plugins as a function with specified options 1`] = `
+Object {
+  "plugins": Array [
+    Object {
+      "imported": "plugin-03",
+      "plugin03Args": Object {
+        "dirname": "<PROJECT_ROOT>",
+        "options": Object {
+          "special": "options 03",
+        },
+      },
+    },
+  ],
+  "preset05Args": Object {
+    "dirname": "<PROJECT_ROOT>",
+    "options": Object {
+      "special": "options 05",
+    },
+  },
+}
+`;
+
 exports[`catches error custom processor override 1`] = `
 [Error: bad value: 3
 invalid key: example
@@ -332,7 +372,7 @@ Object {
 exports[`extends must be a string - nested 1`] = `
 [Error: {
   "presets": [
-    { [31m[1][0m
+    {
       "example": [
         1
       ],
@@ -351,7 +391,7 @@ exports[`extends must be a string - nested 1`] = `
   ]
 }
 [31m
-[1] "0" must be a string[0m
+[1] "presets" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-01/index.js]
 `;
@@ -359,7 +399,7 @@ found in path: <PROJECT_ROOT>/node_modules/invalid-preset-01/index.js]
 exports[`extends must be a string 1`] = `
 [Error: {
   "presets": [
-    { [31m[1][0m
+    {
       "example": [
         1
       ],
@@ -378,7 +418,7 @@ exports[`extends must be a string 1`] = `
   ]
 }
 [31m
-[1] "0" must be a string[0m
+[1] "presets" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string]
 `;
 
@@ -542,10 +582,10 @@ Object {
 }
 `;
 
-exports[`resolve must be a string - nested 1`] = `
+exports[`resolve must be a string - nested - works as array 1`] = `
 [Error: {
   "plugins": [
-    { [31m[1][0m
+    {
       "imported": [
         "imported plugin-01"
       ]
@@ -553,7 +593,23 @@ exports[`resolve must be a string - nested 1`] = `
   ]
 }
 [31m
-[1] "0" must be a string[0m
+[1] "plugins" at position 0 does not match any of the allowed types[0m
+extends key must be a module expressed as a string
+found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js]
+`;
+
+exports[`resolve must be a string - nested 1`] = `
+[Error: {
+  "plugins": [
+    {
+      "imported": [
+        "imported plugin-01"
+      ]
+    }
+  ]
+}
+[31m
+[1] "plugins" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js]
 `;
@@ -561,7 +617,7 @@ found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js]
 exports[`resolve must be a string 1`] = `
 [Error: {
   "plugins": [
-    { [31m[1][0m
+    {
       "imported": [
         "imported plugin-01"
       ]
@@ -569,7 +625,7 @@ exports[`resolve must be a string 1`] = `
   ]
 }
 [31m
-[1] "0" must be a string[0m
+[1] "plugins" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string]
 `;
 

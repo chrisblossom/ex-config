@@ -831,3 +831,53 @@ test('resolve must be a string - nested', () => {
         expect(error).toMatchSnapshot();
     }
 });
+
+test('resolve must be a string - nested - works as array', () => {
+    const dir = path.resolve(__dirname, '__sandbox__/app1/');
+    process.chdir(dir);
+
+    const config = {
+        presets: [['invalid-preset-02', {}]],
+    };
+
+    const exConfig = new ExConfig();
+
+    try {
+        expect.hasAssertions();
+        exConfig.load(config);
+    } catch (error) {
+        expect(error).toMatchSnapshot();
+    }
+});
+
+test('calls presets and plugins as a function with default options = {}', () => {
+    const dir = path.resolve(__dirname, '__sandbox__/app1/');
+    process.chdir(dir);
+
+    const config = {
+        presets: ['preset-05'],
+        plugins: ['plugin-03'],
+    };
+
+    const exConfig = new ExConfig();
+
+    const result = exConfig.load(config);
+
+    expect(result).toMatchSnapshot();
+});
+
+test('calls presets and plugins as a function with specified options', () => {
+    const dir = path.resolve(__dirname, '__sandbox__/app1/');
+    process.chdir(dir);
+
+    const config = {
+        presets: [['preset-05', { special: 'options 05' }]],
+        plugins: [['plugin-03', { special: 'options 03' }]],
+    };
+
+    const exConfig = new ExConfig();
+
+    const result = exConfig.load(config);
+
+    expect(result).toMatchSnapshot();
+});

@@ -9,7 +9,12 @@ function generateResolveValidator(
     plugins?: string | false,
 ) {
     const schema = Joi.array()
-        .items(Joi.string())
+        .items(
+            Joi.string(),
+            Joi.array()
+                .ordered(Joi.string().required(), Joi.any())
+                .max(2),
+        )
         .single(true);
 
     const obj = {};

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+*   `presets` and `plugins` can now be expressed as `['PACKAGE_ID', OPTIONS]`.
+
 ## [1.0.4] - 2018-04-02
 
 *   flow type updates

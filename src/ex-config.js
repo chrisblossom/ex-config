@@ -25,6 +25,11 @@ export type Args = $Shape<{
     dirname: string,
 }>;
 
+export type RequireArgs = {|
+    options: any,
+    dirname: string,
+|};
+
 type Validator = (args: Args) => void;
 type PostProcessor = (args: Args) => any;
 type Preprocessor = (args: Args) => any;
@@ -93,15 +98,31 @@ class ExConfig {
         return resolve;
     }
 
-    static require(packageId: string, resolve: Resolve, dirname: string) {
+    static require(
+        pkg: string | $ReadOnlyArray<*>,
+        resolve: Resolve,
+        dirname: string,
+    ) {
+        const [packageId, options = {}] = Array.isArray(pkg) ? pkg : [pkg];
+
         try {
             const packagePath = resolve(packageId, { dirname });
-            const { dir } = path.parse(packagePath);
+            const { dir: updatedDirname } = path.parse(packagePath);
 
-            const module = require(packagePath);
+            let module = require(packagePath);
+
+            if (typeof module === 'function') {
+                const args: RequireArgs = {
+                    options,
+                    dirname,
+                };
+
+                module = module(args);
+            }
+
             return {
                 module,
-                dir,
+                dirname: updatedDirname,
                 pathname: packagePath,
             };
         } catch (error) {
@@ -259,11 +280,11 @@ class ExConfig {
         const toArray = Array.isArray(packageIds) ? packageIds : [packageIds];
 
         toArray.forEach((packageId) => {
-            const { module, dir, pathname } = ExConfig.require(
-                packageId,
-                resolve,
-                dirname,
-            );
+            const {
+                module,
+                dirname: updatedDirname,
+                pathname,
+            } = ExConfig.require(packageId, resolve, dirname);
 
             let config = cloneDeep(module);
             try {
@@ -271,7 +292,7 @@ class ExConfig {
                     config = this.preprocessor({
                         value: config,
                         config: this.config,
-                        dirname: dir,
+                        dirname: updatedDirname,
                     });
                 }
 
@@ -282,7 +303,7 @@ class ExConfig {
                     this.validator({
                         value: config,
                         config: this.config,
-                        dirname: dir,
+                        dirname: updatedDirname,
                     });
                 }
             } catch (error) {
@@ -293,7 +314,7 @@ class ExConfig {
                 throw error;
             }
 
-            this.sort(config, dir, pathname);
+            this.sort(config, updatedDirname, pathname);
         });
     }
 

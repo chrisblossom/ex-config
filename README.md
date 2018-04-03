@@ -203,6 +203,42 @@ const result = exConfig.load(config);
 module.exports = result;
 ```
 
+## Creating Presets and Plugins
+
+A `preset` or `plugin` needs to export an `object` or `function`.
+
+If a `function` is used it will be invoked with the following argument:
+
+```js
+// config.js
+const exampleConfig = {
+    presets: [
+        [
+            // packageId
+            'presetExample',
+            // options for preset/plugin
+            { verbose: true },
+        ],
+    ],
+};
+
+module.exports = exampleConfig;
+
+// preset-example.js
+function presetExample(args) {
+    // options given as second index when calling preset/plugin
+    const options = args.options;
+    // dirname package was found from
+    const dirname = args.dirname;
+
+    return {
+        verbose: options.verbose,
+    };
+}
+
+module.exports = presetExample;
+```
+
 ## Thanks To
 
 This package was created with the great work / lessons learned from:

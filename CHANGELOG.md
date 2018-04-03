@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.5] - 2018-04-02
+
 ### Added
 
 *   `presets` and `plugins` can now be expressed as `['PACKAGE_ID', OPTIONS]`.

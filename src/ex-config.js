@@ -68,11 +68,15 @@ class ExConfig {
     constructor(options?: Options = {}) {
         this.presets = options.presets
             ? options.presets
-            : options.presets === undefined ? 'presets' : false;
+            : options.presets === undefined
+                ? 'presets'
+                : false;
 
         this.plugins = options.plugins
             ? options.plugins
-            : options.plugins === undefined ? 'plugins' : false;
+            : options.plugins === undefined
+                ? 'plugins'
+                : false;
 
         this.overrides = options.overrides || {};
         this.processor = getProcessor(options.processor);

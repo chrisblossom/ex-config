@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+*   package updates
+
+### Fixed
+
+*   Updated `resolve-with-prefix`: [resolve id fix](https://github.com/chrisblossom/resolve-with-prefix/commit/6dfc4d4cd7d8a16678551496916aedc2636cf4a5)
+
 ## [1.0.5] - 2018-04-02
 
 ### Added

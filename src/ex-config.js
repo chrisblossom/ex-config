@@ -156,10 +156,20 @@ class ExConfig {
             return this.config;
         }
 
+        let cfg = config;
+        if (typeof config === 'function') {
+            const args: RequireArgs = {
+                options: undefined,
+                dirname,
+            };
+
+            cfg = config(args);
+        }
         /**
          * Prevent original config from being mutated to guard against external caching issues
          */
-        let cfg = cloneDeep(config);
+        cfg = cloneDeep(cfg);
+
         if (this.preprocessor) {
             try {
                 cfg = this.preprocessor({ value: cfg, dirname });

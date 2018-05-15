@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+*   handle base config as `function`
+
 ## [1.0.6] - 2018-05-09
 
 ### Changed

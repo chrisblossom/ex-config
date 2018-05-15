@@ -427,6 +427,32 @@ exports[`extends must be a string 1`] = `
 extends key must be a module expressed as a string]
 `;
 
+exports[`handle base config as function 1`] = `
+Object {
+  "args": Object {
+    "dirname": "<PROJECT_ROOT>",
+    "options": undefined,
+  },
+  "plugins": Array [
+    Object {
+      "imported": "plugin-03",
+      "plugin03Args": Object {
+        "dirname": "<PROJECT_ROOT>",
+        "options": Object {
+          "special": "options 03",
+        },
+      },
+    },
+  ],
+  "preset05Args": Object {
+    "dirname": "<PROJECT_ROOT>",
+    "options": Object {
+      "special": "options 05",
+    },
+  },
+}
+`;
+
 exports[`handles es module default exports 1`] = `
 Object {
   "inside": Array [

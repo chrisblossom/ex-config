@@ -900,6 +900,25 @@ test('calls presets and plugins as a function with specified options', () => {
     expect(result).toMatchSnapshot();
 });
 
+test('handle base config as function', () => {
+    const dir = path.resolve(__dirname, '__sandbox__/app1/');
+    process.chdir(dir);
+
+    const config = (args) => {
+        return {
+            args,
+            presets: [['preset-05', { special: 'options 05' }]],
+            plugins: [['plugin-03', { special: 'options 03' }]],
+        };
+    };
+
+    const exConfig = new ExConfig();
+
+    const result = exConfig.load(config);
+
+    expect(result).toMatchSnapshot();
+});
+
 test('handles es module default exports', () => {
     const dir = path.resolve(__dirname, '__sandbox__/app1/');
     process.chdir(dir);

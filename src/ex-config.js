@@ -159,7 +159,7 @@ class ExConfig {
         let cfg = config;
         if (typeof config === 'function') {
             const args: RequireArgs = {
-                options: undefined,
+                options: {},
                 dirname,
             };
 

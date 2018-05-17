@@ -431,7 +431,7 @@ exports[`handle base config as function 1`] = `
 Object {
   "args": Object {
     "dirname": "<PROJECT_ROOT>",
-    "options": undefined,
+    "options": Object {},
   },
   "plugins": Array [
     Object {

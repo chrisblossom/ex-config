@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.9] - 2018-05-17
+
 ### Fixed
 
 *   when base config is a `function`, `options` is now an empty object

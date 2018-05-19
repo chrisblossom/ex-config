@@ -1,4 +1,19 @@
+/**
+ * This file is managed by backtrack
+ *
+ * source: @backtrack/preset-jest
+ * namespace: jest
+ *
+ * DO NOT MODIFY
+ */
+
 'use strict';
+
+const Backtrack = require('@backtrack/core');
+
+const { configManager, pkg } = new Backtrack();
+
+const packageId = '@backtrack/preset-jest';
 
 /**
  * https://facebook.github.io/jest/docs/configuration.html#options
@@ -8,7 +23,10 @@ const jest = {
     testEnvironment: 'node',
     collectCoverage: false,
     coveragePathIgnorePatterns: ['/__sandbox__/'],
-    snapshotSerializers: ['jest-serializer-path'],
+    snapshotSerializers: [
+        pkg.resolve(packageId, 'jest-serializer-path'),
+        pkg.resolve(packageId, 'jest-snapshot-serializer-function-name'),
+    ],
 
     /**
      * Automatically reset mock state between every test.
@@ -33,4 +51,7 @@ const jest = {
     restoreMocks: true,
 };
 
-module.exports = jest;
+module.exports = configManager({
+    namespace: 'jest',
+    config: jest,
+});

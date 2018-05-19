@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+*   Internal: Use [`backtrack`](https://github.com/chrisblossom/backtrack) to manage build environment
+
 ## [1.0.9] - 2018-05-17
 
 ### Fixed

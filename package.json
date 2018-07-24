@@ -1,6 +1,6 @@
 {
   "name": "ex-config",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Extendable configuration processor.",
   "keywords": [
     "config",
@@ -17,7 +17,7 @@
     "string config",
     "string configuration"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "repository": "chrisblossom/ex-config",
   "homepage": "https://github.com/chrisblossom/ex-config",
   "author": "Chris Blossom",

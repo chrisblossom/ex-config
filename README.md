@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/ex-config.svg?label=npm%20version)](https://www.npmjs.com/package/ex-config)
 [![Linux Build Status](https://img.shields.io/circleci/project/github/chrisblossom/ex-config/master.svg?label=linux%20build)](https://circleci.com/gh/chrisblossom/ex-config/tree/master)
 [![Windows Build Status](https://img.shields.io/appveyor/ci/chrisblossom/ex-config/master.svg?label=windows%20build)](https://ci.appveyor.com/project/chrisblossom/ex-config/branch/master)
-[![Code Coverage](https://img.shields.io/coveralls/github/chrisblossom/ex-config/master.svg)](https://coveralls.io/github/chrisblossom/ex-config?branch=master)
+[![Code Coverage](https://img.shields.io/codecov/c/github/chrisblossom/ex-config/master.svg)](https://codecov.io/gh/chrisblossom/ex-config/branch/master)
 
 ## About
 
@@ -246,5 +246,5 @@ module.exports = presetExample;
 
 This package was created with the great work / lessons learned from:
 
-*   [babel](https://github.com/babel/babel/)
-*   [eslint](https://github.com/eslint/eslint)
+-   [babel](https://github.com/babel/babel/)
+-   [eslint](https://github.com/eslint/eslint)

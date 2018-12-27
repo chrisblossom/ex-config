@@ -32,14 +32,14 @@
   "main": "dist/ex-config.js",
   "scripts": {
     "build": "backtrack build --production",
-    "check-all": "backtrack check-all",
     "clean": "backtrack clean",
     "dev": "backtrack dev --development",
     "flow": "backtrack flow",
     "format": "backtrack format",
+    "git-pre-commit": "backtrack git-pre-commit",
+    "git-pre-push": "backtrack git-pre-push",
     "lint": "backtrack lint",
     "lint.fix": "backtrack lint.fix",
-    "precommit": "backtrack precommit",
     "prepublishOnly": "backtrack prepublishOnly",
     "prepush": "backtrack prepush",
     "test": "backtrack test",
@@ -48,20 +48,15 @@
     "test.update": "jest --updateSnapshot",
     "test.watch": "jest --watch"
   },
-  "lint-staged": {
-    "*.{js,md,json}": [
-      "prettier --write",
-      "git add"
-    ]
-  },
   "babel": {
     "presets": [
-      "./.babelrc.js"
+      "@backtrack/preset-node-module/babel-flow"
     ]
   },
   "devDependencies": {
-    "@backtrack/core": "^0.1.20",
-    "@backtrack/preset-node-module": "^0.2.1"
+    "@backtrack/core": "^0.1.23",
+    "@backtrack/preset-node-module": "^0.3.5",
+    "flow-bin": "^0.80.0"
   },
   "dependencies": {
     "joi": "^12.0.0",

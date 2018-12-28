@@ -23,7 +23,7 @@
             "README.md": "ignoreUpdates",
             "appveyor.yml": "251406424b8cb49b1a8858ef7eb521ae57856964625daed85b591692e8f98e15",
             "flow-typed/jest.js": "dfb57c1db3a0b01a101ca14855be030bcc566be90bf00110f2fa16b42e92158d",
-            "jest.config.js": "322dd136d43514064c38fdf8cd999d6511d83af8efbb35d8d355a3f35937c6c4",
+            "jest.config.js": "89b921f7f379662d979221ac8124f85a5c2443a66f5d6922babf18e67b0f5727",
             "src/ex-config.js": "ignoreUpdates",
             "wallaby.config.js": "e49a5402ae304b54d6aa0087e0d6d95b0561a03dd16783d6d0a513036cf98712"
         }

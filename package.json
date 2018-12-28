@@ -55,7 +55,7 @@
   },
   "devDependencies": {
     "@backtrack/core": "^0.1.23",
-    "@backtrack/preset-node-module": "^0.3.5",
+    "@backtrack/preset-node-module": "^0.3.6",
     "flow-bin": "^0.80.0"
   },
   "dependencies": {

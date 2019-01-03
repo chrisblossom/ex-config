@@ -1,6 +1,6 @@
 {
   "name": "ex-config",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Extendable configuration processor.",
   "keywords": [
     "config",

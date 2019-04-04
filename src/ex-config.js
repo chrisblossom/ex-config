@@ -4,7 +4,7 @@
 
 import path from 'path';
 import cloneDeep from 'lodash.clonedeep';
-import ResolveWithPrefix, { type Resolve } from 'resolve-with-prefix';
+import { createResolverSync, resolveWithPrefixSync } from 'resolve-with-prefix';
 import type { ResolveWithPrefixOptions as PrefixOptions } from 'resolve-with-prefix';
 import { generateResolveValidator, validateResolveKeys } from './validate';
 import { extendError } from './extend-error';
@@ -41,6 +41,8 @@ export type Overrides = $Shape<{
     validator?: Validator,
     preprocessor?: Preprocessor,
 }>;
+
+type Resolve = typeof resolveWithPrefixSync;
 
 type Options = $Shape<{
     presets?: string | false,
@@ -94,7 +96,7 @@ class ExConfig {
     getResolveFn(key: string, prefixOptions: PrefixOptions) {
         let resolve = this.resolve[key];
         if (!resolve) {
-            this.resolve[key] = new ResolveWithPrefix(prefixOptions);
+            this.resolve[key] = createResolverSync(prefixOptions);
 
             resolve = this.resolve[key];
         }

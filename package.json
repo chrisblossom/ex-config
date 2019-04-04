@@ -56,6 +56,6 @@
     "lodash.clonedeep": "^4.5.0",
     "lodash.isplainobject": "^4.0.6",
     "lodash.mergewith": "^4.6.1",
-    "resolve-with-prefix": "^1.0.8"
+    "resolve-with-prefix": "^2.0.0"
   }
 }

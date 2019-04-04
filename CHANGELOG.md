@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Internal: Use [`@backtrack/preset-node`](https://github.com/chrisblossom/backtrack-preset-node)
 -   Update [`resolve-with-prefix`](https://github.com/chrisblossom/resolve-with-prefix)
+-   Use full lodash package
 
 ## [1.0.12] - 2019-01-02
 

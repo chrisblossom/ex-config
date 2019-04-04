@@ -1,7 +1,6 @@
 /* @flow */
 
-import mergeWith from 'lodash.mergewith';
-import isPlainObject from 'lodash.isplainobject';
+import { mergeWith, isPlainObject } from 'lodash';
 
 import type { Args, Processor } from './ex-config';
 
@@ -24,6 +23,7 @@ function mergeDeep(args: Args) {
     const { value, current = {}, dirname } = args;
     const val = Array.isArray(value) ? value : [value];
 
+    // $FlowIgnore
     return mergeWith(current, ...val, (objValue, srcValue) => {
         if (Array.isArray(objValue)) {
             return objValue.concat(srcValue);

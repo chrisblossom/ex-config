@@ -22,8 +22,7 @@
   "homepage": "https://github.com/chrisblossom/ex-config",
   "author": "Chris Blossom",
   "engines": {
-    "node": ">=6.9.0",
-    "npm": ">=3.10.10"
+    "node": ">=6.9.0"
   },
   "files": [
     "dist/",
@@ -41,21 +40,15 @@
     "lint": "backtrack lint",
     "lint.fix": "backtrack lint.fix",
     "prepublishOnly": "backtrack prepublishOnly",
-    "prepush": "backtrack prepush",
     "test": "backtrack test",
     "test.ci": "backtrack test.ci",
     "test.ci-pretest": "backtrack test.ci-pretest",
-    "test.update": "jest --updateSnapshot",
+    "test.update": "jest --update-snapshot",
     "test.watch": "jest --watch"
   },
-  "babel": {
-    "presets": [
-      "@backtrack/preset-node-module/babel-flow"
-    ]
-  },
   "devDependencies": {
-    "@backtrack/core": "^0.1.23",
-    "@backtrack/preset-node-module": "^0.3.7",
+    "@backtrack/core": "^0.1.27",
+    "@backtrack/preset-node": "^0.3.0",
     "flow-bin": "^0.80.0"
   },
   "dependencies": {

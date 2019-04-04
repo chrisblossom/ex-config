@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+-   Internal: Use [`@backtrack/preset-node`](https://github.com/chrisblossom/backtrack-preset-node)
+
 ## [1.0.12] - 2019-01-02
 
 ### Changed

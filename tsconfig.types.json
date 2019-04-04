@@ -1,0 +1,21 @@
+/**
+ * This file is managed by backtrack
+ *
+ * source: @backtrack/preset-node
+ *
+ * DO NOT MODIFY
+ */
+
+{
+    "extends": "./tsconfig",
+    "compilerOptions": {
+        "outDir": "dist",
+        "declaration": true,
+        "declarationMap": true,
+        "isolatedModules": false,
+        "noEmit": false,
+        "allowJs": false,
+        "emitDeclarationOnly": true
+    },
+    "exclude": ["**/*.test.ts"]
+}

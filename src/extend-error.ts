@@ -1,5 +1,3 @@
-/* @flow */
-
 /* eslint-disable no-useless-concat,no-param-reassign */
 
 function extendError(error: Error, pathname?: string, message?: string) {

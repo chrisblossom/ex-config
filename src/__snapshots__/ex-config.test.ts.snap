@@ -554,7 +554,7 @@ Object {
   },
   "other": 1,
   "plugins": Array [
-    "imported sanejs-plugin-01",
+    "imported backtrack-plugin-01",
   ],
 }
 `;

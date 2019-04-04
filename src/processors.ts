@@ -1,44 +1,39 @@
-/* @flow */
-
 import { mergeWith, isPlainObject } from 'lodash';
+import { Context, Processor } from './ex-config';
 
-import type { Args, Processor } from './ex-config';
-
-function arrayPush(args: Args) {
-    const { value, current = [] } = args;
-
+function arrayPush({ value, current = [] }: Context) {
     const toArray = Array.isArray(value) ? value : [value];
 
     return [...current, ...toArray];
 }
 
-function arrayConcat(args: Args) {
-    const { value, current = [] } = args;
+function arrayConcat({ value, current = [] }: Context) {
     const toArray = Array.isArray(value) ? value : [value];
 
     return [...toArray, ...current];
 }
 
-function mergeDeep(args: Args) {
-    const { value, current = {}, dirname } = args;
+function mergeDeep({ value, current = {}, dirname }: Context) {
     const val = Array.isArray(value) ? value : [value];
 
-    // $FlowIgnore
-    return mergeWith(current, ...val, (objValue, srcValue) => {
+    return mergeWith(current, ...val, <N, S>(objValue: N, srcValue: S) => {
         if (Array.isArray(objValue)) {
             return objValue.concat(srcValue);
         }
 
         if (isPlainObject(objValue)) {
-            return mergeDeep({ value: objValue, current: srcValue, dirname });
+            return mergeDeep({
+                value: objValue,
+                current: srcValue,
+                dirname,
+            });
         }
 
         return srcValue;
     });
 }
 
-function automatic(args: Args) {
-    const { value, current, dirname } = args;
+function automatic({ value, current, dirname }: Context) {
     if (current === undefined) {
         return value;
     }
@@ -55,8 +50,9 @@ function automatic(args: Args) {
 }
 
 const parsers = { automatic, arrayConcat, arrayPush, mergeDeep };
+export type Parsers = 'automatic' | 'arrayConcat' | 'arrayPush' | 'mergeDeep';
 
-function getProcessor(parser: Processor | string = 'automatic'): Processor {
+function getProcessor(parser: Processor | Parsers = 'automatic'): Processor {
     if (typeof parser === 'function') {
         return parser;
     }

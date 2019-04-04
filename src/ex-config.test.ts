@@ -1,20 +1,18 @@
-/* @flow */
-
 import path from 'path';
-import cloneDeep from 'lodash.clonedeep';
+import { cloneDeep } from 'lodash';
 import Joi from 'joi';
-import ExConfig from './ex-config';
+import ExConfig, {
+    Config,
+    PostProcessor,
+    Preprocessor,
+    Processor,
+    Validator,
+} from './ex-config';
 
 const cwd = process.cwd();
 
 afterEach(() => {
     process.chdir(cwd);
-});
-
-test('config starts undefined', () => {
-    const exConfig = new ExConfig();
-
-    expect(exConfig.config).toEqual(undefined);
 });
 
 test('does not mutate original config', () => {
@@ -29,14 +27,14 @@ test('does not mutate original config', () => {
 
     const configClone = cloneDeep(config);
 
-    const processor = ({ value, current = [] }) => {
+    const processor: Processor = ({ value, current = [] }) => {
         value.push(3);
         current.push(value);
         return current;
     };
 
-    const postProcessor = ({ value }) => {
-        value.plugins.forEach((val) => {
+    const postProcessor: PostProcessor = ({ value }) => {
+        value.plugins.forEach((val: any) => {
             val[0].imported.push(`mutated ${val[0].imported[0]}`);
         });
 
@@ -50,7 +48,11 @@ test('does not mutate original config', () => {
     expect(result1).toMatchSnapshot();
 
     const clone1 = cloneDeep(result1);
-    delete exConfig.config;
+
+    // reset config
+    // @ts-ignore
+    exConfig.config = {};
+    // @ts-ignore
     exConfig.loaded = false;
 
     const result2 = exConfig.load(config);
@@ -79,7 +81,7 @@ test('adds dirname to all lifecycles', () => {
     const dir = path.resolve(__dirname, '__sandbox__/app1/');
     process.chdir(dir);
 
-    const result = {
+    const result: any = {
         validator: [],
         preprocessor: [],
         processor: [],
@@ -90,35 +92,35 @@ test('adds dirname to all lifecycles', () => {
         overrideProcessor: [],
     };
 
-    const validator = ({ dirname }) => {
+    const validator: Validator = ({ dirname }) => {
         result.validator.push(dirname);
     };
 
-    const preprocessor = ({ value, dirname }) => {
+    const preprocessor: Preprocessor = ({ value, dirname }) => {
         result.preprocessor.push(dirname);
         return value;
     };
 
-    const processor = ({ value, dirname }) => {
+    const processor: Processor = ({ value, dirname }) => {
         result.processor.push(dirname);
         return value;
     };
 
-    const postProcessor = ({ value, dirname }) => {
+    const postProcessor: PostProcessor = ({ value, dirname }) => {
         result.postProcessor.push(dirname);
         return value;
     };
 
-    const overrideValidator = ({ dirname }) => {
+    const overrideValidator: Validator = ({ dirname }) => {
         result.overrideValidator.push(dirname);
     };
 
-    const overridePreprocessor = ({ value, dirname }) => {
+    const overridePreprocessor: Preprocessor = ({ value, dirname }) => {
         result.overridePreprocessor.push(dirname);
         return value;
     };
 
-    const overrideProcessor = ({ value, dirname }) => {
+    const overrideProcessor: Processor = ({ value, dirname }) => {
         result.overrideProcessor.push(dirname);
         return value;
     };
@@ -177,7 +179,7 @@ test('plugins processor can be overridden', () => {
         example: false,
     };
 
-    const processor = ({ value }) => {
+    const processor: Processor = ({ value }) => {
         return value;
     };
 
@@ -248,15 +250,15 @@ test('merges deep with custom prefix resolution', () => {
         overrides: {
             presets: {
                 resolve: {
-                    prefix: 'sanejs-preset',
-                    org: '@sanejs',
+                    prefix: 'backtrack-preset',
+                    org: '@backtrack',
                     orgPrefix: 'preset',
                 },
             },
             plugins: {
                 resolve: {
-                    prefix: 'sanejs-plugin',
-                    org: '@sanejs',
+                    prefix: 'backtrack-plugin',
+                    org: '@backtrack',
                     orgPrefix: 'plugin',
                 },
             },
@@ -296,7 +298,7 @@ test('allows custom processor', () => {
         example: [0],
     };
 
-    const processor = ({ value }) => {
+    const processor: Processor = ({ value }) => {
         return value;
     };
 
@@ -341,7 +343,7 @@ test('allows custom processor override', () => {
         example: [0],
     };
 
-    const processor = ({ value }) => {
+    const processor: Processor = ({ value }) => {
         return value;
     };
 
@@ -367,7 +369,7 @@ test('catches error custom processor override', () => {
         inside: [0],
     };
 
-    const processor = ({ value }) => {
+    const processor: Processor = ({ value }) => {
         throw new Error(`bad value: ${value}`);
     };
 
@@ -421,7 +423,7 @@ test('validates config', () => {
         string: 1,
     };
 
-    const validator = ({ value }) => {
+    const validator: Validator = ({ value }) => {
         const schema = Joi.object({
             string: Joi.string(),
         });
@@ -453,7 +455,7 @@ test('validates nested config', () => {
         presets: ['preset-01'],
     };
 
-    const validator = ({ value }) => {
+    const validator: Validator = ({ value }) => {
         const schema = Joi.object({
             other: Joi.string(),
         });
@@ -486,7 +488,7 @@ test('validates override config', () => {
         string: 1,
     };
 
-    const validator = ({ value }) => {
+    const validator: Validator = ({ value }) => {
         const schema = Joi.string();
 
         const isValid = Joi.validate(value, schema, { allowUnknown: true });
@@ -521,7 +523,7 @@ test('validates nested override config', () => {
         string: 1,
     };
 
-    const validator = ({ value }) => {
+    const validator: Validator = ({ value }) => {
         const schema = Joi.string();
 
         const isValid = Joi.validate(value, schema, { allowUnknown: true });
@@ -556,8 +558,8 @@ test('allows post processing', () => {
         example: [0],
     };
 
-    const postProcessor = ({ value }) => {
-        const example = value.example.map((number) => number * 2);
+    const postProcessor: PostProcessor = ({ value }) => {
+        const example = value.example.map((number: number) => number * 2);
         return {
             ...value,
             example,
@@ -583,7 +585,7 @@ test('allows post processing error', () => {
         example: [0],
     };
 
-    const postProcessor = ({ value }) => {
+    const postProcessor: PostProcessor = ({ value }) => {
         throw new Error(`postProcessor error ${value.example}`);
     };
 
@@ -608,7 +610,7 @@ test('allows preprocessing', () => {
         example: [0],
     };
 
-    const validator = ({ value }) => {
+    const validator: Validator = ({ value }) => {
         const schema = Joi.object({
             example: Joi.array().items(Joi.string()),
         });
@@ -620,8 +622,10 @@ test('allows preprocessing', () => {
         }
     };
 
-    const preprocessor = ({ value }) => {
-        const example = value.example.map((number) => number.toString());
+    const preprocessor: Preprocessor = ({ value }) => {
+        const example = value.example.map((number: number) =>
+            number.toString(),
+        );
 
         return {
             ...value,
@@ -647,7 +651,7 @@ test('preprocessing error', () => {
         example: [0],
     };
 
-    const validator = ({ value }) => {
+    const validator: Validator = ({ value }) => {
         const schema = Joi.object({
             example: Joi.array().items(Joi.string()),
         });
@@ -659,7 +663,7 @@ test('preprocessing error', () => {
         }
     };
 
-    const preprocessor = ({ value }) => {
+    const preprocessor: Preprocessor = ({ value }) => {
         throw new Error(`preprocessor ${value.example}`);
     };
 
@@ -685,7 +689,7 @@ test('allows preprocessing override', () => {
         example: [0],
     };
 
-    const validator = ({ value }) => {
+    const validator: Validator = ({ value }) => {
         const schema = Joi.array().items(Joi.string());
 
         const isValid = Joi.validate(value, schema, { allowUnknown: true });
@@ -695,8 +699,8 @@ test('allows preprocessing override', () => {
         }
     };
 
-    const preprocessor = ({ value }) => {
-        const example = value.map((number) => number.toString());
+    const preprocessor: Preprocessor = ({ value }) => {
+        const example = value.map((number: number) => number.toString());
 
         return example;
     };
@@ -723,7 +727,7 @@ test('preprocessing override error', () => {
         example: [0],
     };
 
-    const validator = ({ value }) => {
+    const validator: Validator = ({ value }) => {
         const schema = Joi.array().items(Joi.string());
 
         const isValid = Joi.validate(value, schema, { allowUnknown: true });
@@ -733,7 +737,7 @@ test('preprocessing override error', () => {
         }
     };
 
-    const preprocessor = ({ value }) => {
+    const preprocessor: Preprocessor = ({ value }) => {
         throw new Error(`preprocessor ${value}`);
     };
 
@@ -904,7 +908,7 @@ test('handle base config as function', () => {
     const dir = path.resolve(__dirname, '__sandbox__/app1/');
     process.chdir(dir);
 
-    const config = (args) => {
+    const config = (args: Config) => {
         return {
             args,
             presets: [['preset-05', { special: 'options 05' }]],

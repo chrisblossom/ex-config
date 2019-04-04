@@ -1,5 +1,3 @@
-/* @flow */
-
 import { mergeDeep } from './processors';
 
 describe('mergeDeep', () => {

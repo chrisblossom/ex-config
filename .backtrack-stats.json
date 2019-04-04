@@ -3,7 +3,6 @@
         "directories": [
             ".circleci",
             "dist",
-            "flow-typed",
             "src"
         ],
         "files": {
@@ -12,7 +11,6 @@
             ".editorconfig": "ec4ed6b0bd85bf29162eccef4420c8b03bd330e8abd84d7a14b2cae3079f1fd9",
             ".eslintignore": "df678e7a458aba93c115564cfd4a701bdf4397e943de8745d37f2798c1dc5c11",
             ".eslintrc.js": "0de8c62f28870b2afeb3eb58a5a9a106a96c9181aa9478f71760bb155bb4a205",
-            ".flowconfig": "45cde9c64ee231ad984aa284beeddf56cd695e295aedcd3c73f904b0daf51713",
             ".gitignore": "8791c419e79de53e5c2eefa59ab16b52b5413bd08da46be94e9e6cc3153a17a0",
             ".huskyrc.js": "f7b6f2abb505e7b45fb028edb1a032b9fb7c997e4d563fdd0567beb582f8da76",
             ".lintstagedrc.js": "a1d49f8d7d4c67c356cc9fbb939df7484016908ed4777300c3fbf355b47921d9",
@@ -23,9 +21,11 @@
             "CHANGELOG.md": "ignoreUpdates",
             "README.md": "ignoreUpdates",
             "appveyor.yml": "251406424b8cb49b1a8858ef7eb521ae57856964625daed85b591692e8f98e15",
-            "flow-typed/jest.js": "dfb57c1db3a0b01a101ca14855be030bcc566be90bf00110f2fa16b42e92158d",
+            "global.d.ts": "ignoreUpdates",
             "jest.config.js": "e12a7bf22599c80204f73e366b427a8296f16e8fdd1fda0f09a508935258f870",
-            "src/ex-config.js": "ignoreUpdates",
+            "src/ex-config.ts": "ignoreUpdates",
+            "tsconfig.json": "82c59a9bda4362ae308e013465028a04e97edb9ff0ed6f2c500c69effd6ae12d",
+            "tsconfig.types.json": "5fcb969aef44ee0d4c94c53572433f558d49cc1b4b05257fc6a0765cc1afa737",
             "wallaby.config.js": "2656c547b42344e044e4a04d211059882aa4ab616f46051bbf994a018be2b9ec"
         }
     },
@@ -34,15 +34,13 @@
             "node": ">=6.9.0"
         },
         "files": [
-            "dist/",
-            "flow-typed/"
+            "dist/"
         ],
         "main": "dist/ex-config.js",
         "scripts": {
             "build": "backtrack build --production",
             "clean": "backtrack clean",
             "dev": "backtrack dev --development",
-            "flow": "backtrack flow",
             "format": "backtrack format",
             "git-pre-commit": "backtrack git-pre-commit",
             "git-pre-push": "backtrack git-pre-push",
@@ -53,7 +51,9 @@
             "test.ci": "backtrack test.ci",
             "test.ci-pretest": "backtrack test.ci-pretest",
             "test.update": "jest --update-snapshot",
-            "test.watch": "jest --watch"
-        }
+            "test.watch": "jest --watch",
+            "typescript": "backtrack typescript"
+        },
+        "types": "dist/ex-config.d.ts"
     }
 }

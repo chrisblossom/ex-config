@@ -213,6 +213,20 @@ Only `export default` is supported when using es modules.
 If a `function` is used it will be invoked with the following argument:
 
 ```js
+// preset-example.js
+function presetExample(context) {
+    // options given as second index when calling preset/plugin
+    const options = context.options;
+    // dirname package was found from
+    const dirname = context.dirname;
+
+    return {
+        verbose: options.verbose,
+    };
+}
+
+module.exports = presetExample;
+
 // config.js
 const exampleConfig = {
     presets: [
@@ -226,20 +240,6 @@ const exampleConfig = {
 };
 
 module.exports = exampleConfig;
-
-// preset-example.js
-function presetExample(args) {
-    // options given as second index when calling preset/plugin
-    const options = args.options;
-    // dirname package was found from
-    const dirname = args.dirname;
-
-    return {
-        verbose: options.verbose,
-    };
-}
-
-module.exports = presetExample;
 ```
 
 ## Thanks To

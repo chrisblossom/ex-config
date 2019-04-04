@@ -1,8 +1,6 @@
-/* @flow */
-
 import Joi from 'joi';
 import { extendError } from './extend-error';
-import type { Config, ResolveSchema } from './ex-config';
+import { Config } from './ex-config';
 
 function generateResolveValidator(
     presets?: string | false,
@@ -17,7 +15,7 @@ function generateResolveValidator(
         )
         .single(true);
 
-    const obj = {};
+    const obj: Config = {};
     if (presets) {
         obj[presets] = schema.label(presets);
     }
@@ -59,5 +57,7 @@ function validateResolveKeys(
         throw error;
     }
 }
+
+export type ResolveSchema = ReturnType<typeof generateResolveValidator>;
 
 export { generateResolveValidator, validateResolveKeys };

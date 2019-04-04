@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+-   Migrate to Typescript
 -   Internal: Use [`@backtrack/preset-node`](https://github.com/chrisblossom/backtrack-preset-node)
 -   Update [`resolve-with-prefix`](https://github.com/chrisblossom/resolve-with-prefix)
 -   Use full lodash package

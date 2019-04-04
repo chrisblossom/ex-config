@@ -1,84 +1,89 @@
-/* @flow */
-
 /* eslint-disable no-useless-concat,no-nested-ternary */
 
 import path from 'path';
 import { cloneDeep } from 'lodash';
-import { createResolverSync, resolveWithPrefixSync } from 'resolve-with-prefix';
-import type { ResolveWithPrefixOptions as PrefixOptions } from 'resolve-with-prefix';
-import { generateResolveValidator, validateResolveKeys } from './validate';
+import {
+    createResolverSync,
+    resolveWithPrefixSync,
+    PrefixOptions,
+} from 'resolve-with-prefix';
+import {
+    generateResolveValidator,
+    validateResolveKeys,
+    ResolveSchema,
+} from './validate';
 import { extendError } from './extend-error';
-import { getProcessor } from './processors';
+import { getProcessor, Parsers } from './processors';
 
-// eslint-disable-next-line flowtype/require-exact-type
-export type Config = {};
-export type ResolveSchema = Object | null;
+export type Config = { [key: string]: any };
 
-export type Args = $Shape<{
+export type Context = {
     // actionable item
-    value: any,
+    value: any;
     // current value of actionable item
-    current?: any,
+    current?: any;
     // current full config
-    config?: any,
+    config?: Config;
     // current config directory
-    dirname: string,
-}>;
+    dirname: string;
+};
 
-export type RequireArgs = {|
-    options: any,
-    dirname: string,
-|};
+export type RequireContext = {
+    options: any;
+    dirname: string;
+};
 
-type Validator = (args: Args) => void;
-type PostProcessor = (args: Args) => any;
-type Preprocessor = (args: Args) => any;
-export type Processor = (args: Args) => any;
+export type Validator = (context: Context) => void;
+export type PostProcessor = (context: Context) => Config;
+export type Preprocessor = (context: Context) => Config;
+export type Processor = (context: Context) => any;
 
-export type Overrides = $Shape<{
-    resolve?: PrefixOptions,
-    processor?: Processor | string,
-    validator?: Validator,
-    preprocessor?: Preprocessor,
-}>;
+export type Overrides = {
+    resolve?: PrefixOptions;
+    processor?: Processor | Parsers;
+    validator?: Validator;
+    preprocessor?: Preprocessor;
+};
 
-type Resolve = typeof resolveWithPrefixSync;
+type ResolveFn = typeof resolveWithPrefixSync;
 
-type Options = $Shape<{
-    presets?: string | false,
-    plugins?: string | false,
-    preprocessor?: Preprocessor,
-    processor?: Processor | string,
-    validator?: Validator,
-    postProcessor?: PostProcessor,
-    overrides?: { [key: string]: Overrides },
-}>;
+type Options = {
+    presets?: string | false;
+    plugins?: string | false;
+    preprocessor?: Preprocessor;
+    processor?: Processor | Parsers;
+    validator?: Validator;
+    postProcessor?: PostProcessor;
+    overrides?: { [key: string]: Overrides };
+};
 
 class ExConfig {
-    presets: string | false;
-    plugins: string | false;
-    config: Config;
-    resolve: { [key: string]: Resolve };
-    processor: Processor;
-    validator: ?Validator;
-    preprocessor: ?Preprocessor;
-    postProcessor: ?PostProcessor;
-    overrides: { [key: string]: Overrides };
-    resolveSchema: ResolveSchema;
-    loaded: boolean;
+    private readonly presets: string | false;
+    private readonly plugins: string | false;
+    private readonly resolve: { [key: string]: ResolveFn };
+    private readonly processor: Processor;
+    private readonly validator?: Validator;
+    private readonly preprocessor?: Preprocessor;
+    private readonly postProcessor?: PostProcessor;
+    private readonly overrides: { [key: string]: Overrides };
+    private readonly resolveSchema: ResolveSchema;
+    private config: Config;
+    private loaded: boolean;
 
-    constructor(options?: Options = {}) {
+    constructor(options: Options = {}) {
+        // prettier-ignore
         this.presets = options.presets
             ? options.presets
             : options.presets === undefined
-            ? 'presets'
-            : false;
+                ? 'presets'
+                : false;
 
+        // prettier-ignore
         this.plugins = options.plugins
             ? options.plugins
             : options.plugins === undefined
-            ? 'plugins'
-            : false;
+                ? 'plugins'
+                : false;
 
         this.overrides = options.overrides || {};
         this.processor = getProcessor(options.processor);
@@ -90,12 +95,15 @@ class ExConfig {
             this.presets,
             this.plugins,
         );
+
+        this.config = {};
         this.loaded = false;
     }
 
-    getResolveFn(key: string, prefixOptions: PrefixOptions) {
+    private getResolveFn(key: string, prefixOptions?: PrefixOptions) {
         let resolve = this.resolve[key];
-        if (!resolve) {
+
+        if (resolve === undefined) {
             this.resolve[key] = createResolverSync(prefixOptions);
 
             resolve = this.resolve[key];
@@ -104,9 +112,9 @@ class ExConfig {
         return resolve;
     }
 
-    static require(
-        pkg: string | $ReadOnlyArray<*>,
-        resolve: Resolve,
+    private static require(
+        pkg: string | ReadonlyArray<string>,
+        resolve: ResolveFn,
         dirname: string,
     ) {
         const [packageId, options = {}] = Array.isArray(pkg) ? pkg : [pkg];
@@ -131,12 +139,12 @@ class ExConfig {
             }
 
             if (typeof module === 'function') {
-                const args: RequireArgs = {
+                const context: RequireContext = {
                     options,
                     dirname,
                 };
 
-                module = module(args);
+                module = module(context);
             }
 
             return {
@@ -150,17 +158,15 @@ class ExConfig {
         }
     }
 
-    /**
-     * Load is only called once. Setup configuration here
-     */
-    load(config: {}, dirname?: string = process.cwd()): any {
+    // Load is only called once. Setup configuration here
+    load(config: Config, dirname: string = process.cwd()): Config {
         if (this.loaded === true) {
             return this.config;
         }
 
         let cfg = config;
         if (typeof config === 'function') {
-            const args: RequireArgs = {
+            const args: RequireContext = {
                 options: {},
                 dirname,
             };
@@ -188,10 +194,6 @@ class ExConfig {
             this.validator({ value: cfg, dirname });
         }
 
-        if (this.config === undefined) {
-            this.config = {};
-        }
-
         this.sort(cfg, dirname);
 
         if (this.postProcessor) {
@@ -211,17 +213,15 @@ class ExConfig {
         return this.config;
     }
 
-    /**
-     * Handle extendable configs
-     */
-    sort(config: {}, dirname: string, packagePath?: string) {
+    private sort(config: Config, dirname: string, packagePath?: string) {
         validateResolveKeys(config, this.resolveSchema, packagePath);
 
         /**
          * Handle presets first so object-key order does not matter
          */
         if (this.presets && config[this.presets]) {
-            const presets = config[this.presets];
+            const presets: string | ReadonlyArray<string> =
+                config[this.presets];
 
             // eslint-disable-next-line no-param-reassign
             delete config[this.presets];
@@ -298,17 +298,15 @@ class ExConfig {
         }
     }
 
-    /**
-     * Handle extendable configs
-     */
-    extend(
-        packageIds: string | $ReadOnlyArray<string>,
-        resolve: Resolve,
+    private extend(
+        packageIds: string | ReadonlyArray<string>,
+        resolve: ResolveFn,
         dirname: string,
     ) {
-        const toArray = Array.isArray(packageIds) ? packageIds : [packageIds];
-
-        toArray.forEach((packageId) => {
+        const normalizedPackageIds = Array.isArray(packageIds)
+            ? packageIds
+            : [packageIds];
+        for (const packageId of normalizedPackageIds) {
             const {
                 module,
                 dirname: updatedDirname,
@@ -344,13 +342,11 @@ class ExConfig {
             }
 
             this.sort(config, updatedDirname, pathname);
-        });
+        }
     }
 
-    /**
-     * Parse new value into old value
-     */
-    parse(key: string, value: *, dirname: string) {
+    // Parse new value into old value
+    private parse(key: string, value: unknown, dirname: string) {
         const processor =
             this.overrides[key] && this.overrides[key].processor
                 ? getProcessor(this.overrides[key].processor)

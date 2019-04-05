@@ -19,7 +19,7 @@ ex-config is an extendable configuration processor. It is used to merge multiple
 'use strict';
 
 const cosmiconfig = require('cosmiconfig');
-const ExConfig = require('ex-config');
+const ExConfig = require('ex-config').default;
 
 /**
  * Original configs are not mutated
@@ -193,11 +193,8 @@ const exConfig = new ExConfig({
 /**
  * Example using cosmiconfig to load the base config from disk
  */
-const explorer = cosmiconfig('example', {
-    rcExtensions: true,
-    sync: true,
-});
-const config = explorer.load();
+const explorer = cosmiconfig('example');
+const config = explorer.loadSync();
 
 const result = exConfig.load(config);
 
@@ -232,7 +229,7 @@ const exampleConfig = {
     presets: [
         [
             // packageId
-            'presetExample',
+            'preset-example',
             // options for preset/plugin
             { verbose: true },
         ],

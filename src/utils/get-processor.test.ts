@@ -1,4 +1,4 @@
-import { mergeDeep } from './processors';
+import { mergeDeep } from './get-processor';
 
 describe('mergeDeep', () => {
     test('deep merges objects', () => {
@@ -38,6 +38,7 @@ describe('mergeDeep', () => {
         };
 
         const result = mergeDeep({
+            config: {},
             current: obj1,
             value: [obj2, obj3],
             dirname: __dirname,

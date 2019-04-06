@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import { extendError } from './extend-error';
-import { Config } from './ex-config';
+import { Config } from '../ex-config';
 
 function generateResolveValidator(
     presets?: string | false,
@@ -52,7 +52,7 @@ function validateResolveKeys(
 
         const error = new Error(message);
 
-        extendError(error, packagePath);
+        extendError({ error, pathname: packagePath });
 
         throw error;
     }

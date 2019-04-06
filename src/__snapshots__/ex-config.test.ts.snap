@@ -229,12 +229,7 @@ Object {
 }
 `;
 
-exports[`allows post processing error 1`] = `
-[Error: postProcessor error 3,2,1,0
-found in path: <PROJECT_ROOT>]
-`;
-
-exports[`allows preprocessing 1`] = `
+exports[`allows preprocessor 1`] = `
 Object {
   "example": Array [
     "3",
@@ -260,7 +255,7 @@ Object {
 }
 `;
 
-exports[`allows preprocessing override 1`] = `
+exports[`allows preprocessor override 1`] = `
 Object {
   "example": Array [
     "3",
@@ -326,12 +321,6 @@ Object {
 }
 `;
 
-exports[`catches error custom processor override 1`] = `
-[Error: bad value: 3
-invalid key: example
-found in path: <PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03/index.js]
-`;
-
 exports[`does not mutate original config 1`] = `
 Object {
   "inside": Array [
@@ -367,64 +356,6 @@ Object {
     ],
   ],
 }
-`;
-
-exports[`es modules must use a default export 1`] = `
-[Error: <PROJECT_ROOT>/node_modules/invalid-preset-03/index.js must use export default with es modules
-found in path: <PROJECT_ROOT>]
-`;
-
-exports[`extends must be a string - nested 1`] = `
-[Error: {
-  "presets": [
-    {
-      "example": [
-        1
-      ],
-      "other": 1,
-      "presets": [
-        "preset-02"
-      ],
-      "object": {
-        "array": [
-          1
-        ],
-        "one": true,
-        "preset": 1
-      }
-    }
-  ]
-}
-[31m
-[1] "presets" at position 0 does not match any of the allowed types[0m
-extends key must be a module expressed as a string
-found in path: <PROJECT_ROOT>/node_modules/invalid-preset-01/index.js]
-`;
-
-exports[`extends must be a string 1`] = `
-[Error: {
-  "presets": [
-    {
-      "example": [
-        1
-      ],
-      "other": 1,
-      "presets": [
-        "preset-02"
-      ],
-      "object": {
-        "array": [
-          1
-        ],
-        "one": true,
-        "preset": 1
-      }
-    }
-  ]
-}
-[31m
-[1] "presets" at position 0 does not match any of the allowed types[0m
-extends key must be a module expressed as a string]
 `;
 
 exports[`handle base config as function 1`] = `
@@ -463,6 +394,32 @@ Object {
     Object {
       "imported": Array [
         "imported plugin-04",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`ignores mutated value 1`] = `
+Object {
+  "example": Array [
+    0,
+  ],
+  "inside": Array [
+    1,
+  ],
+  "object": Object {
+    "array": Array [
+      1,
+    ],
+    "one": true,
+    "preset": 1,
+  },
+  "other": 1,
+  "plugins": Array [
+    Object {
+      "imported": Array [
+        "imported plugin-01",
       ],
     },
   ],
@@ -586,16 +543,6 @@ Object {
 }
 `;
 
-exports[`preprocessing error 1`] = `
-[Error: preprocessor 0
-found in path: <PROJECT_ROOT>]
-`;
-
-exports[`preprocessing override error 1`] = `
-[Error: preprocessor 3
-invalid key: example]
-`;
-
 exports[`preset object order matter does not matter 1`] = `
 Object {
   "example": Array [
@@ -627,92 +574,4 @@ Object {
     },
   ],
 }
-`;
-
-exports[`resolve must be a string - nested - works as array 1`] = `
-[Error: {
-  "plugins": [
-    {
-      "imported": [
-        "imported plugin-01"
-      ]
-    }
-  ]
-}
-[31m
-[1] "plugins" at position 0 does not match any of the allowed types[0m
-extends key must be a module expressed as a string
-found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js]
-`;
-
-exports[`resolve must be a string - nested 1`] = `
-[Error: {
-  "plugins": [
-    {
-      "imported": [
-        "imported plugin-01"
-      ]
-    }
-  ]
-}
-[31m
-[1] "plugins" at position 0 does not match any of the allowed types[0m
-extends key must be a module expressed as a string
-found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js]
-`;
-
-exports[`resolve must be a string 1`] = `
-[Error: {
-  "plugins": [
-    {
-      "imported": [
-        "imported plugin-01"
-      ]
-    }
-  ]
-}
-[31m
-[1] "plugins" at position 0 does not match any of the allowed types[0m
-extends key must be a module expressed as a string]
-`;
-
-exports[`validates config 1`] = `
-[Error: {
-  "string" [31m[1][0m: 1
-}
-[31m
-[1] "string" must be a string[0m]
-`;
-
-exports[`validates nested config 1`] = `
-[Error: {
-  "example": [
-    1
-  ],
-  "presets": [
-    "preset-02"
-  ],
-  "object": {
-    "array": [
-      1
-    ],
-    "one": true,
-    "preset": 1
-  },
-  "other" [31m[1][0m: 1
-}
-[31m
-[1] "other" must be a string[0m
-invalid nested config: <PROJECT_ROOT>/node_modules/preset-01/index.js]
-`;
-
-exports[`validates nested override config 1`] = `
-[Error: "value" must be a string
-invalid key: other
-found in path: <PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03/index.js]
-`;
-
-exports[`validates override config 1`] = `
-[Error: "value" must be a string
-invalid key: string]
 `;

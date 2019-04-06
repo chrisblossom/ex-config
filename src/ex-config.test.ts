@@ -1,24 +1,35 @@
 import path from 'path';
 import { cloneDeep } from 'lodash';
 import Joi from 'joi';
-import ExConfig, {
+import {
+    exConfig,
     Config,
     PostProcessor,
     Preprocessor,
     Processor,
     Validator,
+    Options,
 } from './ex-config';
 
 const cwd = process.cwd();
+const app1Dir = path.resolve(__dirname, '__sandbox__/app1/');
+
+beforeEach(() => {
+    process.chdir(app1Dir);
+});
 
 afterEach(() => {
     process.chdir(cwd);
 });
 
-test('does not mutate original config', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
+test('throws with undefined config', () => {
+    // @ts-ignore
+    expect(() => exConfig()).toThrowErrorMatchingInlineSnapshot(
+        `"config is required"`,
+    );
+});
 
+test('does not mutate original config', () => {
     const config = {
         presets: ['preset-04'],
         inside: [1, 2],
@@ -41,46 +52,90 @@ test('does not mutate original config', () => {
         return value;
     };
 
-    const exConfig = new ExConfig({ processor, postProcessor });
+    const options = { processor, postProcessor };
 
-    const result1 = exConfig.load(config);
+    const result1 = exConfig(config, options);
+
     expect(config).toEqual(configClone);
     expect(result1).toMatchSnapshot();
 
     const clone1 = cloneDeep(result1);
 
-    // reset config
-    // @ts-ignore
-    exConfig.config = {};
-    // @ts-ignore
-    exConfig.loaded = false;
-
-    const result2 = exConfig.load(config);
+    const result2 = exConfig(config, options);
     expect(config).toEqual(configClone);
     expect(result2).toEqual(clone1);
 });
 
 test('merges deep nested presets', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
     const config = {
         presets: ['preset-01'],
         inside: [1],
         plugins: ['plugin-01'],
     };
 
-    const exConfig = new ExConfig();
+    const result = exConfig(config);
 
-    const result = exConfig.load(config);
+    expect(result).toMatchSnapshot();
+});
+
+test('ignores mutated value', () => {
+    const config = {
+        presets: ['preset-01'],
+        inside: [1],
+        plugins: ['plugin-01'],
+        example: [0],
+    };
+
+    /* eslint-disable no-param-reassign */
+    const preprocessor: Preprocessor = ({ value }) => {
+        const clone = cloneDeep(value);
+        value = {};
+        return clone;
+    };
+
+    const processor: Processor = ({ value }) => {
+        const clone = cloneDeep(value);
+        value = {};
+        return clone;
+    };
+
+    const postProcessor: PostProcessor = ({ value }) => {
+        const clone = cloneDeep(value);
+        value = {};
+        return clone;
+    };
+
+    const overridePreprocessor: Preprocessor = ({ value }) => {
+        const clone = cloneDeep(value);
+        value = {};
+        return clone;
+    };
+
+    const overrideProcessor: Processor = ({ value }) => {
+        const clone = cloneDeep(value);
+        value = {};
+        return clone;
+    };
+    /* eslint-enable */
+
+    const options = {
+        preprocessor,
+        processor,
+        postProcessor,
+        overrides: {
+            example: {
+                preprocessor: overridePreprocessor,
+                processor: overrideProcessor,
+            },
+        },
+    };
+
+    const result = exConfig(config, options);
 
     expect(result).toMatchSnapshot();
 });
 
 test('adds dirname to all lifecycles', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
     const result: any = {
         validator: [],
         preprocessor: [],
@@ -132,7 +187,7 @@ test('adds dirname to all lifecycles', () => {
         example: [0],
     };
 
-    const exConfig = new ExConfig({
+    const options = {
         validator,
         preprocessor,
         processor,
@@ -144,33 +199,38 @@ test('adds dirname to all lifecycles', () => {
                 processor: overrideProcessor,
             },
         },
-    });
+    };
 
-    exConfig.load(config);
+    exConfig(config, options);
 
     expect(result).toMatchSnapshot();
 });
 
 test('preset object order matter does not matter', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
     const config = {
         inside: [1],
         plugins: ['plugin-01'],
         presets: ['preset-01'],
     };
 
-    const exConfig = new ExConfig();
-
-    const result = exConfig.load(config);
+    const result = exConfig(config);
 
     expect(result).toMatchSnapshot();
 });
 
 test('plugins processor can be overridden', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
+    const processor: Processor = ({ value }) => {
+        return value;
+    };
+
+    const options: Options = {
+        processor,
+        overrides: {
+            plugins: {
+                processor: 'arrayConcat',
+            },
+        },
+    };
 
     const config = {
         presets: ['preset-01', 'preset-04'],
@@ -179,26 +239,15 @@ test('plugins processor can be overridden', () => {
         example: false,
     };
 
-    const processor: Processor = ({ value }) => {
-        return value;
-    };
-
-    const exConfig = new ExConfig({
-        processor,
-        overrides: {
-            plugins: {
-                processor: 'arrayConcat',
-            },
-        },
-    });
-
-    const result = exConfig.load(config);
+    const result = exConfig(config, options);
     expect(result).toMatchSnapshot();
 });
 
 test('allows disabling presets and plugins', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
+    const options: Options = {
+        presets: false,
+        plugins: false,
+    };
 
     const config = {
         presets: ['one'],
@@ -206,19 +255,16 @@ test('allows disabling presets and plugins', () => {
         plugins: ['plugin-one'],
     };
 
-    const exConfig = new ExConfig({
-        presets: false,
-        plugins: false,
-    });
-
-    const result = exConfig.load(config);
+    const result = exConfig(config, options);
 
     expect(result).toMatchSnapshot();
 });
 
 test('allows custom preset and plugin name', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
+    const options = {
+        presets: 'customPreset',
+        plugins: 'customPlugin',
+    };
 
     const config = {
         customPreset: ['preset-01'],
@@ -226,12 +272,7 @@ test('allows custom preset and plugin name', () => {
         customPlugin: ['plugin-01'],
     };
 
-    const exConfig = new ExConfig({
-        presets: 'customPreset',
-        plugins: 'customPlugin',
-    });
-
-    const result = exConfig.load(config);
+    const result = exConfig(config, options);
 
     expect(result).toMatchSnapshot();
 });
@@ -240,13 +281,7 @@ test('merges deep with custom prefix resolution', () => {
     const dir = path.resolve(__dirname, '__sandbox__/app2/');
     process.chdir(dir);
 
-    const config = {
-        presets: ['01'],
-        inside: [1],
-        plugins: ['01'],
-    };
-
-    const exConfig = new ExConfig({
+    const options = {
         overrides: {
             presets: {
                 resolve: {
@@ -263,34 +298,42 @@ test('merges deep with custom prefix resolution', () => {
                 },
             },
         },
-    });
+    };
 
-    const result = exConfig.load(config);
+    const config = {
+        presets: ['01'],
+        inside: [1],
+        plugins: ['01'],
+    };
+
+    const result = exConfig(config, options);
 
     expect(result).toMatchSnapshot();
 });
 
 test('allows builtin processor', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
+    const options: Options = {
+        processor: 'arrayConcat',
+    };
 
     const config = {
         presets: ['preset-01'],
         inside: [1],
     };
 
-    const exConfig = new ExConfig({
-        processor: 'arrayConcat',
-    });
-
-    const result = exConfig.load(config);
+    const result = exConfig(config, options);
 
     expect(result).toMatchSnapshot();
 });
 
 test('allows custom processor', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
+    const processor: Processor = ({ value }) => {
+        return value;
+    };
+
+    const options = {
+        processor,
+    };
 
     const config = {
         presets: ['preset-01'],
@@ -298,44 +341,42 @@ test('allows custom processor', () => {
         example: [0],
     };
 
-    const processor: Processor = ({ value }) => {
-        return value;
-    };
-
-    const exConfig = new ExConfig({
-        processor,
-    });
-
-    const result = exConfig.load(config);
+    const result = exConfig(config, options);
 
     expect(result).toMatchSnapshot();
 });
 
 test('allows builtin processor override', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
+    const options: Options = {
+        overrides: {
+            example: {
+                processor: 'arrayConcat',
+            },
+        },
+    };
 
     const config = {
         presets: ['preset-01'],
         inside: [1],
     };
 
-    const exConfig = new ExConfig({
-        overrides: {
-            example: {
-                processor: 'arrayConcat',
-            },
-        },
-    });
-
-    const result = exConfig.load(config);
+    const result = exConfig(config, options);
 
     expect(result).toMatchSnapshot();
 });
 
 test('allows custom processor override', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
+    const processor: Processor = ({ value }) => {
+        return value;
+    };
+
+    const options = {
+        overrides: {
+            example: {
+                processor,
+            },
+        },
+    };
 
     const config = {
         presets: ['preset-01'],
@@ -343,55 +384,44 @@ test('allows custom processor override', () => {
         example: [0],
     };
 
-    const processor: Processor = ({ value }) => {
-        return value;
-    };
-
-    const exConfig = new ExConfig({
-        overrides: {
-            example: {
-                processor,
-            },
-        },
-    });
-
-    const result = exConfig.load(config);
+    const result = exConfig(config, options);
 
     expect(result).toMatchSnapshot();
 });
 
 test('catches error custom processor override', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
+    const processor: Processor = ({ value }) => {
+        throw new Error(`bad value: ${value}`);
+    };
+
+    const options = {
+        overrides: {
+            example: {
+                processor,
+            },
+        },
+    };
 
     const config = {
         presets: ['preset-01'],
         inside: [0],
     };
 
-    const processor: Processor = ({ value }) => {
-        throw new Error(`bad value: ${value}`);
-    };
-
-    const exConfig = new ExConfig({
-        overrides: {
-            example: {
-                processor,
-            },
-        },
-    });
-
-    try {
-        expect.hasAssertions();
-        exConfig.load(config);
-    } catch (error) {
-        expect(error).toMatchSnapshot();
-    }
+    expect(() => exConfig(config, options)).toThrowErrorMatchingInlineSnapshot(`
+"bad value: 3
+invalid key: example
+found in path: <PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03/index.js"
+`);
 });
 
 test('mergeObject processor', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
+    const options: Options = {
+        overrides: {
+            object: {
+                processor: 'mergeDeep',
+            },
+        },
+    };
 
     const config = {
         presets: ['preset-01'],
@@ -402,27 +432,12 @@ test('mergeObject processor', () => {
         },
     };
 
-    const exConfig = new ExConfig({
-        overrides: {
-            object: {
-                processor: 'mergeDeep',
-            },
-        },
-    });
-
-    const result = exConfig.load(config);
+    const result = exConfig(config, options);
 
     expect(result).toMatchSnapshot();
 });
 
 test('validates config', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
-    const config = {
-        string: 1,
-    };
-
     const validator: Validator = ({ value }) => {
         const schema = Joi.object({
             string: Joi.string(),
@@ -435,26 +450,24 @@ test('validates config', () => {
         }
     };
 
-    const exConfig = new ExConfig({
+    const options = {
         validator,
-    });
+    };
 
-    try {
-        expect.hasAssertions();
-        exConfig.load(config);
-    } catch (error) {
-        expect(error).toMatchSnapshot();
-    }
+    const config = {
+        string: 1,
+    };
+
+    expect(() => exConfig(config, options)).toThrowErrorMatchingInlineSnapshot(`
+"{
+  \\"string\\" [31m[1][0m: 1
+}
+[31m
+[1] \\"string\\" must be a string[0m"
+`);
 });
 
 test('validates nested config', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
-    const config = {
-        presets: ['preset-01'],
-    };
-
     const validator: Validator = ({ value }) => {
         const schema = Joi.object({
             other: Joi.string(),
@@ -467,27 +480,39 @@ test('validates nested config', () => {
         }
     };
 
-    const exConfig = new ExConfig({
+    const options = {
         presets: 'presets',
         validator,
-    });
+    };
 
-    try {
-        expect.hasAssertions();
-        exConfig.load(config);
-    } catch (error) {
-        expect(error).toMatchSnapshot();
-    }
+    const config = {
+        presets: ['preset-01'],
+    };
+
+    expect(() => exConfig(config, options)).toThrowErrorMatchingInlineSnapshot(`
+"{
+  \\"example\\": [
+    1
+  ],
+  \\"presets\\": [
+    \\"preset-02\\"
+  ],
+  \\"object\\": {
+    \\"array\\": [
+      1
+    ],
+    \\"one\\": true,
+    \\"preset\\": 1
+  },
+  \\"other\\" [31m[1][0m: 1
+}
+[31m
+[1] \\"other\\" must be a string[0m
+invalid nested config: <PROJECT_ROOT>/node_modules/preset-01/index.js"
+`);
 });
 
 test('validates override config', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
-    const config = {
-        string: 1,
-    };
-
     const validator: Validator = ({ value }) => {
         const schema = Joi.string();
 
@@ -498,31 +523,25 @@ test('validates override config', () => {
         }
     };
 
-    const exConfig = new ExConfig({
+    const options = {
         overrides: {
             string: {
                 validator,
             },
         },
-    });
-
-    try {
-        expect.hasAssertions();
-        exConfig.load(config);
-    } catch (error) {
-        expect(error).toMatchSnapshot();
-    }
-});
-
-test('validates nested override config', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
+    };
 
     const config = {
-        presets: ['preset-01'],
         string: 1,
     };
 
+    expect(() => exConfig(config, options)).toThrowErrorMatchingInlineSnapshot(`
+"\\"value\\" must be a string
+invalid key: string"
+`);
+});
+
+test('validates nested override config', () => {
     const validator: Validator = ({ value }) => {
         const schema = Joi.string();
 
@@ -533,31 +552,27 @@ test('validates nested override config', () => {
         }
     };
 
-    const exConfig = new ExConfig({
+    const options = {
         overrides: {
             other: {
                 validator,
             },
         },
-    });
-
-    try {
-        expect.hasAssertions();
-        exConfig.load(config);
-    } catch (error) {
-        expect(error).toMatchSnapshot();
-    }
-});
-
-test('allows post processing', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
+    };
 
     const config = {
         presets: ['preset-01'],
-        example: [0],
+        string: 1,
     };
 
+    expect(() => exConfig(config, options)).toThrowErrorMatchingInlineSnapshot(`
+"\\"value\\" must be a string
+invalid key: other
+found in path: <PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03/index.js"
+`);
+});
+
+test('allows post processing', () => {
     const postProcessor: PostProcessor = ({ value }) => {
         const example = value.example.map((number: number) => number * 2);
         return {
@@ -566,50 +581,42 @@ test('allows post processing', () => {
         };
     };
 
-    const exConfig = new ExConfig({
+    const options = {
         postProcessor,
-    });
+    };
+
+    const config = {
+        presets: ['preset-01'],
+        example: [0],
+    };
 
     // Call twice to ensure loaded works
-    exConfig.load(config);
-    const result = exConfig.load(config);
+    exConfig(config);
+    const result = exConfig(config, options);
     expect(result).toMatchSnapshot();
 });
 
 test('allows post processing error', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
-    const config = {
-        presets: ['preset-01'],
-        example: [0],
-    };
-
     const postProcessor: PostProcessor = ({ value }) => {
         throw new Error(`postProcessor error ${value.example}`);
     };
 
-    const exConfig = new ExConfig({
+    const options = {
         postProcessor,
-    });
-
-    try {
-        expect.hasAssertions();
-        exConfig.load(config);
-    } catch (error) {
-        expect(error).toMatchSnapshot();
-    }
-});
-
-test('allows preprocessing', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
+    };
 
     const config = {
         presets: ['preset-01'],
         example: [0],
     };
 
+    expect(() => exConfig(config, options)).toThrowErrorMatchingInlineSnapshot(`
+"postProcessor error 3,2,1,0
+found in path: <PROJECT_ROOT>"
+`);
+});
+
+test('allows preprocessor', () => {
     const validator: Validator = ({ value }) => {
         const schema = Joi.object({
             example: Joi.array().items(Joi.string()),
@@ -633,24 +640,21 @@ test('allows preprocessing', () => {
         };
     };
 
-    const exConfig = new ExConfig({
+    const options = {
         validator,
         preprocessor,
-    });
-
-    const result = exConfig.load(config);
-    expect(result).toMatchSnapshot();
-});
-
-test('preprocessing error', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
+    };
 
     const config = {
-        presets: ['01'],
+        presets: ['preset-01'],
         example: [0],
     };
 
+    const result = exConfig(config, options);
+    expect(result).toMatchSnapshot();
+});
+
+test('preprocessor error', () => {
     const validator: Validator = ({ value }) => {
         const schema = Joi.object({
             example: Joi.array().items(Joi.string()),
@@ -667,28 +671,23 @@ test('preprocessing error', () => {
         throw new Error(`preprocessor ${value.example}`);
     };
 
-    const exConfig = new ExConfig({
+    const options = {
         validator,
         preprocessor,
-    });
-
-    try {
-        expect.hasAssertions();
-        exConfig.load(config);
-    } catch (error) {
-        expect(error).toMatchSnapshot();
-    }
-});
-
-test('allows preprocessing override', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
+    };
 
     const config = {
-        presets: ['preset-01'],
+        presets: ['01'],
         example: [0],
     };
 
+    expect(() => exConfig(config, options)).toThrowErrorMatchingInlineSnapshot(`
+"preprocessor 0
+found in path: <PROJECT_ROOT>"
+`);
+});
+
+test('allows preprocessor override', () => {
     const validator: Validator = ({ value }) => {
         const schema = Joi.array().items(Joi.string());
 
@@ -705,28 +704,25 @@ test('allows preprocessing override', () => {
         return example;
     };
 
-    const exConfig = new ExConfig({
+    const options = {
         overrides: {
             example: {
                 preprocessor,
                 validator,
             },
         },
-    });
-
-    const result = exConfig.load(config);
-    expect(result).toMatchSnapshot();
-});
-
-test('preprocessing override error', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
+    };
 
     const config = {
         presets: ['preset-01'],
         example: [0],
     };
 
+    const result = exConfig(config, options);
+    expect(result).toMatchSnapshot();
+});
+
+test('preprocessor override error', () => {
     const validator: Validator = ({ value }) => {
         const schema = Joi.array().items(Joi.string());
 
@@ -741,81 +737,116 @@ test('preprocessing override error', () => {
         throw new Error(`preprocessor ${value}`);
     };
 
-    const exConfig = new ExConfig({
+    const options = {
         overrides: {
             example: {
                 preprocessor,
                 validator,
             },
         },
-    });
+    };
 
-    try {
-        expect.hasAssertions();
-        exConfig.load(config);
-    } catch (error) {
-        expect(error).toMatchSnapshot();
-    }
+    const config = {
+        presets: ['preset-01'],
+        example: [0],
+    };
+
+    expect(() => exConfig(config, options)).toThrowErrorMatchingInlineSnapshot(`
+"preprocessor 3
+invalid key: example"
+`);
 });
 
 test('extends must be a string', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
-    const presetPath = path.resolve(dir, 'node_modules/preset-01');
+    const presetPath = path.resolve(app1Dir, 'node_modules/preset-01');
     const one = require(presetPath);
 
     const config = {
         presets: [one],
     };
 
-    const exConfig = new ExConfig();
-
-    try {
-        expect.hasAssertions();
-        exConfig.load(config);
-    } catch (error) {
-        expect(error).toMatchSnapshot();
+    expect(() => exConfig(config)).toThrowErrorMatchingInlineSnapshot(`
+"{
+  \\"presets\\": [
+    {
+      \\"example\\": [
+        1
+      ],
+      \\"other\\": 1,
+      \\"presets\\": [
+        \\"preset-02\\"
+      ],
+      \\"object\\": {
+        \\"array\\": [
+          1
+        ],
+        \\"one\\": true,
+        \\"preset\\": 1
+      }
     }
+  ]
+}
+[31m
+[1] \\"presets\\" at position 0 does not match any of the allowed types[0m
+extends key must be a module expressed as a string"
+`);
 });
 
 test('extends must be a string - nested', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
     const config = {
         presets: ['invalid-preset-01'],
     };
 
-    const exConfig = new ExConfig();
-
-    try {
-        expect.hasAssertions();
-        exConfig.load(config);
-    } catch (error) {
-        expect(error).toMatchSnapshot();
+    expect(() => exConfig(config)).toThrowErrorMatchingInlineSnapshot(`
+"{
+  \\"presets\\": [
+    {
+      \\"example\\": [
+        1
+      ],
+      \\"other\\": 1,
+      \\"presets\\": [
+        \\"preset-02\\"
+      ],
+      \\"object\\": {
+        \\"array\\": [
+          1
+        ],
+        \\"one\\": true,
+        \\"preset\\": 1
+      }
     }
+  ]
+}
+[31m
+[1] \\"presets\\" at position 0 does not match any of the allowed types[0m
+extends key must be a module expressed as a string
+found in path: <PROJECT_ROOT>/node_modules/invalid-preset-01/index.js"
+`);
 });
 
 test('resolve must be a string', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
-    const pluginPath = path.resolve(dir, 'node_modules/plugin-01');
+    const pluginPath = path.resolve(app1Dir, 'node_modules/plugin-01');
     const pluginOne = require(pluginPath);
 
     const config = {
         plugins: [pluginOne],
     };
 
-    const exConfig = new ExConfig();
-
-    try {
-        expect.hasAssertions();
-        exConfig.load(config);
-    } catch (error) {
-        expect(error).toMatchSnapshot();
+    expect(() => exConfig(config)).toThrowErrorMatchingInlineSnapshot(`
+"{
+  \\"plugins\\": [
+    {
+      \\"imported\\": [
+        \\"imported plugin-01\\"
+      ]
     }
+  ]
+}
+[31m
+[1] \\"plugins\\" at position 0 does not match any of the allowed types[0m
+extends key must be a module expressed as a string"
+`);
 });
 
 test('resolve must be a string - nested', () => {
@@ -826,14 +857,21 @@ test('resolve must be a string - nested', () => {
         presets: ['invalid-preset-02'],
     };
 
-    const exConfig = new ExConfig();
-
-    try {
-        expect.hasAssertions();
-        exConfig.load(config);
-    } catch (error) {
-        expect(error).toMatchSnapshot();
+    expect(() => exConfig(config)).toThrowErrorMatchingInlineSnapshot(`
+"{
+  \\"plugins\\": [
+    {
+      \\"imported\\": [
+        \\"imported plugin-01\\"
+      ]
     }
+  ]
+}
+[31m
+[1] \\"plugins\\" at position 0 does not match any of the allowed types[0m
+extends key must be a module expressed as a string
+found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
+`);
 });
 
 test('resolve must be a string - nested - works as array', () => {
@@ -844,46 +882,41 @@ test('resolve must be a string - nested - works as array', () => {
         presets: [['invalid-preset-02', {}]],
     };
 
-    const exConfig = new ExConfig();
-
-    try {
-        expect.hasAssertions();
-        exConfig.load(config);
-    } catch (error) {
-        expect(error).toMatchSnapshot();
+    expect(() => exConfig(config)).toThrowErrorMatchingInlineSnapshot(`
+"{
+  \\"plugins\\": [
+    {
+      \\"imported\\": [
+        \\"imported plugin-01\\"
+      ]
     }
+  ]
+}
+[31m
+[1] \\"plugins\\" at position 0 does not match any of the allowed types[0m
+extends key must be a module expressed as a string
+found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
+`);
 });
 
 test('es modules must use a default export', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
     const config = {
         presets: ['invalid-preset-03'],
     };
 
-    const exConfig = new ExConfig();
-
-    try {
-        expect.hasAssertions();
-        exConfig.load(config);
-    } catch (error) {
-        expect(error).toMatchSnapshot();
-    }
+    expect(() => exConfig(config)).toThrowErrorMatchingInlineSnapshot(`
+"<PROJECT_ROOT>/node_modules/invalid-preset-03/index.js must use export default with es modules
+found in path: <PROJECT_ROOT>"
+`);
 });
 
 test('calls presets and plugins as a function with default options = {}', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
     const config = {
         presets: ['preset-05'],
         plugins: ['plugin-03'],
     };
 
-    const exConfig = new ExConfig();
-
-    const result = exConfig.load(config);
+    const result = exConfig(config);
 
     expect(result).toMatchSnapshot();
 });
@@ -897,17 +930,12 @@ test('calls presets and plugins as a function with specified options', () => {
         plugins: [['plugin-03', { special: 'options 03' }]],
     };
 
-    const exConfig = new ExConfig();
-
-    const result = exConfig.load(config);
+    const result = exConfig(config);
 
     expect(result).toMatchSnapshot();
 });
 
 test('handle base config as function', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
     const config = (args: Config) => {
         return {
             args,
@@ -916,25 +944,18 @@ test('handle base config as function', () => {
         };
     };
 
-    const exConfig = new ExConfig();
-
-    const result = exConfig.load(config);
+    const result = exConfig(config);
 
     expect(result).toMatchSnapshot();
 });
 
 test('handles es module default exports', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
     const config = {
         presets: ['preset-06'],
         plugins: ['plugin-04'],
     };
 
-    const exConfig = new ExConfig();
-
-    const result = exConfig.load(config);
+    const result = exConfig(config);
 
     expect(result).toMatchSnapshot();
 });

@@ -1,6 +1,12 @@
 /* eslint-disable no-useless-concat,no-param-reassign */
 
-function extendError(error: Error, pathname?: string, message?: string) {
+interface Args {
+    error: Error;
+    pathname?: string;
+    message?: string;
+}
+
+function extendError({ error, pathname, message }: Args) {
     if (pathname) {
         error.message += message || '\n' + `found in path: ${pathname}`;
     }

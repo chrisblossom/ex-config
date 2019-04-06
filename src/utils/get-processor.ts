@@ -1,19 +1,19 @@
 import { mergeWith, isPlainObject } from 'lodash';
-import { Context, Processor } from './ex-config';
+import { LifecycleParams, Processor } from '../ex-config';
 
-function arrayPush({ value, current = [] }: Context) {
+function arrayPush({ value, current = [] }: LifecycleParams) {
     const toArray = Array.isArray(value) ? value : [value];
 
     return [...current, ...toArray];
 }
 
-function arrayConcat({ value, current = [] }: Context) {
+function arrayConcat({ value, current = [] }: LifecycleParams) {
     const toArray = Array.isArray(value) ? value : [value];
 
     return [...toArray, ...current];
 }
 
-function mergeDeep({ value, current = {}, dirname }: Context) {
+function mergeDeep({ config, value, current = {}, dirname }: LifecycleParams) {
     const val = Array.isArray(value) ? value : [value];
 
     return mergeWith(current, ...val, <N, S>(objValue: N, srcValue: S) => {
@@ -23,6 +23,7 @@ function mergeDeep({ value, current = {}, dirname }: Context) {
 
         if (isPlainObject(objValue)) {
             return mergeDeep({
+                config,
                 value: objValue,
                 current: srcValue,
                 dirname,
@@ -33,31 +34,37 @@ function mergeDeep({ value, current = {}, dirname }: Context) {
     });
 }
 
-function automatic({ value, current, dirname }: Context) {
+function automatic({ config, value, current, dirname }: LifecycleParams) {
     if (current === undefined) {
         return value;
     }
 
     if (isPlainObject(current)) {
-        return mergeDeep({ current, value, dirname });
+        return mergeDeep({ config, current, value, dirname });
     }
 
     if (Array.isArray(current)) {
-        return arrayPush({ current, value, dirname });
+        return arrayPush({ config, current, value, dirname });
     }
 
     return value;
 }
 
-const parsers = { automatic, arrayConcat, arrayPush, mergeDeep };
-export type Parsers = 'automatic' | 'arrayConcat' | 'arrayPush' | 'mergeDeep';
+const builtInProcessors = { automatic, arrayConcat, arrayPush, mergeDeep };
+export type builtInProcessors =
+    | 'automatic'
+    | 'arrayConcat'
+    | 'arrayPush'
+    | 'mergeDeep';
 
-function getProcessor(parser: Processor | Parsers = 'automatic'): Processor {
-    if (typeof parser === 'function') {
-        return parser;
+function getProcessor(
+    processor: Processor | builtInProcessors = 'automatic',
+): Processor {
+    if (typeof processor === 'function') {
+        return processor;
     }
 
-    const matched = parsers[parser];
+    const matched = builtInProcessors[processor];
 
     return matched;
 }

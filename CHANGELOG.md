@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [2.0.0] - 2019-04-27
+
 -   Add named export: `exConfig`
 -   Breaking: remove default export
 -   Breaking: Remove class and `new ExConfig`

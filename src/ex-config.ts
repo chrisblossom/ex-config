@@ -24,6 +24,7 @@ export type Processor = (lifecycleParams: LifecycleParams) => any;
 export type PostProcessor = (lifecycleParams: LifecycleParams) => Config;
 
 export interface Options {
+    baseDirectory?: string;
     presets?: string | false;
     plugins?: string | false;
     preprocessor?: Preprocessor;
@@ -38,9 +39,11 @@ function exConfig(config: Config, options: Options = {}): Config {
         throw new Error('config is required');
     }
 
-    const dirname = process.cwd();
+    const { baseDirectory = process.cwd(), ...opts } = options;
 
-    const context = getContext(options);
+    const dirname = baseDirectory;
+
+    const context = getContext(opts);
 
     let cfg: Config = config;
     if (typeof config === 'function') {
@@ -75,9 +78,9 @@ function exConfig(config: Config, options: Options = {}): Config {
 
     cfg = parseKeys({ baseConfig: {}, config: cfg, dirname, context });
 
-    if (options.postProcessor) {
+    if (opts.postProcessor) {
         try {
-            cfg = options.postProcessor({
+            cfg = opts.postProcessor({
                 value: cfg,
                 config: cfg,
                 dirname,

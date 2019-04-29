@@ -959,3 +959,37 @@ test('handles es module default exports', () => {
 
     expect(result).toMatchSnapshot();
 });
+
+test('baseDirectory option', () => {
+    const baseDirectory = path.resolve(__dirname, '__sandbox__/app2/');
+
+    const options = {
+        baseDirectory,
+        overrides: {
+            presets: {
+                resolve: {
+                    prefix: 'backtrack-preset',
+                    org: '@backtrack',
+                    orgPrefix: 'preset',
+                },
+            },
+            plugins: {
+                resolve: {
+                    prefix: 'backtrack-plugin',
+                    org: '@backtrack',
+                    orgPrefix: 'plugin',
+                },
+            },
+        },
+    };
+
+    const config = {
+        presets: ['01'],
+        inside: [1],
+        plugins: ['01'],
+    };
+
+    const result = exConfig(config, options);
+
+    expect(result).toMatchSnapshot();
+});

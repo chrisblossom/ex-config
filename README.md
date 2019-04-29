@@ -45,6 +45,13 @@ const config = exConfig(
     baseConfig,
     /* options: */ {
         /**
+         * directory to initially resolve presets/plugins from
+         *
+         * default: process.cwd()
+         */
+        baseDirectory: process.cwd(),
+
+        /**
          * key id that extends configurations via resolve
          * See also, overrides.presets.resolve
          *

@@ -281,6 +281,35 @@ Object {
 }
 `;
 
+exports[`baseDirectory option 1`] = `
+Object {
+  "example": Array [
+    3,
+    2,
+    1,
+  ],
+  "inside": Array [
+    3,
+    1,
+  ],
+  "object": Object {
+    "array": Array [
+      3,
+      2,
+      1,
+    ],
+    "one": true,
+    "preset": 1,
+    "three": true,
+    "two": true,
+  },
+  "other": 1,
+  "plugins": Array [
+    "imported backtrack-plugin-01",
+  ],
+}
+`;
+
 exports[`calls presets and plugins as a function with default options = {} 1`] = `
 Object {
   "plugins": Array [

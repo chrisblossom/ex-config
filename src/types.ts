@@ -1,15 +1,90 @@
 import { PrefixOptions } from 'resolve-with-prefix';
-import { builtInProcessors } from './utils/get-processor';
-import { Preprocessor, Processor, Validator } from './ex-config';
+import { BuiltInProcessors } from './utils/get-processor';
+
+export type BasicConfig = { [key: string]: any };
+
+type ConfigFnAsync = (
+    args: ConfigFunctionParameters,
+) => Promise<BasicConfig> | BasicConfig;
+export type ConfigAsync = BasicConfig | ConfigFnAsync;
+
+// Currently cannot disallow async functions.
+// https://github.com/Microsoft/TypeScript/pull/29317
+type ConfigFnSync = (args: ConfigFunctionParameters) => BasicConfig;
+export type ConfigSync = BasicConfig | ConfigFnSync;
+
+export interface LifecycleParams {
+    // actionable item
+    value: any;
+    // current value of actionable item
+    current?: any;
+    // current full config
+    config: BasicConfig;
+    // current config directory
+    dirname: string;
+}
+
+export type ValidatorAsync = (
+    lifecycleParams: LifecycleParams,
+) => Promise<void> | void;
+export type ValidatorSync = (lifecycleParams: LifecycleParams) => void;
+
+export type PreprocessorAsync = (
+    lifecycleParams: LifecycleParams,
+) => Promise<BasicConfig> | BasicConfig;
+export type PreprocessorSync = (
+    lifecycleParams: LifecycleParams,
+) => BasicConfig;
+
+export type ProcessorAsync = (
+    lifecycleParams: LifecycleParams,
+) => Promise<unknown> | unknown;
+export type ProcessorSync = (lifecycleParams: LifecycleParams) => unknown;
+
+export type PostProcessorAsync = (
+    lifecycleParams: LifecycleParams,
+) => Promise<BasicConfig> | BasicConfig;
+export type PostProcessorSync = (
+    lifecycleParams: LifecycleParams,
+) => BasicConfig;
 
 export type ConfigFunctionParameters = {
     options: any;
     dirname: string;
 };
 
-export type Overrides = {
+export type OverridesAsync = {
     resolve?: PrefixOptions;
-    processor?: Processor | builtInProcessors;
-    validator?: Validator;
-    preprocessor?: Preprocessor;
+    processor?: ProcessorAsync | BuiltInProcessors;
+    validator?: ValidatorAsync;
+    preprocessor?: PreprocessorAsync;
 };
+
+export type OverridesSync = {
+    resolve?: PrefixOptions;
+    processor?: ProcessorSync | BuiltInProcessors;
+    validator?: ValidatorSync;
+    preprocessor?: PreprocessorSync;
+};
+
+export interface OptionsAsync {
+    baseDirectory?: string;
+    presets?: string | false;
+    plugins?: string | false;
+    preprocessor?: PreprocessorAsync;
+    processor?: ProcessorAsync | BuiltInProcessors;
+    validator?: ValidatorAsync;
+    postProcessor?: PostProcessorAsync;
+    overrides?: { [key: string]: OverridesAsync };
+}
+
+export interface OptionsSync {
+    baseDirectory?: string;
+    presets?: string | false;
+    plugins?: string | false;
+    preprocessor?: PreprocessorSync;
+    processor?: ProcessorSync | BuiltInProcessors;
+    validator?: ValidatorSync;
+    postProcessor?: PostProcessorSync;
+    overrides?: { [key: string]: OverridesSync };
+}

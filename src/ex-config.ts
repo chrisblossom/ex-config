@@ -1,97 +1,42 @@
-import { cloneDeep } from 'lodash';
-import { builtInProcessors } from './utils/get-processor';
-import { ConfigFunctionParameters, Overrides } from './types';
-import { getContext } from './utils/get-context';
-import { extendError } from './utils/extend-error';
-import { parseKeys } from './parse-keys';
+import { exConfigSync } from './ex-config-sync';
+import { exConfigAsync as exConfig } from './ex-config-async';
+import {
+    ConfigAsync as ConfigAsyncType,
+    ConfigSync as ConfigSyncType,
+    LifecycleParams as LifecycleParamsType,
+    ValidatorAsync as ValidatorAsyncType,
+    ValidatorSync as ValidatorSyncType,
+    PreprocessorAsync as PreprocessorAsyncType,
+    PreprocessorSync as PreprocessorSyncType,
+    ProcessorAsync as ProcessorAsyncType,
+    ProcessorSync as ProcessorSyncType,
+    PostProcessorAsync as PostProcessorAsyncType,
+    PostProcessorSync as PostProcessorSyncType,
+    OptionsAsync as OptionsAsyncType,
+    OptionsSync as OptionsSyncType,
+    ConfigFunctionParameters as ConfigFunctionParametersType,
+} from './types';
 
-export type Config = { [key: string]: any };
+export type Config = ConfigAsyncType;
+export type ConfigSync = ConfigSyncType;
 
-export interface LifecycleParams {
-    // actionable item
-    value: any;
-    // current value of actionable item
-    current?: any;
-    // current full config
-    config: Config;
-    // current config directory
-    dirname: string;
-}
+export type ConfigFunctionParameters = ConfigFunctionParametersType;
 
-export type Validator = (lifecycleParams: LifecycleParams) => void;
-export type Preprocessor = (lifecycleParams: LifecycleParams) => Config;
-export type Processor = (lifecycleParams: LifecycleParams) => any;
-export type PostProcessor = (lifecycleParams: LifecycleParams) => Config;
+export type LifecycleParams = LifecycleParamsType;
 
-export interface Options {
-    baseDirectory?: string;
-    presets?: string | false;
-    plugins?: string | false;
-    preprocessor?: Preprocessor;
-    processor?: Processor | builtInProcessors;
-    validator?: Validator;
-    postProcessor?: PostProcessor;
-    overrides?: { [key: string]: Overrides };
-}
+export type Validator = ValidatorAsyncType;
+export type ValidatorSync = ValidatorSyncType;
 
-function exConfig(config: Config, options: Options = {}): Config {
-    if (config === undefined) {
-        throw new Error('config is required');
-    }
+export type Preprocessor = PreprocessorAsyncType;
+export type PreprocessorSync = PreprocessorSyncType;
 
-    const { baseDirectory = process.cwd(), ...opts } = options;
+export type Processor = ProcessorAsyncType;
+export type ProcessorSync = ProcessorSyncType;
 
-    const dirname = baseDirectory;
+export type PostProcessor = PostProcessorAsyncType;
+export type PostProcessorSync = PostProcessorSyncType;
 
-    const context = getContext(opts);
+export type Options = OptionsAsyncType;
+export type OptionsSync = OptionsSyncType;
 
-    let cfg: Config = config;
-    if (typeof config === 'function') {
-        const args: ConfigFunctionParameters = {
-            options: {},
-            dirname,
-        };
-
-        cfg = config(args);
-    }
-
-    /**
-     * Prevent original config from being mutated to guard against external caching issues
-     */
-    cfg = cloneDeep(cfg);
-
-    if (context.preprocessor) {
-        try {
-            cfg = context.preprocessor({ value: cfg, config: cfg, dirname });
-        } catch (error) {
-            extendError({ error, pathname: dirname });
-            throw error;
-        }
-    }
-
-    /**
-     * Validate base config
-     */
-    if (context.validator) {
-        context.validator({ value: cfg, config: cfg, dirname });
-    }
-
-    cfg = parseKeys({ baseConfig: {}, config: cfg, dirname, context });
-
-    if (opts.postProcessor) {
-        try {
-            cfg = opts.postProcessor({
-                value: cfg,
-                config: cfg,
-                dirname,
-            });
-        } catch (error) {
-            extendError({ error, pathname: dirname });
-            throw error;
-        }
-    }
-
-    return cfg;
-}
-
-export { exConfig };
+export { exConfig, exConfigSync };

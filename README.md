@@ -19,13 +19,16 @@ ex-config is an extendable configuration processor. It is used to merge multiple
 'use strict';
 
 const cosmiconfig = require('cosmiconfig');
-const { exConfig } = require('ex-config');
+const {
+    /* async: */ exConfig,
+    /* sync: */ exConfigSync,
+} = require('ex-config');
 
 /**
  * Example using cosmiconfig to load the base config from disk
  */
 const explorer = cosmiconfig('example');
-const baseConfig = explorer.loadSync();
+const baseConfig = await explorer.load();
 
 /**
  * Original configs are not mutated
@@ -41,7 +44,7 @@ const baseConfig = explorer.loadSync();
  *   dirname: directory where the preset was loaded from
  * }
  */
-const config = exConfig(
+const config = await exConfig(
     baseConfig,
     /* options: */ {
         /**
@@ -75,7 +78,7 @@ const config = exConfig(
          *
          * Runs once with each preset
          */
-        preprocessor: ({ value, current, config, dirname }) => {
+        preprocessor: async ({ value, current, config, dirname }) => {
             // returned value will be the updated preset value
             return value;
         },
@@ -85,7 +88,7 @@ const config = exConfig(
          *
          * Runs once with each preset
          */
-        validator: ({ value, current, config, dirname }) => {
+        validator: async ({ value, current, config, dirname }) => {
             if (value !== 'valid') {
                 throw new Error('value is invalid');
             }
@@ -98,7 +101,7 @@ const config = exConfig(
          * Post Processor runs once after all configurations
          *   have been successfully processed.
          */
-        postProcessor: ({ config, dirname }) => {
+        postProcessor: async ({ config, dirname }) => {
             // returned value will equal the final config
             return value;
         },
@@ -122,7 +125,7 @@ const config = exConfig(
          *
          * Pass a function to use a custom processor
          */
-        processor: ({ value, current = [], config, dirname }) => {
+        processor: async ({ value, current = [], config, dirname }) => {
             const val = Array.isArray(value) ? value : [value];
 
             // returned value will be the new value of the key
@@ -180,14 +183,14 @@ const config = exConfig(
                 /**
                  * preprocessor override is in addition to the base preprocessor
                  */
-                preprocessor: ({ value, current, config, dirname }) => {
+                preprocessor: async ({ value, current, config, dirname }) => {
                     return value;
                 },
 
                 /**
                  * validator override will validate in addition to the base validator
                  */
-                validator: ({ value, current, config, dirname }) => {
+                validator: async ({ value, current, config, dirname }) => {
                     if (typeof value.source !== 'string') {
                         throw new Error('files source must be a string');
                     }
@@ -196,7 +199,7 @@ const config = exConfig(
                 /**
                  * processor override will override the base processor
                  */
-                processor: ({ value, current = [], config, dirname }) => {
+                processor: async ({ value, current = [], config, dirname }) => {
                     const val = Array.isArray(value) ? value : [value];
 
                     return [...val, ...current];
@@ -205,8 +208,6 @@ const config = exConfig(
         },
     },
 );
-
-module.exports = config;
 ```
 
 ## Creating Presets and Plugins

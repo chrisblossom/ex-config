@@ -1,43 +1,43 @@
 import { cloneDeep } from 'lodash';
 import { extendError } from './utils/extend-error';
-import { requireFromString } from './utils/require-from-string';
-import { ResolveFunction } from './utils/get-resolve-function';
-import { Context } from './utils/get-context';
-import { Config } from './ex-config';
-import { parseKeys } from './parse-keys';
+import { requireFromStringAsync } from './utils/require-from-string';
+import { ResolveFunctionAsync } from './utils/get-resolve-function';
+import { ContextAsync } from './utils/get-context';
+import { parseKeysAsync } from './parse-keys-async';
+import { BasicConfig } from './types';
 
 interface Args {
-    baseConfig: Config;
+    baseConfig: BasicConfig;
     packageIds: string | ReadonlyArray<string>;
-    resolveFunction: ResolveFunction;
+    resolveFunction: ResolveFunctionAsync;
     dirname: string;
-    context: Context;
+    context: ContextAsync;
 }
 
-function extendConfig({
+async function extendConfigAsync({
     baseConfig,
     packageIds,
     resolveFunction,
     dirname,
     context,
-}: Args): Config {
+}: Args): Promise<BasicConfig> {
     const normalizedPackageIds = Array.isArray(packageIds)
         ? packageIds
         : [packageIds];
 
     let extendedConfig = baseConfig;
 
-    for (const packageId of normalizedPackageIds) {
+    for await (const packageId of normalizedPackageIds) {
         const {
             module: LoadedConfig,
             dirname: updatedDirname,
             pathname,
-        } = requireFromString(packageId, resolveFunction, dirname);
+        } = await requireFromStringAsync(packageId, resolveFunction, dirname);
 
         let mergeLoadedConfig = cloneDeep(LoadedConfig);
         try {
             if (context.preprocessor) {
-                mergeLoadedConfig = context.preprocessor({
+                mergeLoadedConfig = await context.preprocessor({
                     config: extendedConfig,
                     value: mergeLoadedConfig,
                     dirname: updatedDirname,
@@ -48,7 +48,7 @@ function extendConfig({
              * Validate config before merging
              */
             if (context.validator) {
-                context.validator({
+                await context.validator({
                     value: mergeLoadedConfig,
                     config: extendedConfig,
                     dirname: updatedDirname,
@@ -63,7 +63,7 @@ function extendConfig({
             throw error;
         }
 
-        extendedConfig = parseKeys({
+        extendedConfig = await parseKeysAsync({
             baseConfig: extendedConfig,
             config: mergeLoadedConfig,
             dirname: updatedDirname,
@@ -75,4 +75,4 @@ function extendConfig({
     return extendedConfig;
 }
 
-export { extendConfig };
+export { extendConfigAsync };

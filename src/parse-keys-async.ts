@@ -1,29 +1,28 @@
 import { cloneDeep } from 'lodash';
-import { requireFromString } from './utils/require-from-string';
-import { getResolveFunction } from './utils/get-resolve-function';
+import { requireFromStringAsync } from './utils/require-from-string';
+import { getResolveFunctionAsync } from './utils/get-resolve-function';
 import { validateResolveKeys } from './utils/validation-utils';
 import { extendError } from './utils/extend-error';
-import { Config } from './ex-config';
-import { Overrides } from './types';
-import { Context } from './utils/get-context';
-import { extendConfig } from './extend-config';
-import { getProcessor } from './utils/get-processor';
+import { BasicConfig, OverridesAsync } from './types';
+import { ContextAsync } from './utils/get-context';
+import { extendConfigAsync } from './extend-config-async';
+import { getProcessorAsync } from './utils/get-processor';
 
 interface Args {
-    baseConfig: Config;
-    config: Config;
+    baseConfig: BasicConfig;
+    config: BasicConfig;
     dirname: string;
     packagePath?: string;
-    context: Context;
+    context: ContextAsync;
 }
 
-function parseKeys({
+async function parseKeysAsync({
     baseConfig,
     config,
     dirname,
     packagePath,
     context,
-}: Args): Config {
+}: Args): Promise<BasicConfig> {
     validateResolveKeys(config, context.resolveSchema, packagePath);
 
     let currentConfig = baseConfig;
@@ -38,14 +37,15 @@ function parseKeys({
         delete config[context.presets];
         /* eslint-enable */
 
-        const overrides: Overrides = context.overrides[context.presets] || {};
-        const resolveFunction = getResolveFunction({
+        const overrides: OverridesAsync =
+            context.overrides[context.presets] || {};
+        const resolveFunction = getResolveFunctionAsync({
             key: context.presets,
             prefixOptions: overrides.resolve,
             context,
         });
 
-        currentConfig = extendConfig({
+        currentConfig = await extendConfigAsync({
             baseConfig: currentConfig,
             packageIds: presets,
             resolveFunction,
@@ -54,7 +54,7 @@ function parseKeys({
         });
     }
 
-    for (const key of Object.keys(config)) {
+    for await (const key of Object.keys(config)) {
         let value = config[key];
         const previousValue = currentConfig[key];
         const overrides = context.overrides[key] || {};
@@ -64,7 +64,7 @@ function parseKeys({
 
         if (overrides.preprocessor) {
             try {
-                value = overrides.preprocessor({
+                value = await overrides.preprocessor({
                     value,
                     current: previousValue,
                     config: currentConfig,
@@ -90,15 +90,15 @@ function parseKeys({
                 const normalizedPluginValue = Array.isArray(value)
                     ? value
                     : [value];
-                const resolve = getResolveFunction({
+                const resolve = getResolveFunctionAsync({
                     key,
                     prefixOptions: overrides.resolve,
                     context,
                 });
 
                 value = [];
-                for (const packageId of normalizedPluginValue) {
-                    const { module: plugin } = requireFromString(
+                for await (const packageId of normalizedPluginValue) {
+                    const { module: plugin } = await requireFromStringAsync(
                         packageId,
                         resolve,
                         dirname,
@@ -109,7 +109,7 @@ function parseKeys({
             }
 
             if (overrides.validator) {
-                overrides.validator({
+                await overrides.validator({
                     value,
                     current: previousValue,
                     config: currentConfig,
@@ -122,11 +122,12 @@ function parseKeys({
              */
             const processor =
                 context.overrides[key] && context.overrides[key].processor
-                    ? getProcessor(context.overrides[key].processor)
+                    ? getProcessorAsync(context.overrides[key].processor)
                     : context.processor;
 
             const currentValue = currentConfig[key];
-            const processedValue = processor({
+
+            const processedValue = await processor({
                 value,
                 current: currentValue,
                 config,
@@ -146,4 +147,4 @@ function parseKeys({
     return currentConfig;
 }
 
-export { parseKeys };
+export { parseKeysAsync };

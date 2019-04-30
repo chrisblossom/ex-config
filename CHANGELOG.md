@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+-   Added sync export `exConfigSync`
+
+### Changed
+
+-   Breaking: `exConfig` is now async
+
 ## [2.1.0] - 2019-04-29
 
 ### Added

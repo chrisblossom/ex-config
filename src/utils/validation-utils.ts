@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import { extendError } from './extend-error';
-import { Config } from '../ex-config';
+import { BasicConfig } from '../types';
 
 function generateResolveValidator(
     presets?: string | false,
@@ -15,7 +15,7 @@ function generateResolveValidator(
         )
         .single(true);
 
-    const obj: Config = {};
+    const obj: BasicConfig = {};
     if (presets) {
         obj[presets] = schema.label(presets);
     }
@@ -32,7 +32,7 @@ function generateResolveValidator(
 }
 
 function validateResolveKeys(
-    config: Config,
+    config: BasicConfig,
     schema: ResolveSchema,
     packagePath?: string,
 ) {

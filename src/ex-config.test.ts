@@ -1,18 +1,22 @@
 import path from 'path';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isPlainObject } from 'lodash';
 import Joi from 'joi';
+import { exConfig, exConfigSync } from './ex-config';
 import {
-    exConfig,
-    Config,
-    PostProcessor,
-    Preprocessor,
-    Processor,
-    Validator,
-    Options,
-} from './ex-config';
+    ConfigFunctionParameters,
+    PostProcessorAsync,
+    PreprocessorAsync,
+    ProcessorAsync,
+    ValidatorAsync,
+    OptionsAsync,
+    BasicConfig,
+} from './types';
+import { automatic as automaticProcessor } from './utils/get-processor';
 
 const cwd = process.cwd();
 const app1Dir = path.resolve(__dirname, '__sandbox__/app1/');
+
+const sleep = (ms = 50) => new Promise((resolve) => setTimeout(resolve, ms));
 
 beforeEach(() => {
     process.chdir(app1Dir);
@@ -22,14 +26,23 @@ afterEach(() => {
     process.chdir(cwd);
 });
 
-test('throws with undefined config', () => {
-    // @ts-ignore
-    expect(() => exConfig()).toThrowErrorMatchingInlineSnapshot(
-        `"config is required"`,
-    );
+describe('throws with undefined config', () => {
+    test('async', async () => {
+        // @ts-ignore
+        await expect(exConfig()).rejects.toThrowErrorMatchingInlineSnapshot(
+            `"config is required"`,
+        );
+    });
+
+    test('sync', () => {
+        // @ts-ignore
+        expect(() => exConfigSync()).toThrowErrorMatchingInlineSnapshot(
+            `"config is required"`,
+        );
+    });
 });
 
-test('does not mutate original config', () => {
+describe('does not mutate original config', () => {
     const config = {
         presets: ['preset-04'],
         inside: [1, 2],
@@ -38,13 +51,13 @@ test('does not mutate original config', () => {
 
     const configClone = cloneDeep(config);
 
-    const processor: Processor = ({ value, current = [] }) => {
+    const processor: ProcessorAsync = ({ value, current = [] }) => {
         value.push(3);
         current.push(value);
         return current;
     };
 
-    const postProcessor: PostProcessor = ({ value }) => {
+    const postProcessor: PostProcessorAsync = ({ value }) => {
         value.plugins.forEach((val: any) => {
             val[0].imported.push(`mutated ${val[0].imported[0]}`);
         });
@@ -54,31 +67,74 @@ test('does not mutate original config', () => {
 
     const options = { processor, postProcessor };
 
-    const result1 = exConfig(config, options);
+    let lastResult1;
+    let lastResult2;
+    const checkResult = ({ result1, result2 }: any) => {
+        expect(config).toEqual(configClone);
+        expect(result1).toMatchSnapshot();
 
-    expect(config).toEqual(configClone);
-    expect(result1).toMatchSnapshot();
+        const result1Clone = cloneDeep(result1);
 
-    const clone1 = cloneDeep(result1);
+        expect(config).toEqual(configClone);
+        expect(result2).toEqual(result1Clone);
 
-    const result2 = exConfig(config, options);
-    expect(config).toEqual(configClone);
-    expect(result2).toEqual(clone1);
+        lastResult1 = result1;
+        if (lastResult1) {
+            expect(result1).toEqual(lastResult1);
+        }
+
+        lastResult2 = result2;
+        if (lastResult2) {
+            expect(result2).toEqual(lastResult2);
+        }
+    };
+
+    test('async', async () => {
+        const result1 = await exConfig(config, options);
+        const result2 = await exConfig(config, options);
+
+        checkResult({ result1, result2 });
+    });
+
+    test('sync', () => {
+        const result1 = exConfigSync(config, options);
+        const result2 = exConfigSync(config, options);
+
+        checkResult({ result1, result2 });
+    });
 });
 
-test('merges deep nested presets', () => {
+describe('merges deep nested presets', () => {
     const config = {
         presets: ['preset-01'],
         inside: [1],
         plugins: ['plugin-01'],
     };
 
-    const result = exConfig(config);
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config);
+
+        checkResult(result);
+    });
 });
 
-test('ignores mutated value', () => {
+describe('ignores mutated value', () => {
     const config = {
         presets: ['preset-01'],
         inside: [1],
@@ -87,31 +143,31 @@ test('ignores mutated value', () => {
     };
 
     /* eslint-disable no-param-reassign */
-    const preprocessor: Preprocessor = ({ value }) => {
+    const preprocessor: PreprocessorAsync = ({ value }) => {
         const clone = cloneDeep(value);
         value = {};
         return clone;
     };
 
-    const processor: Processor = ({ value }) => {
+    const processor: ProcessorAsync = ({ value }) => {
         const clone = cloneDeep(value);
         value = {};
         return clone;
     };
 
-    const postProcessor: PostProcessor = ({ value }) => {
+    const postProcessor: PostProcessorAsync = ({ value }) => {
         const clone = cloneDeep(value);
         value = {};
         return clone;
     };
 
-    const overridePreprocessor: Preprocessor = ({ value }) => {
+    const overridePreprocessor: PreprocessorAsync = ({ value }) => {
         const clone = cloneDeep(value);
         value = {};
         return clone;
     };
 
-    const overrideProcessor: Processor = ({ value }) => {
+    const overrideProcessor: ProcessorAsync = ({ value }) => {
         const clone = cloneDeep(value);
         value = {};
         return clone;
@@ -130,52 +186,74 @@ test('ignores mutated value', () => {
         },
     };
 
-    const result = exConfig(config, options);
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
-});
-
-test('adds dirname to all lifecycles', () => {
-    const result: any = {
-        validator: [],
-        preprocessor: [],
-        processor: [],
-        postProcessor: [],
-
-        overrideValidator: [],
-        overridePreprocessor: [],
-        overrideProcessor: [],
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
     };
 
-    const validator: Validator = ({ dirname }) => {
+    test('async', async () => {
+        const result = await exConfig(config, options);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config, options);
+
+        checkResult(result);
+    });
+});
+
+describe('adds dirname to all lifecycles', () => {
+    let result: any = {};
+
+    beforeEach(() => {
+        result = {
+            validator: [],
+            preprocessor: [],
+            processor: [],
+            postProcessor: [],
+
+            overrideValidator: [],
+            overridePreprocessor: [],
+            overrideProcessor: [],
+        };
+    });
+
+    const validator: ValidatorAsync = ({ dirname }) => {
         result.validator.push(dirname);
     };
 
-    const preprocessor: Preprocessor = ({ value, dirname }) => {
+    const preprocessor: PreprocessorAsync = ({ value, dirname }) => {
         result.preprocessor.push(dirname);
         return value;
     };
 
-    const processor: Processor = ({ value, dirname }) => {
+    const processor: ProcessorAsync = ({ value, dirname }) => {
         result.processor.push(dirname);
         return value;
     };
 
-    const postProcessor: PostProcessor = ({ value, dirname }) => {
+    const postProcessor: PostProcessorAsync = ({ value, dirname }) => {
         result.postProcessor.push(dirname);
         return value;
     };
 
-    const overrideValidator: Validator = ({ dirname }) => {
+    const overrideValidator: ValidatorAsync = ({ dirname }) => {
         result.overrideValidator.push(dirname);
     };
 
-    const overridePreprocessor: Preprocessor = ({ value, dirname }) => {
+    const overridePreprocessor: PreprocessorAsync = ({ value, dirname }) => {
         result.overridePreprocessor.push(dirname);
         return value;
     };
 
-    const overrideProcessor: Processor = ({ value, dirname }) => {
+    const overrideProcessor: ProcessorAsync = ({ value, dirname }) => {
         result.overrideProcessor.push(dirname);
         return value;
     };
@@ -201,29 +279,65 @@ test('adds dirname to all lifecycles', () => {
         },
     };
 
-    exConfig(config, options);
+    let lastResult;
+    const checkResult = () => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        await exConfig(config, options);
+
+        checkResult();
+    });
+
+    test('sync', () => {
+        exConfigSync(config, options);
+
+        checkResult();
+    });
 });
 
-test('preset object order matter does not matter', () => {
+describe('preset object order matter does not matter', () => {
     const config = {
         inside: [1],
         plugins: ['plugin-01'],
         presets: ['preset-01'],
     };
 
-    const result = exConfig(config);
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config);
+
+        checkResult(result);
+    });
 });
 
-test('plugins processor can be overridden', () => {
-    const processor: Processor = ({ value }) => {
+describe('plugins processor can be overridden', () => {
+    const processor: ProcessorAsync = ({ value }) => {
         return value;
     };
 
-    const options: Options = {
+    const options: OptionsAsync = {
         processor,
         overrides: {
             plugins: {
@@ -239,12 +353,31 @@ test('plugins processor can be overridden', () => {
         example: false,
     };
 
-    const result = exConfig(config, options);
-    expect(result).toMatchSnapshot();
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
+
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config, options);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config, options);
+
+        checkResult(result);
+    });
 });
 
-test('allows disabling presets and plugins', () => {
-    const options: Options = {
+describe('allows disabling presets and plugins', () => {
+    const options: OptionsAsync = {
         presets: false,
         plugins: false,
     };
@@ -255,12 +388,30 @@ test('allows disabling presets and plugins', () => {
         plugins: ['plugin-one'],
     };
 
-    const result = exConfig(config, options);
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config, options);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config, options);
+
+        checkResult(result);
+    });
 });
 
-test('allows custom preset and plugin name', () => {
+describe('allows custom preset and plugin name', () => {
     const options = {
         presets: 'customPreset',
         plugins: 'customPlugin',
@@ -272,14 +423,34 @@ test('allows custom preset and plugin name', () => {
         customPlugin: ['plugin-01'],
     };
 
-    const result = exConfig(config, options);
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config, options);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config, options);
+
+        checkResult(result);
+    });
 });
 
-test('merges deep with custom prefix resolution', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app2/');
-    process.chdir(dir);
+describe('merges deep with custom prefix resolution', () => {
+    beforeEach(() => {
+        const dir = path.resolve(__dirname, '__sandbox__/app2/');
+        process.chdir(dir);
+    });
 
     const options = {
         overrides: {
@@ -306,13 +477,31 @@ test('merges deep with custom prefix resolution', () => {
         plugins: ['01'],
     };
 
-    const result = exConfig(config, options);
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config, options);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config, options);
+
+        checkResult(result);
+    });
 });
 
-test('allows builtin processor', () => {
-    const options: Options = {
+describe('allows builtin processor', () => {
+    const options: OptionsAsync = {
         processor: 'arrayConcat',
     };
 
@@ -321,13 +510,31 @@ test('allows builtin processor', () => {
         inside: [1],
     };
 
-    const result = exConfig(config, options);
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config, options);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config, options);
+
+        checkResult(result);
+    });
 });
 
-test('allows custom processor', () => {
-    const processor: Processor = ({ value }) => {
+describe('allows custom processor', () => {
+    const processor: ProcessorAsync = ({ value }) => {
         return value;
     };
 
@@ -341,13 +548,31 @@ test('allows custom processor', () => {
         example: [0],
     };
 
-    const result = exConfig(config, options);
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config, options);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config, options);
+
+        checkResult(result);
+    });
 });
 
-test('allows builtin processor override', () => {
-    const options: Options = {
+describe('allows builtin processor override', () => {
+    const options: OptionsAsync = {
         overrides: {
             example: {
                 processor: 'arrayConcat',
@@ -360,13 +585,31 @@ test('allows builtin processor override', () => {
         inside: [1],
     };
 
-    const result = exConfig(config, options);
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config, options);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config, options);
+
+        checkResult(result);
+    });
 });
 
-test('allows custom processor override', () => {
-    const processor: Processor = ({ value }) => {
+describe('allows custom processor override', () => {
+    const processor: ProcessorAsync = ({ value }) => {
         return value;
     };
 
@@ -384,13 +627,31 @@ test('allows custom processor override', () => {
         example: [0],
     };
 
-    const result = exConfig(config, options);
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config, options);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config, options);
+
+        checkResult(result);
+    });
 });
 
-test('catches error custom processor override', () => {
-    const processor: Processor = ({ value }) => {
+describe('catches error custom processor override', () => {
+    const processor: ProcessorAsync = ({ value }) => {
         throw new Error(`bad value: ${value}`);
     };
 
@@ -407,15 +668,27 @@ test('catches error custom processor override', () => {
         inside: [0],
     };
 
-    expect(() => exConfig(config, options)).toThrowErrorMatchingInlineSnapshot(`
+    test('async', async () => {
+        await expect(exConfig(config, options)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
 "bad value: 3
 invalid key: example
 found in path: <PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03/index.js"
 `);
+    });
+
+    test('sync', () => {
+        expect(() => exConfigSync(config, options))
+            .toThrowErrorMatchingInlineSnapshot(`
+"bad value: 3
+invalid key: example
+found in path: <PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03/index.js"
+`);
+    });
 });
 
-test('mergeObject processor', () => {
-    const options: Options = {
+describe('mergeObject processor', () => {
+    const options: OptionsAsync = {
         overrides: {
             object: {
                 processor: 'mergeDeep',
@@ -432,13 +705,31 @@ test('mergeObject processor', () => {
         },
     };
 
-    const result = exConfig(config, options);
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config, options);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config, options);
+
+        checkResult(result);
+    });
 });
 
-test('validates config', () => {
-    const validator: Validator = ({ value }) => {
+describe('validates config', () => {
+    const validator: ValidatorAsync = ({ value }) => {
         const schema = Joi.object({
             string: Joi.string(),
         });
@@ -458,17 +749,31 @@ test('validates config', () => {
         string: 1,
     };
 
-    expect(() => exConfig(config, options)).toThrowErrorMatchingInlineSnapshot(`
+    test('async', async () => {
+        await expect(exConfig(config, options)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
 "{
   \\"string\\" [31m[1][0m: 1
 }
 [31m
 [1] \\"string\\" must be a string[0m"
 `);
+    });
+
+    test('sync', () => {
+        expect(() => exConfigSync(config, options))
+            .toThrowErrorMatchingInlineSnapshot(`
+"{
+  \\"string\\" [31m[1][0m: 1
+}
+[31m
+[1] \\"string\\" must be a string[0m"
+`);
+    });
 });
 
-test('validates nested config', () => {
-    const validator: Validator = ({ value }) => {
+describe('validates nested config', () => {
+    const validator: ValidatorAsync = ({ value }) => {
         const schema = Joi.object({
             other: Joi.string(),
         });
@@ -489,7 +794,9 @@ test('validates nested config', () => {
         presets: ['preset-01'],
     };
 
-    expect(() => exConfig(config, options)).toThrowErrorMatchingInlineSnapshot(`
+    test('async', async () => {
+        await expect(exConfig(config, options)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
 "{
   \\"example\\": [
     1
@@ -510,10 +817,36 @@ test('validates nested config', () => {
 [1] \\"other\\" must be a string[0m
 invalid nested config: <PROJECT_ROOT>/node_modules/preset-01/index.js"
 `);
+    });
+
+    test('sync', () => {
+        expect(() => exConfigSync(config, options))
+            .toThrowErrorMatchingInlineSnapshot(`
+"{
+  \\"example\\": [
+    1
+  ],
+  \\"presets\\": [
+    \\"preset-02\\"
+  ],
+  \\"object\\": {
+    \\"array\\": [
+      1
+    ],
+    \\"one\\": true,
+    \\"preset\\": 1
+  },
+  \\"other\\" [31m[1][0m: 1
+}
+[31m
+[1] \\"other\\" must be a string[0m
+invalid nested config: <PROJECT_ROOT>/node_modules/preset-01/index.js"
+`);
+    });
 });
 
-test('validates override config', () => {
-    const validator: Validator = ({ value }) => {
+describe('validates override config', () => {
+    const validator: ValidatorAsync = ({ value }) => {
         const schema = Joi.string();
 
         const isValid = Joi.validate(value, schema, { allowUnknown: true });
@@ -535,14 +868,25 @@ test('validates override config', () => {
         string: 1,
     };
 
-    expect(() => exConfig(config, options)).toThrowErrorMatchingInlineSnapshot(`
+    test('async', async () => {
+        await expect(exConfig(config, options)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
 "\\"value\\" must be a string
 invalid key: string"
 `);
+    });
+
+    test('sync', () => {
+        expect(() => exConfigSync(config, options))
+            .toThrowErrorMatchingInlineSnapshot(`
+"\\"value\\" must be a string
+invalid key: string"
+`);
+    });
 });
 
-test('validates nested override config', () => {
-    const validator: Validator = ({ value }) => {
+describe('validates nested override config', () => {
+    const validator: ValidatorAsync = ({ value }) => {
         const schema = Joi.string();
 
         const isValid = Joi.validate(value, schema, { allowUnknown: true });
@@ -565,15 +909,27 @@ test('validates nested override config', () => {
         string: 1,
     };
 
-    expect(() => exConfig(config, options)).toThrowErrorMatchingInlineSnapshot(`
+    test('async', async () => {
+        await expect(exConfig(config, options)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
 "\\"value\\" must be a string
 invalid key: other
 found in path: <PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03/index.js"
 `);
+    });
+
+    test('sync', () => {
+        expect(() => exConfigSync(config, options))
+            .toThrowErrorMatchingInlineSnapshot(`
+"\\"value\\" must be a string
+invalid key: other
+found in path: <PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03/index.js"
+`);
+    });
 });
 
-test('allows post processing', () => {
-    const postProcessor: PostProcessor = ({ value }) => {
+describe('allows post processing', () => {
+    const postProcessor: PostProcessorAsync = ({ value }) => {
         const example = value.example.map((number: number) => number * 2);
         return {
             ...value,
@@ -590,14 +946,35 @@ test('allows post processing', () => {
         example: [0],
     };
 
-    // Call twice to ensure loaded works
-    exConfig(config);
-    const result = exConfig(config, options);
-    expect(result).toMatchSnapshot();
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
+
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        // Call twice to ensure loaded works
+        await exConfig(config);
+        const result = await exConfig(config, options);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        // Call twice to ensure loaded works
+        exConfigSync(config);
+        const result = exConfigSync(config, options);
+
+        checkResult(result);
+    });
 });
 
-test('allows post processing error', () => {
-    const postProcessor: PostProcessor = ({ value }) => {
+describe('allows post processing error', () => {
+    const postProcessor: PostProcessorAsync = ({ value }) => {
         throw new Error(`postProcessor error ${value.example}`);
     };
 
@@ -610,14 +987,25 @@ test('allows post processing error', () => {
         example: [0],
     };
 
-    expect(() => exConfig(config, options)).toThrowErrorMatchingInlineSnapshot(`
+    test('async', async () => {
+        await expect(exConfig(config, options)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
 "postProcessor error 3,2,1,0
 found in path: <PROJECT_ROOT>"
 `);
+    });
+
+    test('sync', () => {
+        expect(() => exConfigSync(config, options))
+            .toThrowErrorMatchingInlineSnapshot(`
+"postProcessor error 3,2,1,0
+found in path: <PROJECT_ROOT>"
+`);
+    });
 });
 
-test('allows preprocessor', () => {
-    const validator: Validator = ({ value }) => {
+describe('allows preprocessor', () => {
+    const validator: ValidatorAsync = ({ value }) => {
         const schema = Joi.object({
             example: Joi.array().items(Joi.string()),
         });
@@ -629,7 +1017,7 @@ test('allows preprocessor', () => {
         }
     };
 
-    const preprocessor: Preprocessor = ({ value }) => {
+    const preprocessor: PreprocessorAsync = ({ value }) => {
         const example = value.example.map((number: number) =>
             number.toString(),
         );
@@ -650,12 +1038,31 @@ test('allows preprocessor', () => {
         example: [0],
     };
 
-    const result = exConfig(config, options);
-    expect(result).toMatchSnapshot();
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
+
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config, options);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config, options);
+
+        checkResult(result);
+    });
 });
 
-test('preprocessor error', () => {
-    const validator: Validator = ({ value }) => {
+describe('preprocessor error', () => {
+    const validator: ValidatorAsync = ({ value }) => {
         const schema = Joi.object({
             example: Joi.array().items(Joi.string()),
         });
@@ -667,7 +1074,7 @@ test('preprocessor error', () => {
         }
     };
 
-    const preprocessor: Preprocessor = ({ value }) => {
+    const preprocessor: PreprocessorAsync = ({ value }) => {
         throw new Error(`preprocessor ${value.example}`);
     };
 
@@ -681,14 +1088,25 @@ test('preprocessor error', () => {
         example: [0],
     };
 
-    expect(() => exConfig(config, options)).toThrowErrorMatchingInlineSnapshot(`
+    test('async', async () => {
+        await expect(exConfig(config, options)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
 "preprocessor 0
 found in path: <PROJECT_ROOT>"
 `);
+    });
+
+    test('sync', () => {
+        expect(() => exConfigSync(config, options))
+            .toThrowErrorMatchingInlineSnapshot(`
+"preprocessor 0
+found in path: <PROJECT_ROOT>"
+`);
+    });
 });
 
-test('allows preprocessor override', () => {
-    const validator: Validator = ({ value }) => {
+describe('allows preprocessor override', () => {
+    const validator: ValidatorAsync = ({ value }) => {
         const schema = Joi.array().items(Joi.string());
 
         const isValid = Joi.validate(value, schema, { allowUnknown: true });
@@ -698,7 +1116,7 @@ test('allows preprocessor override', () => {
         }
     };
 
-    const preprocessor: Preprocessor = ({ value }) => {
+    const preprocessor: PreprocessorAsync = ({ value }) => {
         const example = value.map((number: number) => number.toString());
 
         return example;
@@ -718,12 +1136,31 @@ test('allows preprocessor override', () => {
         example: [0],
     };
 
-    const result = exConfig(config, options);
-    expect(result).toMatchSnapshot();
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
+
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config, options);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config, options);
+
+        checkResult(result);
+    });
 });
 
-test('preprocessor override error', () => {
-    const validator: Validator = ({ value }) => {
+describe('preprocessor override error', () => {
+    const validator: ValidatorAsync = ({ value }) => {
         const schema = Joi.array().items(Joi.string());
 
         const isValid = Joi.validate(value, schema, { allowUnknown: true });
@@ -733,7 +1170,7 @@ test('preprocessor override error', () => {
         }
     };
 
-    const preprocessor: Preprocessor = ({ value }) => {
+    const preprocessor: PreprocessorAsync = ({ value }) => {
         throw new Error(`preprocessor ${value}`);
     };
 
@@ -751,13 +1188,24 @@ test('preprocessor override error', () => {
         example: [0],
     };
 
-    expect(() => exConfig(config, options)).toThrowErrorMatchingInlineSnapshot(`
+    test('async', async () => {
+        await expect(exConfig(config, options)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
 "preprocessor 3
 invalid key: example"
 `);
+    });
+
+    test('sync', () => {
+        expect(() => exConfigSync(config, options))
+            .toThrowErrorMatchingInlineSnapshot(`
+"preprocessor 3
+invalid key: example"
+`);
+    });
 });
 
-test('extends must be a string', () => {
+describe('extends must be a string', () => {
     const presetPath = path.resolve(app1Dir, 'node_modules/preset-01');
     const one = require(presetPath);
 
@@ -765,7 +1213,9 @@ test('extends must be a string', () => {
         presets: [one],
     };
 
-    expect(() => exConfig(config)).toThrowErrorMatchingInlineSnapshot(`
+    test('async', async () => {
+        await expect(exConfig(config)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
 "{
   \\"presets\\": [
     {
@@ -790,14 +1240,45 @@ test('extends must be a string', () => {
 [1] \\"presets\\" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string"
 `);
+    });
+
+    test('sync', () => {
+        expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
+"{
+  \\"presets\\": [
+    {
+      \\"example\\": [
+        1
+      ],
+      \\"other\\": 1,
+      \\"presets\\": [
+        \\"preset-02\\"
+      ],
+      \\"object\\": {
+        \\"array\\": [
+          1
+        ],
+        \\"one\\": true,
+        \\"preset\\": 1
+      }
+    }
+  ]
+}
+[31m
+[1] \\"presets\\" at position 0 does not match any of the allowed types[0m
+extends key must be a module expressed as a string"
+`);
+    });
 });
 
-test('extends must be a string - nested', () => {
+describe('extends must be a string - nested', () => {
     const config = {
         presets: ['invalid-preset-01'],
     };
 
-    expect(() => exConfig(config)).toThrowErrorMatchingInlineSnapshot(`
+    test('async', async () => {
+        await expect(exConfig(config)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
 "{
   \\"presets\\": [
     {
@@ -823,9 +1304,39 @@ test('extends must be a string - nested', () => {
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-01/index.js"
 `);
+    });
+
+    test('sync', () => {
+        expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
+"{
+  \\"presets\\": [
+    {
+      \\"example\\": [
+        1
+      ],
+      \\"other\\": 1,
+      \\"presets\\": [
+        \\"preset-02\\"
+      ],
+      \\"object\\": {
+        \\"array\\": [
+          1
+        ],
+        \\"one\\": true,
+        \\"preset\\": 1
+      }
+    }
+  ]
+}
+[31m
+[1] \\"presets\\" at position 0 does not match any of the allowed types[0m
+extends key must be a module expressed as a string
+found in path: <PROJECT_ROOT>/node_modules/invalid-preset-01/index.js"
+`);
+    });
 });
 
-test('resolve must be a string', () => {
+describe('resolve must be a string', () => {
     const pluginPath = path.resolve(app1Dir, 'node_modules/plugin-01');
     const pluginOne = require(pluginPath);
 
@@ -833,7 +1344,9 @@ test('resolve must be a string', () => {
         plugins: [pluginOne],
     };
 
-    expect(() => exConfig(config)).toThrowErrorMatchingInlineSnapshot(`
+    test('async', async () => {
+        await expect(exConfig(config)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
 "{
   \\"plugins\\": [
     {
@@ -847,17 +1360,34 @@ test('resolve must be a string', () => {
 [1] \\"plugins\\" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string"
 `);
+    });
+
+    test('sync', () => {
+        expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
+"{
+  \\"plugins\\": [
+    {
+      \\"imported\\": [
+        \\"imported plugin-01\\"
+      ]
+    }
+  ]
+}
+[31m
+[1] \\"plugins\\" at position 0 does not match any of the allowed types[0m
+extends key must be a module expressed as a string"
+`);
+    });
 });
 
-test('resolve must be a string - nested', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
+describe('resolve must be a string - nested', () => {
     const config = {
         presets: ['invalid-preset-02'],
     };
 
-    expect(() => exConfig(config)).toThrowErrorMatchingInlineSnapshot(`
+    test('async', async () => {
+        await expect(exConfig(config)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
 "{
   \\"plugins\\": [
     {
@@ -872,17 +1402,35 @@ test('resolve must be a string - nested', () => {
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
 `);
+    });
+
+    test('sync', () => {
+        expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
+"{
+  \\"plugins\\": [
+    {
+      \\"imported\\": [
+        \\"imported plugin-01\\"
+      ]
+    }
+  ]
+}
+[31m
+[1] \\"plugins\\" at position 0 does not match any of the allowed types[0m
+extends key must be a module expressed as a string
+found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
+`);
+    });
 });
 
-test('resolve must be a string - nested - works as array', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
+describe('resolve must be a string - nested - works as array', () => {
     const config = {
         presets: [['invalid-preset-02', {}]],
     };
 
-    expect(() => exConfig(config)).toThrowErrorMatchingInlineSnapshot(`
+    test('async', async () => {
+        await expect(exConfig(config)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
 "{
   \\"plugins\\": [
     {
@@ -897,46 +1445,108 @@ test('resolve must be a string - nested - works as array', () => {
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
 `);
+    });
+
+    test('sync', () => {
+        expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
+"{
+  \\"plugins\\": [
+    {
+      \\"imported\\": [
+        \\"imported plugin-01\\"
+      ]
+    }
+  ]
+}
+[31m
+[1] \\"plugins\\" at position 0 does not match any of the allowed types[0m
+extends key must be a module expressed as a string
+found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
+`);
+    });
 });
 
-test('es modules must use a default export', () => {
+describe('es modules must use a default export', () => {
     const config = {
         presets: ['invalid-preset-03'],
     };
 
-    expect(() => exConfig(config)).toThrowErrorMatchingInlineSnapshot(`
+    test('async', async () => {
+        await expect(exConfig(config)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
 "<PROJECT_ROOT>/node_modules/invalid-preset-03/index.js must use export default with es modules
 found in path: <PROJECT_ROOT>"
 `);
+    });
+
+    test('sync', () => {
+        expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
+"<PROJECT_ROOT>/node_modules/invalid-preset-03/index.js must use export default with es modules
+found in path: <PROJECT_ROOT>"
+`);
+    });
 });
 
-test('calls presets and plugins as a function with default options = {}', () => {
+describe('calls presets and plugins as a function with default options = {}', () => {
     const config = {
         presets: ['preset-05'],
         plugins: ['plugin-03'],
     };
 
-    const result = exConfig(config);
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config);
+
+        checkResult(result);
+    });
 });
 
-test('calls presets and plugins as a function with specified options', () => {
-    const dir = path.resolve(__dirname, '__sandbox__/app1/');
-    process.chdir(dir);
-
+describe('calls presets and plugins as a function with specified options', () => {
     const config = {
         presets: [['preset-05', { special: 'options 05' }]],
         plugins: [['plugin-03', { special: 'options 03' }]],
     };
 
-    const result = exConfig(config);
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config);
+
+        checkResult(result);
+    });
 });
 
-test('handle base config as function', () => {
-    const config = (args: Config) => {
+describe('handle base config as function', () => {
+    const config = (args: ConfigFunctionParameters) => {
         return {
             args,
             presets: [['preset-05', { special: 'options 05' }]],
@@ -944,23 +1554,59 @@ test('handle base config as function', () => {
         };
     };
 
-    const result = exConfig(config);
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config);
+
+        checkResult(result);
+    });
 });
 
-test('handles es module default exports', () => {
+describe('handles es module default exports', () => {
     const config = {
         presets: ['preset-06'],
         plugins: ['plugin-04'],
     };
 
-    const result = exConfig(config);
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config);
+
+        checkResult(result);
+    });
 });
 
-test('baseDirectory option', () => {
+describe('baseDirectory option', () => {
     const baseDirectory = path.resolve(__dirname, '__sandbox__/app2/');
 
     const options = {
@@ -989,7 +1635,253 @@ test('baseDirectory option', () => {
         plugins: ['01'],
     };
 
-    const result = exConfig(config, options);
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
 
-    expect(result).toMatchSnapshot();
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(config, options);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(config, options);
+
+        checkResult(result);
+    });
+});
+
+describe('async-only tests', () => {
+    test('adds dirname to all lifecycles with delay', async () => {
+        function changeValues(object: { [key: string]: any }, context: string) {
+            function updater(value: any): any {
+                if (isPlainObject(value) === true) {
+                    const updatedObject = Object.keys(value).reduce(
+                        (acc, key) => {
+                            const val = value[key];
+
+                            if (['presets', 'plugins'].includes(key) === true) {
+                                return { ...acc, [key]: val };
+                            }
+
+                            return {
+                                ...acc,
+                                [key]: updater(val),
+                            };
+                        },
+                        {},
+                    );
+
+                    return updatedObject;
+                }
+
+                if (Array.isArray(value)) {
+                    return value.map((val) => updater(val));
+                }
+
+                if (
+                    typeof value !== 'string' &&
+                    typeof value.toString === 'function'
+                ) {
+                    // eslint-disable-next-line no-param-reassign
+                    value = value.toString();
+                }
+
+                if (typeof value === 'string') {
+                    return `${value} ${context}`;
+                }
+
+                return value;
+            }
+
+            const updated = updater(object);
+
+            return updated;
+        }
+
+        const preprocessor: PreprocessorAsync = async ({ value }) => {
+            await sleep();
+
+            const updated = changeValues(value, 'preprocessor');
+
+            return updated;
+        };
+
+        const processor: ProcessorAsync = async ({
+            config,
+            value,
+            current,
+            dirname,
+        }) => {
+            await sleep();
+
+            const initialMerge = automaticProcessor({
+                config,
+                value: changeValues(value, 'processor'),
+                current,
+                dirname,
+            });
+
+            return initialMerge;
+        };
+
+        const postProcessor: PostProcessorAsync = async ({ value }) => {
+            await sleep();
+
+            const updated = changeValues(value, 'postProcessor');
+
+            return updated;
+        };
+
+        const overridePreprocessor: PreprocessorAsync = async ({ value }) => {
+            await sleep();
+
+            const updated = changeValues(value, 'overridePreprocessor');
+
+            return updated;
+        };
+
+        const overrideProcessor: ProcessorAsync = async ({
+            config,
+            value,
+            current,
+            dirname,
+        }) => {
+            await sleep();
+
+            const initialMerge = automaticProcessor({
+                config,
+                value: changeValues(value, 'overrideProcessor'),
+                current,
+                dirname,
+            });
+
+            return initialMerge;
+        };
+
+        const config = {
+            presets: ['preset-01'],
+            inside: [1],
+            plugins: ['plugin-01'],
+            example: [0],
+        };
+
+        const options = {
+            preprocessor,
+            processor,
+            postProcessor,
+            overrides: {
+                example: {
+                    preprocessor: overridePreprocessor,
+                    processor: overrideProcessor,
+                },
+            },
+        };
+
+        const parsedConfig = await exConfig(config, options);
+        expect(parsedConfig).toMatchSnapshot();
+    });
+
+    test('config can be async', async () => {
+        const expected = {
+            works: true,
+        };
+
+        const config = async () => {
+            await sleep();
+
+            return expected;
+        };
+
+        const parsedConfig = await exConfig(config);
+        expect(parsedConfig).toEqual(expected);
+    });
+
+    test('error in postProcessor will extendError', async () => {
+        const baseConfig = {};
+
+        const postProcessor: PostProcessorAsync = async () => {
+            await sleep();
+            throw new Error('postProcessor can throw');
+        };
+
+        const options = { postProcessor };
+
+        await expect(exConfig(baseConfig, options)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
+"postProcessor can throw
+found in path: <PROJECT_ROOT>"
+`);
+    });
+
+    test('validator can be async', async () => {
+        const baseConfig = {};
+
+        const validator: ValidatorAsync = async () => {
+            await sleep();
+            throw new Error('validator can throw');
+        };
+
+        const options = { validator };
+
+        await expect(
+            exConfig(baseConfig, options),
+        ).rejects.toThrowErrorMatchingInlineSnapshot(`"validator can throw"`);
+    });
+
+    test('validator can be async - extended config', async () => {
+        const baseConfig = {
+            presets: ['preset-01'],
+        };
+
+        let loaded = 0;
+        const validator: ValidatorAsync = async () => {
+            loaded += 1;
+            await sleep();
+
+            if (loaded === 2) {
+                throw new Error('extended validator can throw');
+            }
+        };
+        const options = { validator };
+
+        await expect(exConfig(baseConfig, options)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
+"extended validator can throw
+invalid nested config: <PROJECT_ROOT>/node_modules/preset-01/index.js"
+`);
+    });
+
+    test('validator override can be async', async () => {
+        const baseConfig = {
+            valid: 0,
+            invalidExample: 1,
+        };
+
+        const overrideValidator: ValidatorAsync = async () => {
+            await sleep();
+            throw new Error('validator override can throw');
+        };
+
+        const options = {
+            overrides: {
+                invalidExample: {
+                    validator: overrideValidator,
+                },
+            },
+        };
+
+        await expect(exConfig(baseConfig, options)).rejects
+            .toThrowErrorMatchingInlineSnapshot(`
+"validator override can throw
+invalid key: invalidExample"
+`);
+    });
 });

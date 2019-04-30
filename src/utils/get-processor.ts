@@ -1,5 +1,5 @@
 import { mergeWith, isPlainObject } from 'lodash';
-import { LifecycleParams, Processor } from '../ex-config';
+import { LifecycleParams, ProcessorAsync, ProcessorSync } from '../types';
 
 function arrayPush({ value, current = [] }: LifecycleParams) {
     const toArray = Array.isArray(value) ? value : [value];
@@ -51,15 +51,15 @@ function automatic({ config, value, current, dirname }: LifecycleParams) {
 }
 
 const builtInProcessors = { automatic, arrayConcat, arrayPush, mergeDeep };
-export type builtInProcessors =
+export type BuiltInProcessors =
     | 'automatic'
     | 'arrayConcat'
     | 'arrayPush'
     | 'mergeDeep';
 
 function getProcessor(
-    processor: Processor | builtInProcessors = 'automatic',
-): Processor {
+    processor: ProcessorAsync | ProcessorSync | BuiltInProcessors,
+) {
     if (typeof processor === 'function') {
         return processor;
     }
@@ -69,4 +69,27 @@ function getProcessor(
     return matched;
 }
 
-export { getProcessor, automatic, arrayConcat, arrayPush, mergeDeep };
+function getProcessorAsync(
+    processor: ProcessorAsync | BuiltInProcessors = 'automatic',
+): ProcessorAsync {
+    const matchedProcessor: ProcessorAsync = getProcessor(processor);
+
+    return matchedProcessor;
+}
+
+function getProcessorSync(
+    processor: ProcessorSync | BuiltInProcessors = 'automatic',
+): ProcessorSync {
+    const matchedProcessor: ProcessorSync = getProcessor(processor);
+
+    return matchedProcessor;
+}
+
+export {
+    getProcessorSync,
+    getProcessorAsync,
+    automatic,
+    arrayConcat,
+    arrayPush,
+    mergeDeep,
+};

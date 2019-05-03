@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [3.0.0] - 2019-05-02
+
 ### Added
 
 -   Added sync export `exConfigSync`

@@ -23,10 +23,12 @@ function exConfigSync(
     const dirname = baseDirectory;
 
     const context = getContextSync(opts);
+    const api = context.api;
 
     const args: ConfigFunctionParameters = {
         options: {},
         dirname,
+        api,
     };
 
     let cfg = runFunctionWithContextSync(config, args);
@@ -38,7 +40,12 @@ function exConfigSync(
 
     if (context.preprocessor) {
         try {
-            cfg = context.preprocessor({ value: cfg, config: cfg, dirname });
+            cfg = context.preprocessor({
+                value: cfg,
+                config: cfg,
+                dirname,
+                api,
+            });
         } catch (error) {
             extendError({ error, pathname: dirname });
             throw error;
@@ -49,7 +56,7 @@ function exConfigSync(
      * Validate base config
      */
     if (context.validator) {
-        context.validator({ value: cfg, config: cfg, dirname });
+        context.validator({ value: cfg, config: cfg, dirname, api });
     }
 
     cfg = parseKeysSync({ baseConfig: {}, config: cfg, dirname, context });
@@ -60,6 +67,7 @@ function exConfigSync(
                 value: cfg,
                 config: cfg,
                 dirname,
+                api,
             });
         } catch (error) {
             extendError({ error, pathname: dirname });

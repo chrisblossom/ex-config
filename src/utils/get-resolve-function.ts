@@ -5,8 +5,7 @@ import {
     createResolver,
     PrefixOptions,
 } from 'resolve-with-prefix';
-import { ContextSync } from './get-context';
-import { ContextAsync } from './get-context';
+import { ContextSync, ContextAsync } from './get-context';
 
 interface ArgsAsync {
     key: string;

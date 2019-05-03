@@ -42,6 +42,7 @@ describe('mergeDeep', () => {
             current: obj1,
             value: [obj2, obj3],
             dirname: __dirname,
+            api: {},
         });
 
         expect(result).toEqual({

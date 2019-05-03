@@ -27,6 +27,8 @@ function parseKeysSync({
 
     let currentConfig = baseConfig;
 
+    const api = context.api;
+
     /**
      * Handle presets first so object-key order does not matter
      */
@@ -69,6 +71,7 @@ function parseKeysSync({
                     current: previousValue,
                     config: currentConfig,
                     dirname,
+                    api,
                 });
             } catch (error) {
                 error.message += errorMessage;
@@ -98,11 +101,12 @@ function parseKeysSync({
 
                 value = [];
                 for (const packageId of normalizedPluginValue) {
-                    const { module: plugin } = requireFromStringSync(
-                        packageId,
-                        resolve,
+                    const { module: plugin } = requireFromStringSync({
+                        pkg: packageId,
+                        resolveFunction: resolve,
                         dirname,
-                    );
+                        api,
+                    });
 
                     value.push(cloneDeep(plugin));
                 }
@@ -114,6 +118,7 @@ function parseKeysSync({
                     current: previousValue,
                     config: currentConfig,
                     dirname,
+                    api,
                 });
             }
 
@@ -131,6 +136,7 @@ function parseKeysSync({
                 current: currentValue,
                 config,
                 dirname,
+                api,
             });
 
             currentConfig[key] = processedValue;

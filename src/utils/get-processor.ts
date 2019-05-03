@@ -13,7 +13,7 @@ function arrayConcat({ value, current = [] }: LifecycleParams) {
     return [...toArray, ...current];
 }
 
-function mergeDeep({ config, value, current = {}, dirname }: LifecycleParams) {
+function mergeDeep({ value, current = {}, ...rest }: LifecycleParams) {
     const val = Array.isArray(value) ? value : [value];
 
     return mergeWith(current, ...val, <N, S>(objValue: N, srcValue: S) => {
@@ -23,10 +23,9 @@ function mergeDeep({ config, value, current = {}, dirname }: LifecycleParams) {
 
         if (isPlainObject(objValue)) {
             return mergeDeep({
-                config,
                 value: objValue,
                 current: srcValue,
-                dirname,
+                ...rest,
             });
         }
 
@@ -34,17 +33,18 @@ function mergeDeep({ config, value, current = {}, dirname }: LifecycleParams) {
     });
 }
 
-function automatic({ config, value, current, dirname }: LifecycleParams) {
+function automatic(lifecycleParams: LifecycleParams) {
+    const { current, value } = lifecycleParams;
     if (current === undefined) {
         return value;
     }
 
     if (isPlainObject(current)) {
-        return mergeDeep({ config, current, value, dirname });
+        return mergeDeep(lifecycleParams);
     }
 
     if (Array.isArray(current)) {
-        return arrayPush({ config, current, value, dirname });
+        return arrayPush(lifecycleParams);
     }
 
     return value;

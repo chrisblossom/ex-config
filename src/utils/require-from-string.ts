@@ -4,7 +4,7 @@ import {
     ResolveFunctionSync,
 } from './get-resolve-function';
 import { extendError } from './extend-error';
-import { ConfigFunctionParameters } from '../types';
+import { Api, ConfigFunctionParameters } from '../types';
 import {
     runFunctionWithContextAsync,
     runFunctionWithContextSync,
@@ -39,6 +39,7 @@ async function requireFromStringAsync(
     pkg: string | ReadonlyArray<string>,
     resolveFunction: ResolveFunctionAsync,
     dirname: string,
+    api: Api,
 ): Promise<RequireFromString> {
     const [packageId, options = {}] = Array.isArray(pkg) ? pkg : [pkg];
 
@@ -51,6 +52,7 @@ async function requireFromStringAsync(
         const context: ConfigFunctionParameters = {
             options,
             dirname,
+            api,
         };
 
         const config = await runFunctionWithContextAsync(module, context);
@@ -68,11 +70,19 @@ async function requireFromStringAsync(
     }
 }
 
-function requireFromStringSync(
-    pkg: string | ReadonlyArray<string>,
-    resolveFunction: ResolveFunctionSync,
-    dirname: string,
-): RequireFromString {
+interface RequireFromStringSyncParameters {
+    pkg: string | ReadonlyArray<string>;
+    resolveFunction: ResolveFunctionSync;
+    dirname: string;
+    api: Api;
+}
+
+function requireFromStringSync({
+    pkg,
+    resolveFunction,
+    dirname,
+    api,
+}: RequireFromStringSyncParameters): RequireFromString {
     const [packageId, options = {}] = Array.isArray(pkg) ? pkg : [pkg];
 
     try {
@@ -84,6 +94,7 @@ function requireFromStringSync(
         const context: ConfigFunctionParameters = {
             options,
             dirname,
+            api,
         };
 
         const config = runFunctionWithContextSync(module, context);

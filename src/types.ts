@@ -13,6 +13,8 @@ export type ConfigAsync = BasicConfig | ConfigFnAsync;
 type ConfigFnSync = (args: ConfigFunctionParameters) => BasicConfig;
 export type ConfigSync = BasicConfig | ConfigFnSync;
 
+export type Api = { [key: string]: any };
+
 export interface LifecycleParams {
     // actionable item
     value: any;
@@ -22,6 +24,8 @@ export interface LifecycleParams {
     config: BasicConfig;
     // current config directory
     dirname: string;
+    // user api
+    api: Api;
 }
 
 export type ValidatorAsync = (
@@ -51,6 +55,7 @@ export type PostProcessorSync = (
 export type ConfigFunctionParameters = {
     options: any;
     dirname: string;
+    api: Api;
 };
 
 export type OverridesAsync = {
@@ -68,6 +73,7 @@ export type OverridesSync = {
 };
 
 export interface OptionsAsync {
+    api?: Api;
     baseDirectory?: string;
     presets?: string | false;
     plugins?: string | false;
@@ -79,6 +85,7 @@ export interface OptionsAsync {
 }
 
 export interface OptionsSync {
+    api?: Api;
     baseDirectory?: string;
     presets?: string | false;
     plugins?: string | false;

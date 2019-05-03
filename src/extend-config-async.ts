@@ -21,6 +21,7 @@ async function extendConfigAsync({
     dirname,
     context,
 }: Args): Promise<BasicConfig> {
+    const api = context.api;
     const normalizedPackageIds = Array.isArray(packageIds)
         ? packageIds
         : [packageIds];
@@ -32,7 +33,12 @@ async function extendConfigAsync({
             module: LoadedConfig,
             dirname: updatedDirname,
             pathname,
-        } = await requireFromStringAsync(packageId, resolveFunction, dirname);
+        } = await requireFromStringAsync(
+            packageId,
+            resolveFunction,
+            dirname,
+            api,
+        );
 
         let mergeLoadedConfig = cloneDeep(LoadedConfig);
         try {
@@ -41,6 +47,7 @@ async function extendConfigAsync({
                     config: extendedConfig,
                     value: mergeLoadedConfig,
                     dirname: updatedDirname,
+                    api,
                 });
             }
 
@@ -52,6 +59,7 @@ async function extendConfigAsync({
                     value: mergeLoadedConfig,
                     config: extendedConfig,
                     dirname: updatedDirname,
+                    api,
                 });
             }
         } catch (error) {

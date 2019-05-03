@@ -21,6 +21,7 @@ function extendConfigSync({
     dirname,
     context,
 }: Args): BasicConfig {
+    const api = context.api;
     const normalizedPackageIds = Array.isArray(packageIds)
         ? packageIds
         : [packageIds];
@@ -32,7 +33,12 @@ function extendConfigSync({
             module: LoadedConfig,
             dirname: updatedDirname,
             pathname,
-        } = requireFromStringSync(packageId, resolveFunction, dirname);
+        } = requireFromStringSync({
+            pkg: packageId,
+            resolveFunction,
+            dirname,
+            api,
+        });
 
         let mergeLoadedConfig = cloneDeep(LoadedConfig);
         try {
@@ -41,6 +47,7 @@ function extendConfigSync({
                     config: extendedConfig,
                     value: mergeLoadedConfig,
                     dirname: updatedDirname,
+                    api,
                 });
             }
 
@@ -52,6 +59,7 @@ function extendConfigSync({
                     value: mergeLoadedConfig,
                     config: extendedConfig,
                     dirname: updatedDirname,
+                    api,
                 });
             }
         } catch (error) {

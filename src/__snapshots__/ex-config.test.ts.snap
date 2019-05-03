@@ -562,6 +562,88 @@ Object {
 }
 `;
 
+exports[`api option async 1`] = `
+Object {
+  "example": Array [
+    1,
+  ],
+  "plugins": Array [
+    Object {
+      "imported": "plugin-05",
+      "plugin05Args": Object {
+        "api": Api {
+          "add": [Function bound add],
+          "loaded": Array [
+            "preprocessor",
+            "validator",
+            "preset-07",
+            "preprocessor",
+            "validator",
+            "processor",
+            "plugin-05",
+          ],
+        },
+        "dirname": "<PROJECT_ROOT>",
+        "options": Object {},
+      },
+    },
+  ],
+  "preset07Args": Object {
+    "api": Api {
+      "add": [Function bound add],
+      "loaded": Array [
+        "preprocessor",
+        "validator",
+        "preset-07",
+      ],
+    },
+    "dirname": "<PROJECT_ROOT>",
+    "options": Object {},
+  },
+}
+`;
+
+exports[`api option sync 1`] = `
+Object {
+  "example": Array [
+    1,
+  ],
+  "plugins": Array [
+    Object {
+      "imported": "plugin-05",
+      "plugin05Args": Object {
+        "api": Api {
+          "add": [Function bound add],
+          "loaded": Array [
+            "preprocessor",
+            "validator",
+            "preset-07",
+            "preprocessor",
+            "validator",
+            "processor",
+            "plugin-05",
+          ],
+        },
+        "dirname": "<PROJECT_ROOT>",
+        "options": Object {},
+      },
+    },
+  ],
+  "preset07Args": Object {
+    "api": Api {
+      "add": [Function bound add],
+      "loaded": Array [
+        "preprocessor",
+        "validator",
+        "preset-07",
+      ],
+    },
+    "dirname": "<PROJECT_ROOT>",
+    "options": Object {},
+  },
+}
+`;
+
 exports[`async-only tests adds dirname to all lifecycles with delay 1`] = `
 Object {
   "example": Array [
@@ -660,12 +742,14 @@ Object {
     Object {
       "imported": "plugin-03",
       "plugin03Args": Object {
+        "api": Object {},
         "dirname": "<PROJECT_ROOT>",
         "options": Object {},
       },
     },
   ],
   "preset05Args": Object {
+    "api": Object {},
     "dirname": "<PROJECT_ROOT>",
     "options": Object {},
   },
@@ -678,12 +762,14 @@ Object {
     Object {
       "imported": "plugin-03",
       "plugin03Args": Object {
+        "api": Object {},
         "dirname": "<PROJECT_ROOT>",
         "options": Object {},
       },
     },
   ],
   "preset05Args": Object {
+    "api": Object {},
     "dirname": "<PROJECT_ROOT>",
     "options": Object {},
   },
@@ -696,6 +782,7 @@ Object {
     Object {
       "imported": "plugin-03",
       "plugin03Args": Object {
+        "api": Object {},
         "dirname": "<PROJECT_ROOT>",
         "options": Object {
           "special": "options 03",
@@ -704,6 +791,7 @@ Object {
     },
   ],
   "preset05Args": Object {
+    "api": Object {},
     "dirname": "<PROJECT_ROOT>",
     "options": Object {
       "special": "options 05",
@@ -718,6 +806,7 @@ Object {
     Object {
       "imported": "plugin-03",
       "plugin03Args": Object {
+        "api": Object {},
         "dirname": "<PROJECT_ROOT>",
         "options": Object {
           "special": "options 03",
@@ -726,6 +815,7 @@ Object {
     },
   ],
   "preset05Args": Object {
+    "api": Object {},
     "dirname": "<PROJECT_ROOT>",
     "options": Object {
       "special": "options 05",
@@ -811,6 +901,7 @@ Object {
 exports[`handle base config as function async 1`] = `
 Object {
   "args": Object {
+    "api": Object {},
     "dirname": "<PROJECT_ROOT>",
     "options": Object {},
   },
@@ -818,6 +909,7 @@ Object {
     Object {
       "imported": "plugin-03",
       "plugin03Args": Object {
+        "api": Object {},
         "dirname": "<PROJECT_ROOT>",
         "options": Object {
           "special": "options 03",
@@ -826,6 +918,7 @@ Object {
     },
   ],
   "preset05Args": Object {
+    "api": Object {},
     "dirname": "<PROJECT_ROOT>",
     "options": Object {
       "special": "options 05",
@@ -837,6 +930,7 @@ Object {
 exports[`handle base config as function sync 1`] = `
 Object {
   "args": Object {
+    "api": Object {},
     "dirname": "<PROJECT_ROOT>",
     "options": Object {},
   },
@@ -844,6 +938,7 @@ Object {
     Object {
       "imported": "plugin-03",
       "plugin03Args": Object {
+        "api": Object {},
         "dirname": "<PROJECT_ROOT>",
         "options": Object {
           "special": "options 03",
@@ -852,6 +947,7 @@ Object {
     },
   ],
   "preset05Args": Object {
+    "api": Object {},
     "dirname": "<PROJECT_ROOT>",
     "options": Object {
       "special": "options 05",

@@ -24,9 +24,12 @@ async function exConfigAsync(
 
     const context = getContextAsync(opts);
 
+    const api = context.api;
+
     const args: ConfigFunctionParameters = {
         options: {},
         dirname,
+        api,
     };
 
     let cfg = await runFunctionWithContextAsync(config, args);
@@ -42,6 +45,7 @@ async function exConfigAsync(
                 value: cfg,
                 config: cfg,
                 dirname,
+                api,
             });
         } catch (error) {
             extendError({ error, pathname: dirname });
@@ -53,7 +57,7 @@ async function exConfigAsync(
      * Validate base config
      */
     if (context.validator) {
-        await context.validator({ value: cfg, config: cfg, dirname });
+        await context.validator({ value: cfg, config: cfg, dirname, api });
     }
 
     cfg = await parseKeysAsync({
@@ -69,6 +73,7 @@ async function exConfigAsync(
                 value: cfg,
                 config: cfg,
                 dirname,
+                api,
             });
         } catch (error) {
             extendError({ error, pathname: dirname });

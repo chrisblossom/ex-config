@@ -45,7 +45,7 @@ const baseConfig = await explorer.load();
  * }
  */
 const config = await exConfig(
-    baseConfig,
+    /* initial config: */ baseConfig,
     /* options: */ {
         /**
          * directory to initially resolve presets/plugins from
@@ -53,6 +53,17 @@ const config = await exConfig(
          * default: process.cwd()
          */
         baseDirectory: process.cwd(),
+
+        /**
+         * Add an API accessible to all lifecycles/presets/plugins
+         *
+         * default: {}
+         */
+        api: new (class ApiExample {
+            someCustomApiExample() {
+                return this;
+            }
+        })(),
 
         /**
          * key id that extends configurations via resolve
@@ -78,7 +89,7 @@ const config = await exConfig(
          *
          * Runs once with each preset
          */
-        preprocessor: async ({ value, current, config, dirname }) => {
+        preprocessor: async ({ value, current, config, dirname, api }) => {
             // returned value will be the updated preset value
             return value;
         },
@@ -88,7 +99,7 @@ const config = await exConfig(
          *
          * Runs once with each preset
          */
-        validator: async ({ value, current, config, dirname }) => {
+        validator: async ({ value, current, config, dirname, api }) => {
             if (value !== 'valid') {
                 throw new Error('value is invalid');
             }
@@ -101,7 +112,7 @@ const config = await exConfig(
          * Post Processor runs once after all configurations
          *   have been successfully processed.
          */
-        postProcessor: async ({ config, dirname }) => {
+        postProcessor: async ({ config, dirname, api }) => {
             // returned value will equal the final config
             return value;
         },
@@ -125,7 +136,7 @@ const config = await exConfig(
          *
          * Pass a function to use a custom processor
          */
-        processor: async ({ value, current = [], config, dirname }) => {
+        processor: async ({ value, current = [], config, dirname, api }) => {
             const val = Array.isArray(value) ? value : [value];
 
             // returned value will be the new value of the key
@@ -183,14 +194,20 @@ const config = await exConfig(
                 /**
                  * preprocessor override is in addition to the base preprocessor
                  */
-                preprocessor: async ({ value, current, config, dirname }) => {
+                preprocessor: async ({
+                    value,
+                    current,
+                    config,
+                    dirname,
+                    api,
+                }) => {
                     return value;
                 },
 
                 /**
                  * validator override will validate in addition to the base validator
                  */
-                validator: async ({ value, current, config, dirname }) => {
+                validator: async ({ value, current, config, dirname, api }) => {
                     if (typeof value.source !== 'string') {
                         throw new Error('files source must be a string');
                     }
@@ -199,7 +216,13 @@ const config = await exConfig(
                 /**
                  * processor override will override the base processor
                  */
-                processor: async ({ value, current = [], config, dirname }) => {
+                processor: async ({
+                    value,
+                    current = [],
+                    config,
+                    dirname,
+                    api,
+                }) => {
                     const val = Array.isArray(value) ? value : [value];
 
                     return [...val, ...current];
@@ -225,6 +248,8 @@ function presetExample(context) {
     const options = context.options;
     // dirname package was found from
     const dirname = context.dirname;
+    // api provided in options
+    const api = context.api;
 
     return {
         verbose: options.verbose,

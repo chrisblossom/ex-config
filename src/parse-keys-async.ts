@@ -27,6 +27,8 @@ async function parseKeysAsync({
 
     let currentConfig = baseConfig;
 
+    const api = context.api;
+
     /**
      * Handle presets first so object-key order does not matter
      */
@@ -69,6 +71,7 @@ async function parseKeysAsync({
                     current: previousValue,
                     config: currentConfig,
                     dirname,
+                    api,
                 });
             } catch (error) {
                 error.message += errorMessage;
@@ -102,6 +105,7 @@ async function parseKeysAsync({
                         packageId,
                         resolve,
                         dirname,
+                        api,
                     );
 
                     value.push(cloneDeep(plugin));
@@ -114,6 +118,7 @@ async function parseKeysAsync({
                     current: previousValue,
                     config: currentConfig,
                     dirname,
+                    api,
                 });
             }
 
@@ -132,6 +137,7 @@ async function parseKeysAsync({
                 current: currentValue,
                 config,
                 dirname,
+                api,
             });
 
             currentConfig[key] = processedValue;

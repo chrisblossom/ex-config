@@ -10,6 +10,10 @@ import {
     ValidatorAsync,
     OptionsAsync,
     BasicConfig,
+    ProcessorSync,
+    PreprocessorSync,
+    PostProcessorSync,
+    ValidatorSync,
 } from './types';
 import { automatic as automaticProcessor } from './utils/get-processor';
 
@@ -1727,6 +1731,7 @@ describe('async-only tests', () => {
                 value: changeValues(value, 'processor'),
                 current,
                 dirname,
+                api: {},
             });
 
             return initialMerge;
@@ -1761,6 +1766,7 @@ describe('async-only tests', () => {
                 value: changeValues(value, 'overrideProcessor'),
                 current,
                 dirname,
+                api: {},
             });
 
             return initialMerge;
@@ -1883,5 +1889,130 @@ invalid nested config: <PROJECT_ROOT>/node_modules/preset-01/index.js"
 "validator override can throw
 invalid key: invalidExample"
 `);
+    });
+});
+
+describe('api option', () => {
+    const baseConfig = {
+        presets: ['preset-07'],
+        plugins: ['plugin-05'],
+        example: [1],
+    };
+
+    class Api {
+        loaded: string[];
+
+        constructor() {
+            this.loaded = [];
+
+            this.add = this.add.bind(this);
+        }
+
+        add(lifecycle: string) {
+            this.loaded.push(lifecycle);
+        }
+
+        read() {
+            return this.loaded;
+        }
+    }
+
+    const preprocessor: PreprocessorSync = ({ value, api }) => {
+        api.add('preprocessor');
+
+        return value;
+    };
+
+    const processor: ProcessorSync = ({ api, ...rest }) => {
+        const initialMerge = automaticProcessor({ api, ...rest });
+
+        api.add('processor');
+
+        return initialMerge;
+    };
+
+    const validator: ValidatorSync = ({ api }) => {
+        api.add('validator');
+    };
+
+    const postProcessor: PostProcessorSync = ({ value, api }) => {
+        api.add('postProcessor');
+
+        return value;
+    };
+
+    const overridePreprocessor: PreprocessorSync = ({ value, api }) => {
+        api.add('overridePreprocessor');
+
+        return value;
+    };
+
+    const overrideProcessor: ProcessorSync = ({ api, ...rest }) => {
+        const initialMerge = automaticProcessor({ api, ...rest });
+
+        api.add('overrideProcessor');
+
+        return initialMerge;
+    };
+
+    const overrideValidator: ValidatorSync = ({ api }) => {
+        api.add('overrideValidator');
+    };
+
+    let api = new Api();
+    let options = {};
+    beforeEach(() => {
+        api = new Api();
+
+        options = {
+            api,
+            validator,
+            preprocessor,
+            processor,
+            postProcessor,
+            overrides: {
+                example: {
+                    validator: overrideValidator,
+                    preprocessor: overridePreprocessor,
+                    processor: overrideProcessor,
+                },
+            },
+        };
+    });
+
+    let lastResult;
+    const checkResult = (result: BasicConfig) => {
+        expect(result).toMatchSnapshot();
+        expect(api.read()).toEqual([
+            'preprocessor',
+            'validator',
+            'preset-07',
+            'preprocessor',
+            'validator',
+            'processor',
+            'plugin-05',
+            'processor',
+            'overridePreprocessor',
+            'overrideValidator',
+            'overrideProcessor',
+            'postProcessor',
+        ]);
+
+        lastResult = result;
+        if (lastResult) {
+            expect(result).toEqual(lastResult);
+        }
+    };
+
+    test('async', async () => {
+        const result = await exConfig(baseConfig, options);
+
+        checkResult(result);
+    });
+
+    test('sync', () => {
+        const result = exConfigSync(baseConfig, options);
+
+        checkResult(result);
     });
 });

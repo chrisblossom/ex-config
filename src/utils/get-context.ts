@@ -13,6 +13,7 @@ import {
     PostProcessorAsync,
     OverridesAsync,
     OptionsAsync,
+    Api,
 } from '../types';
 import {
     ResolveFunctionAsync,
@@ -22,6 +23,7 @@ import { generateResolveValidator, ResolveSchema } from './validation-utils';
 import { getProcessorAsync, getProcessorSync } from './get-processor';
 
 export interface ContextAsync {
+    api: Api;
     readonly presets: string | false;
     readonly plugins: string | false;
     readonly resolve: { [key: string]: ResolveFunctionAsync };
@@ -34,6 +36,7 @@ export interface ContextAsync {
 }
 
 export interface ContextSync {
+    api: Api;
     readonly presets: string | false;
     readonly plugins: string | false;
     readonly resolve: { [key: string]: ResolveFunctionSync };
@@ -70,7 +73,10 @@ function getContext({ options, sync }: GetContextParameters) {
             ? getProcessorSync(options.processor)
             : getProcessorAsync(options.processor);
 
+    const api = options.api || {};
+
     const context = {
+        api,
         presets,
         plugins,
         processor,

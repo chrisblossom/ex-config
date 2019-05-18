@@ -1,6 +1,6 @@
 import path from 'path';
 import { cloneDeep, isPlainObject } from 'lodash';
-import Joi from 'joi';
+import Joi from '@hapi/joi';
 import { exConfig, exConfigSync } from './ex-config';
 import {
     ConfigFunctionParameters,

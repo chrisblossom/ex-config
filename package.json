@@ -22,7 +22,7 @@
   "homepage": "https://github.com/chrisblossom/ex-config",
   "author": "Chris Blossom",
   "engines": {
-    "node": ">=6.9.0"
+    "node": ">=8.9.0"
   },
   "files": [
     "dist/"
@@ -47,16 +47,16 @@
     "typescript": "backtrack typescript"
   },
   "devDependencies": {
-    "@backtrack/core": "^0.1.27",
-    "@backtrack/preset-node": "^0.3.0",
-    "@types/jest": "^24.0.11",
-    "@types/joi": "^14.3.2",
-    "@types/lodash": "^4.14.123",
+    "@backtrack/core": "^0.2.0",
+    "@backtrack/preset-node": "^0.4.3",
+    "@types/hapi__joi": "^15.0.1",
+    "@types/jest": "^24.0.13",
+    "@types/lodash": "^4.14.129",
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "joi": "^12.0.0",
+    "@hapi/joi": "^15.0.3",
     "lodash": "^4.17.11",
-    "resolve-with-prefix": "^2.0.0"
+    "resolve-with-prefix": "^3.0.0"
   }
 }

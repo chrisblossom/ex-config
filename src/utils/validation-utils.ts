@@ -1,4 +1,4 @@
-import Joi from '@hapi/joi';
+import Joi from 'joi';
 import { extendError } from './extend-error';
 import { BasicConfig } from '../types';
 
@@ -6,12 +6,10 @@ function generateResolveValidator(
 	presets?: string | false,
 	plugins?: string | false,
 ) {
-	const schema = Joi.array()
-		.items(
-			Joi.string(),
-			Joi.array().ordered(Joi.string().required(), Joi.any()).max(2),
-		)
-		.single(true);
+	const schema = Joi.array().items(
+		Joi.string(),
+		Joi.array().ordered(Joi.string().required(), Joi.any()).max(2),
+	);
 
 	const obj: BasicConfig = {};
 	if (presets) {
@@ -38,7 +36,7 @@ function validateResolveKeys(
 		return;
 	}
 
-	const isValid = Joi.validate(config, schema, {
+	const isValid = schema.validate(config, {
 		allowUnknown: true,
 	});
 

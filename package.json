@@ -53,13 +53,12 @@
 	"devDependencies": {
 		"@backtrack/core": "^0.2.1",
 		"@backtrack/preset-node": "^0.10.3",
-		"@types/hapi__joi": "^15.0.4",
 		"@types/jest": "^29.5.7",
 		"@types/lodash": "^4.14.200",
 		"typescript": "^5.2.2"
 	},
 	"dependencies": {
-		"@hapi/joi": "^15.0.3",
+		"joi": "^17.11.0",
 		"lodash": "^4.17.21",
 		"resolve-with-prefix": "^4.0.1"
 	}

@@ -1,6 +1,6 @@
 import path from 'path';
 import { cloneDeep, isPlainObject } from 'lodash';
-import Joi from '@hapi/joi';
+import Joi from 'joi';
 import { exConfig, exConfigSync } from './ex-config';
 import {
 	ConfigFunctionParameters,
@@ -744,7 +744,7 @@ describe('validates config', () => {
 			string: Joi.string(),
 		});
 
-		const isValid = Joi.validate(value, schema, { allowUnknown: true });
+		const isValid = schema.validate(value, { allowUnknown: true });
 
 		if (isValid.error) {
 			throw new Error(isValid.error.annotate());
@@ -788,7 +788,7 @@ describe('validates nested config', () => {
 			other: Joi.string(),
 		});
 
-		const isValid = Joi.validate(value, schema, { allowUnknown: true });
+		const isValid = schema.validate(value, { allowUnknown: true });
 
 		if (isValid.error) {
 			throw new Error(isValid.error.annotate());
@@ -859,7 +859,7 @@ describe('validates override config', () => {
 	const validator: ValidatorAsync = ({ value }) => {
 		const schema = Joi.string();
 
-		const isValid = Joi.validate(value, schema, { allowUnknown: true });
+		const isValid = schema.validate(value, { allowUnknown: true });
 
 		if (isValid.error) {
 			throw new Error(isValid.error.annotate());
@@ -899,7 +899,7 @@ describe('validates nested override config', () => {
 	const validator: ValidatorAsync = ({ value }) => {
 		const schema = Joi.string();
 
-		const isValid = Joi.validate(value, schema, { allowUnknown: true });
+		const isValid = schema.validate(value, { allowUnknown: true });
 
 		if (isValid.error) {
 			throw new Error(isValid.error.annotate());
@@ -1020,7 +1020,7 @@ describe('allows preprocessor', () => {
 			example: Joi.array().items(Joi.string()),
 		});
 
-		const isValid = Joi.validate(value, schema, { allowUnknown: true });
+		const isValid = schema.validate(value, { allowUnknown: true });
 
 		if (isValid.error) {
 			throw new Error(isValid.error.annotate());
@@ -1077,7 +1077,7 @@ describe('preprocessor error', () => {
 			example: Joi.array().items(Joi.string()),
 		});
 
-		const isValid = Joi.validate(value, schema, { allowUnknown: true });
+		const isValid = schema.validate(value, { allowUnknown: true });
 
 		if (isValid.error) {
 			throw new Error(isValid.error.annotate());
@@ -1119,7 +1119,7 @@ describe('allows preprocessor override', () => {
 	const validator: ValidatorAsync = ({ value }) => {
 		const schema = Joi.array().items(Joi.string());
 
-		const isValid = Joi.validate(value, schema, { allowUnknown: true });
+		const isValid = schema.validate(value, { allowUnknown: true });
 
 		if (isValid.error) {
 			throw new Error(isValid.error.annotate());
@@ -1173,7 +1173,7 @@ describe('preprocessor override error', () => {
 	const validator: ValidatorAsync = ({ value }) => {
 		const schema = Joi.array().items(Joi.string());
 
-		const isValid = Joi.validate(value, schema, { allowUnknown: true });
+		const isValid = schema.validate(value, { allowUnknown: true });
 
 		if (isValid.error) {
 			throw new Error(isValid.error.annotate());
@@ -1228,7 +1228,7 @@ describe('extends must be a string', () => {
 			.toThrowErrorMatchingInlineSnapshot(`
 "{
   "presets": [
-    {
+    { [31m[1][0m
       "example": [
         1
       ],
@@ -1247,7 +1247,7 @@ describe('extends must be a string', () => {
   ]
 }
 [31m
-[1] "presets" at position 0 does not match any of the allowed types[0m
+[1] "presets" does not match any of the allowed types[0m
 extends key must be a module expressed as a string"
 `);
 	});
@@ -1256,7 +1256,7 @@ extends key must be a module expressed as a string"
 		expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
 "{
   "presets": [
-    {
+    { [31m[1][0m
       "example": [
         1
       ],
@@ -1275,7 +1275,7 @@ extends key must be a module expressed as a string"
   ]
 }
 [31m
-[1] "presets" at position 0 does not match any of the allowed types[0m
+[1] "presets" does not match any of the allowed types[0m
 extends key must be a module expressed as a string"
 `);
 	});
@@ -1291,7 +1291,7 @@ describe('extends must be a string - nested', () => {
 			.toThrowErrorMatchingInlineSnapshot(`
 "{
   "presets": [
-    {
+    { [31m[1][0m
       "example": [
         1
       ],
@@ -1310,7 +1310,7 @@ describe('extends must be a string - nested', () => {
   ]
 }
 [31m
-[1] "presets" at position 0 does not match any of the allowed types[0m
+[1] "presets" does not match any of the allowed types[0m
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-01/index.js"
 `);
@@ -1320,7 +1320,7 @@ found in path: <PROJECT_ROOT>/node_modules/invalid-preset-01/index.js"
 		expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
 "{
   "presets": [
-    {
+    { [31m[1][0m
       "example": [
         1
       ],
@@ -1339,7 +1339,7 @@ found in path: <PROJECT_ROOT>/node_modules/invalid-preset-01/index.js"
   ]
 }
 [31m
-[1] "presets" at position 0 does not match any of the allowed types[0m
+[1] "presets" does not match any of the allowed types[0m
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-01/index.js"
 `);
@@ -1359,7 +1359,7 @@ describe('resolve must be a string', () => {
 			.toThrowErrorMatchingInlineSnapshot(`
 "{
   "plugins": [
-    {
+    { [31m[1][0m
       "imported": [
         "imported plugin-01"
       ]
@@ -1367,7 +1367,7 @@ describe('resolve must be a string', () => {
   ]
 }
 [31m
-[1] "plugins" at position 0 does not match any of the allowed types[0m
+[1] "plugins" does not match any of the allowed types[0m
 extends key must be a module expressed as a string"
 `);
 	});
@@ -1376,7 +1376,7 @@ extends key must be a module expressed as a string"
 		expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
 "{
   "plugins": [
-    {
+    { [31m[1][0m
       "imported": [
         "imported plugin-01"
       ]
@@ -1384,7 +1384,7 @@ extends key must be a module expressed as a string"
   ]
 }
 [31m
-[1] "plugins" at position 0 does not match any of the allowed types[0m
+[1] "plugins" does not match any of the allowed types[0m
 extends key must be a module expressed as a string"
 `);
 	});
@@ -1400,7 +1400,7 @@ describe('resolve must be a string - nested', () => {
 			.toThrowErrorMatchingInlineSnapshot(`
 "{
   "plugins": [
-    {
+    { [31m[1][0m
       "imported": [
         "imported plugin-01"
       ]
@@ -1408,7 +1408,7 @@ describe('resolve must be a string - nested', () => {
   ]
 }
 [31m
-[1] "plugins" at position 0 does not match any of the allowed types[0m
+[1] "plugins" does not match any of the allowed types[0m
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
 `);
@@ -1418,7 +1418,7 @@ found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
 		expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
 "{
   "plugins": [
-    {
+    { [31m[1][0m
       "imported": [
         "imported plugin-01"
       ]
@@ -1426,7 +1426,7 @@ found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
   ]
 }
 [31m
-[1] "plugins" at position 0 does not match any of the allowed types[0m
+[1] "plugins" does not match any of the allowed types[0m
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
 `);
@@ -1448,7 +1448,7 @@ describe('resolve must be a string - nested - works as array', () => {
 			.toThrowErrorMatchingInlineSnapshot(`
 "{
   "plugins": [
-    {
+    { [31m[1][0m
       "imported": [
         "imported plugin-01"
       ]
@@ -1456,7 +1456,7 @@ describe('resolve must be a string - nested - works as array', () => {
   ]
 }
 [31m
-[1] "plugins" at position 0 does not match any of the allowed types[0m
+[1] "plugins" does not match any of the allowed types[0m
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
 `);
@@ -1466,7 +1466,7 @@ found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
 		expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
 "{
   "plugins": [
-    {
+    { [31m[1][0m
       "imported": [
         "imported plugin-01"
       ]
@@ -1474,7 +1474,7 @@ found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
   ]
 }
 [31m
-[1] "plugins" at position 0 does not match any of the allowed types[0m
+[1] "plugins" does not match any of the allowed types[0m
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
 `);
@@ -1498,6 +1498,100 @@ found in path: <PROJECT_ROOT>"
 		expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
 "<PROJECT_ROOT>/node_modules/invalid-preset-03/index.js must use export default with es modules
 found in path: <PROJECT_ROOT>"
+`);
+	});
+});
+
+describe('preset cannot have more than one item per array-config', () => {
+	const config = {
+		presets: [
+			[
+				'preset-05',
+				{},
+				{},
+			],
+		],
+	};
+
+	test('async', async () => {
+		await expect(exConfig(config)).rejects
+			.toThrowErrorMatchingInlineSnapshot(`
+"{
+  "presets": [
+    [ [31m[1][0m
+      "preset-05",
+      {},
+      {}
+    ]
+  ]
+}
+[31m
+[1] "presets" does not match any of the allowed types[0m
+extends key must be a module expressed as a string"
+`);
+	});
+
+	test('sync', () => {
+		expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
+"{
+  "presets": [
+    [ [31m[1][0m
+      "preset-05",
+      {},
+      {}
+    ]
+  ]
+}
+[31m
+[1] "presets" does not match any of the allowed types[0m
+extends key must be a module expressed as a string"
+`);
+	});
+});
+
+describe('plugin cannot have more than one item per array-config', () => {
+	const config = {
+		plugins: [
+			[
+				'plugin-03',
+				{},
+				{},
+			],
+		],
+	};
+
+	test('async', async () => {
+		await expect(exConfig(config)).rejects
+			.toThrowErrorMatchingInlineSnapshot(`
+"{
+  "plugins": [
+    [ [31m[1][0m
+      "plugin-03",
+      {},
+      {}
+    ]
+  ]
+}
+[31m
+[1] "plugins" does not match any of the allowed types[0m
+extends key must be a module expressed as a string"
+`);
+	});
+
+	test('sync', () => {
+		expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
+"{
+  "plugins": [
+    [ [31m[1][0m
+      "plugin-03",
+      {},
+      {}
+    ]
+  ]
+}
+[31m
+[1] "plugins" does not match any of the allowed types[0m
+extends key must be a module expressed as a string"
 `);
 	});
 });

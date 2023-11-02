@@ -62,12 +62,11 @@ async function extendConfigAsync({
 					api,
 				});
 			}
-		} catch (error) {
+		} catch (unsafeError: unknown) {
+			const error = unsafeError as Error;
 			// eslint-disable-next-line no-useless-concat
 			const message = '\n' + `invalid nested config: ${pathname}`;
-
 			extendError({ error, pathname, message });
-
 			throw error;
 		}
 

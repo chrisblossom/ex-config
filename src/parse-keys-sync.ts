@@ -73,11 +73,10 @@ function parseKeysSync({
 					dirname,
 					api,
 				});
-			} catch (error) {
+			} catch (unsafeError: unknown) {
+				const error = unsafeError as Error;
 				error.message += errorMessage;
-
 				extendError({ error });
-
 				throw error;
 			}
 		}
@@ -140,11 +139,10 @@ function parseKeysSync({
 			});
 
 			currentConfig[key] = processedValue;
-		} catch (error) {
+		} catch (unsafeError: unknown) {
+			const error = unsafeError as Error;
 			error.message += errorMessage;
-
 			extendError({ error, pathname: packagePath });
-
 			throw error;
 		}
 	}

@@ -67,7 +67,8 @@ async function requireFromStringAsync(
 		};
 
 		return result;
-	} catch (error) {
+	} catch (unsafeError: unknown) {
+		const error = unsafeError as Error;
 		extendError({ error, pathname: dirname });
 		throw error;
 	}
@@ -112,7 +113,8 @@ function requireFromStringSync({
 		};
 
 		return result;
-	} catch (error) {
+	} catch (unsafeError) {
+		const error = unsafeError as Error;
 		extendError({ error, pathname: dirname });
 		throw error;
 	}

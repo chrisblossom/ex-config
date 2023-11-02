@@ -73,11 +73,10 @@ async function parseKeysAsync({
 					dirname,
 					api,
 				});
-			} catch (error) {
+			} catch (unsafeError: unknown) {
+				const error = unsafeError as Error;
 				error.message += errorMessage;
-
 				extendError({ error });
-
 				throw error;
 			}
 		}
@@ -141,11 +140,10 @@ async function parseKeysAsync({
 			});
 
 			currentConfig[key] = processedValue;
-		} catch (error) {
+		} catch (unsafeError: unknown) {
+			const error = unsafeError as Error;
 			error.message += errorMessage;
-
 			extendError({ error, pathname: packagePath });
-
 			throw error;
 		}
 	}

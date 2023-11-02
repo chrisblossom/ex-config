@@ -1,35 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`adds dirname to all lifecycles async 1`] = `
-Object {
-  "overridePreprocessor": Array [
+{
+  "overridePreprocessor": [
     "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
     "<PROJECT_ROOT>/node_modules/preset-02",
     "<PROJECT_ROOT>/node_modules/preset-01",
     "<PROJECT_ROOT>",
   ],
-  "overrideProcessor": Array [
+  "overrideProcessor": [
     "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
     "<PROJECT_ROOT>/node_modules/preset-02",
     "<PROJECT_ROOT>/node_modules/preset-01",
     "<PROJECT_ROOT>",
   ],
-  "overrideValidator": Array [
+  "overrideValidator": [
     "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
     "<PROJECT_ROOT>/node_modules/preset-02",
     "<PROJECT_ROOT>/node_modules/preset-01",
     "<PROJECT_ROOT>",
   ],
-  "postProcessor": Array [
+  "postProcessor": [
     "<PROJECT_ROOT>",
   ],
-  "preprocessor": Array [
+  "preprocessor": [
     "<PROJECT_ROOT>",
     "<PROJECT_ROOT>/node_modules/preset-01",
     "<PROJECT_ROOT>/node_modules/preset-02",
     "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
   ],
-  "processor": Array [
+  "processor": [
     "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
     "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
     "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
@@ -40,7 +40,7 @@ Object {
     "<PROJECT_ROOT>",
     "<PROJECT_ROOT>",
   ],
-  "validator": Array [
+  "validator": [
     "<PROJECT_ROOT>",
     "<PROJECT_ROOT>/node_modules/preset-01",
     "<PROJECT_ROOT>/node_modules/preset-02",
@@ -50,35 +50,35 @@ Object {
 `;
 
 exports[`adds dirname to all lifecycles sync 1`] = `
-Object {
-  "overridePreprocessor": Array [
+{
+  "overridePreprocessor": [
     "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
     "<PROJECT_ROOT>/node_modules/preset-02",
     "<PROJECT_ROOT>/node_modules/preset-01",
     "<PROJECT_ROOT>",
   ],
-  "overrideProcessor": Array [
+  "overrideProcessor": [
     "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
     "<PROJECT_ROOT>/node_modules/preset-02",
     "<PROJECT_ROOT>/node_modules/preset-01",
     "<PROJECT_ROOT>",
   ],
-  "overrideValidator": Array [
+  "overrideValidator": [
     "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
     "<PROJECT_ROOT>/node_modules/preset-02",
     "<PROJECT_ROOT>/node_modules/preset-01",
     "<PROJECT_ROOT>",
   ],
-  "postProcessor": Array [
+  "postProcessor": [
     "<PROJECT_ROOT>",
   ],
-  "preprocessor": Array [
+  "preprocessor": [
     "<PROJECT_ROOT>",
     "<PROJECT_ROOT>/node_modules/preset-01",
     "<PROJECT_ROOT>/node_modules/preset-02",
     "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
   ],
-  "processor": Array [
+  "processor": [
     "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
     "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
     "<PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03",
@@ -89,7 +89,7 @@ Object {
     "<PROJECT_ROOT>",
     "<PROJECT_ROOT>",
   ],
-  "validator": Array [
+  "validator": [
     "<PROJECT_ROOT>",
     "<PROJECT_ROOT>/node_modules/preset-01",
     "<PROJECT_ROOT>/node_modules/preset-02",
@@ -99,40 +99,40 @@ Object {
 `;
 
 exports[`allows builtin processor async 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     1,
     2,
     3,
   ],
-  "inside": Array [
+  "inside": [
     1,
     3,
   ],
-  "object": Array [
-    Object {
-      "array": Array [
+  "object": [
+    {
+      "array": [
         1,
       ],
       "one": true,
       "preset": 1,
     },
-    Object {
-      "array": Array [
+    {
+      "array": [
         2,
       ],
       "preset": 2,
       "two": true,
     },
-    Object {
-      "array": Array [
+    {
+      "array": [
         3,
       ],
       "preset": 1,
       "three": true,
     },
   ],
-  "other": Array [
+  "other": [
     1,
     2,
     3,
@@ -141,18 +141,18 @@ Object {
 `;
 
 exports[`allows builtin processor override async 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     1,
     2,
     3,
   ],
-  "inside": Array [
+  "inside": [
     3,
     1,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -167,18 +167,18 @@ Object {
 `;
 
 exports[`allows builtin processor override sync 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     1,
     2,
     3,
   ],
-  "inside": Array [
+  "inside": [
     3,
     1,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -193,40 +193,40 @@ Object {
 `;
 
 exports[`allows builtin processor sync 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     1,
     2,
     3,
   ],
-  "inside": Array [
+  "inside": [
     1,
     3,
   ],
-  "object": Array [
-    Object {
-      "array": Array [
+  "object": [
+    {
+      "array": [
         1,
       ],
       "one": true,
       "preset": 1,
     },
-    Object {
-      "array": Array [
+    {
+      "array": [
         2,
       ],
       "preset": 2,
       "two": true,
     },
-    Object {
-      "array": Array [
+    {
+      "array": [
         3,
       ],
       "preset": 1,
       "three": true,
     },
   ],
-  "other": Array [
+  "other": [
     1,
     2,
     3,
@@ -235,73 +235,73 @@ Object {
 `;
 
 exports[`allows custom preset and plugin name async 1`] = `
-Object {
-  "customPlugin": Array [
-    Object {
-      "imported": Array [
+{
+  "customPlugin": [
+    {
+      "imported": [
         "imported plugin-01",
       ],
     },
   ],
-  "example": Array [
+  "example": [
     1,
   ],
-  "inside": Array [
+  "inside": [
     1,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       1,
     ],
     "one": true,
     "preset": 1,
   },
   "other": 1,
-  "presets": Array [
+  "presets": [
     "preset-02",
   ],
 }
 `;
 
 exports[`allows custom preset and plugin name sync 1`] = `
-Object {
-  "customPlugin": Array [
-    Object {
-      "imported": Array [
+{
+  "customPlugin": [
+    {
+      "imported": [
         "imported plugin-01",
       ],
     },
   ],
-  "example": Array [
+  "example": [
     1,
   ],
-  "inside": Array [
+  "inside": [
     1,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       1,
     ],
     "one": true,
     "preset": 1,
   },
   "other": 1,
-  "presets": Array [
+  "presets": [
     "preset-02",
   ],
 }
 `;
 
 exports[`allows custom processor async 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     0,
   ],
-  "inside": Array [
+  "inside": [
     0,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       1,
     ],
     "one": true,
@@ -312,16 +312,16 @@ Object {
 `;
 
 exports[`allows custom processor override async 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     0,
   ],
-  "inside": Array [
+  "inside": [
     3,
     0,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -336,16 +336,16 @@ Object {
 `;
 
 exports[`allows custom processor override sync 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     0,
   ],
-  "inside": Array [
+  "inside": [
     3,
     0,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -360,15 +360,15 @@ Object {
 `;
 
 exports[`allows custom processor sync 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     0,
   ],
-  "inside": Array [
+  "inside": [
     0,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       1,
     ],
     "one": true,
@@ -379,46 +379,46 @@ Object {
 `;
 
 exports[`allows disabling presets and plugins async 1`] = `
-Object {
-  "inside": Array [
+{
+  "inside": [
     1,
   ],
-  "plugins": Array [
+  "plugins": [
     "plugin-one",
   ],
-  "presets": Array [
+  "presets": [
     "one",
   ],
 }
 `;
 
 exports[`allows disabling presets and plugins sync 1`] = `
-Object {
-  "inside": Array [
+{
+  "inside": [
     1,
   ],
-  "plugins": Array [
+  "plugins": [
     "plugin-one",
   ],
-  "presets": Array [
+  "presets": [
     "one",
   ],
 }
 `;
 
 exports[`allows post processing async 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     6,
     4,
     2,
     0,
   ],
-  "inside": Array [
+  "inside": [
     3,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -433,18 +433,18 @@ Object {
 `;
 
 exports[`allows post processing sync 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     6,
     4,
     2,
     0,
   ],
-  "inside": Array [
+  "inside": [
     3,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -459,18 +459,18 @@ Object {
 `;
 
 exports[`allows preprocessor async 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     "3",
     "2",
     "1",
     "0",
   ],
-  "inside": Array [
+  "inside": [
     3,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -485,18 +485,18 @@ Object {
 `;
 
 exports[`allows preprocessor override async 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     "3",
     "2",
     "1",
     "0",
   ],
-  "inside": Array [
+  "inside": [
     3,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -511,18 +511,18 @@ Object {
 `;
 
 exports[`allows preprocessor override sync 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     "3",
     "2",
     "1",
     "0",
   ],
-  "inside": Array [
+  "inside": [
     3,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -537,18 +537,18 @@ Object {
 `;
 
 exports[`allows preprocessor sync 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     "3",
     "2",
     "1",
     "0",
   ],
-  "inside": Array [
+  "inside": [
     3,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -563,17 +563,17 @@ Object {
 `;
 
 exports[`api option async 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     1,
   ],
-  "plugins": Array [
-    Object {
+  "plugins": [
+    {
       "imported": "plugin-05",
-      "plugin05Args": Object {
+      "plugin05Args": {
         "api": Api {
           "add": [Function bound add],
-          "loaded": Array [
+          "loaded": [
             "preprocessor",
             "validator",
             "preset-07",
@@ -584,37 +584,37 @@ Object {
           ],
         },
         "dirname": "<PROJECT_ROOT>",
-        "options": Object {},
+        "options": {},
       },
     },
   ],
-  "preset07Args": Object {
+  "preset07Args": {
     "api": Api {
       "add": [Function bound add],
-      "loaded": Array [
+      "loaded": [
         "preprocessor",
         "validator",
         "preset-07",
       ],
     },
     "dirname": "<PROJECT_ROOT>",
-    "options": Object {},
+    "options": {},
   },
 }
 `;
 
 exports[`api option sync 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     1,
   ],
-  "plugins": Array [
-    Object {
+  "plugins": [
+    {
       "imported": "plugin-05",
-      "plugin05Args": Object {
+      "plugin05Args": {
         "api": Api {
           "add": [Function bound add],
-          "loaded": Array [
+          "loaded": [
             "preprocessor",
             "validator",
             "preset-07",
@@ -625,39 +625,39 @@ Object {
           ],
         },
         "dirname": "<PROJECT_ROOT>",
-        "options": Object {},
+        "options": {},
       },
     },
   ],
-  "preset07Args": Object {
+  "preset07Args": {
     "api": Api {
       "add": [Function bound add],
-      "loaded": Array [
+      "loaded": [
         "preprocessor",
         "validator",
         "preset-07",
       ],
     },
     "dirname": "<PROJECT_ROOT>",
-    "options": Object {},
+    "options": {},
   },
 }
 `;
 
 exports[`async-only tests adds dirname to all lifecycles with delay 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     "3 preprocessor overridePreprocessor overrideProcessor postProcessor",
     "2 preprocessor overridePreprocessor overrideProcessor postProcessor",
     "1 preprocessor overridePreprocessor overrideProcessor postProcessor",
     "0 preprocessor overridePreprocessor overrideProcessor postProcessor",
   ],
-  "inside": Array [
+  "inside": [
     "3 preprocessor processor postProcessor",
     "1 preprocessor processor postProcessor",
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       "3 preprocessor processor postProcessor",
       "2 preprocessor processor postProcessor",
       "1 preprocessor processor postProcessor",
@@ -668,9 +668,9 @@ Object {
     "two": "true preprocessor processor postProcessor",
   },
   "other": "1 preprocessor processor postProcessor",
-  "plugins": Array [
-    Object {
-      "imported": Array [
+  "plugins": [
+    {
+      "imported": [
         "imported plugin-01 processor",
       ],
     },
@@ -679,18 +679,18 @@ Object {
 `;
 
 exports[`baseDirectory option async 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     3,
     2,
     1,
   ],
-  "inside": Array [
+  "inside": [
     3,
     1,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -701,25 +701,25 @@ Object {
     "two": true,
   },
   "other": 1,
-  "plugins": Array [
+  "plugins": [
     "imported backtrack-plugin-01",
   ],
 }
 `;
 
 exports[`baseDirectory option sync 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     3,
     2,
     1,
   ],
-  "inside": Array [
+  "inside": [
     3,
     1,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -730,70 +730,70 @@ Object {
     "two": true,
   },
   "other": 1,
-  "plugins": Array [
+  "plugins": [
     "imported backtrack-plugin-01",
   ],
 }
 `;
 
 exports[`calls presets and plugins as a function with default options = {} async 1`] = `
-Object {
-  "plugins": Array [
-    Object {
+{
+  "plugins": [
+    {
       "imported": "plugin-03",
-      "plugin03Args": Object {
-        "api": Object {},
+      "plugin03Args": {
+        "api": {},
         "dirname": "<PROJECT_ROOT>",
-        "options": Object {},
+        "options": {},
       },
     },
   ],
-  "preset05Args": Object {
-    "api": Object {},
+  "preset05Args": {
+    "api": {},
     "dirname": "<PROJECT_ROOT>",
-    "options": Object {},
+    "options": {},
   },
 }
 `;
 
 exports[`calls presets and plugins as a function with default options = {} sync 1`] = `
-Object {
-  "plugins": Array [
-    Object {
+{
+  "plugins": [
+    {
       "imported": "plugin-03",
-      "plugin03Args": Object {
-        "api": Object {},
+      "plugin03Args": {
+        "api": {},
         "dirname": "<PROJECT_ROOT>",
-        "options": Object {},
+        "options": {},
       },
     },
   ],
-  "preset05Args": Object {
-    "api": Object {},
+  "preset05Args": {
+    "api": {},
     "dirname": "<PROJECT_ROOT>",
-    "options": Object {},
+    "options": {},
   },
 }
 `;
 
 exports[`calls presets and plugins as a function with specified options async 1`] = `
-Object {
-  "plugins": Array [
-    Object {
+{
+  "plugins": [
+    {
       "imported": "plugin-03",
-      "plugin03Args": Object {
-        "api": Object {},
+      "plugin03Args": {
+        "api": {},
         "dirname": "<PROJECT_ROOT>",
-        "options": Object {
+        "options": {
           "special": "options 03",
         },
       },
     },
   ],
-  "preset05Args": Object {
-    "api": Object {},
+  "preset05Args": {
+    "api": {},
     "dirname": "<PROJECT_ROOT>",
-    "options": Object {
+    "options": {
       "special": "options 05",
     },
   },
@@ -801,23 +801,23 @@ Object {
 `;
 
 exports[`calls presets and plugins as a function with specified options sync 1`] = `
-Object {
-  "plugins": Array [
-    Object {
+{
+  "plugins": [
+    {
       "imported": "plugin-03",
-      "plugin03Args": Object {
-        "api": Object {},
+      "plugin03Args": {
+        "api": {},
         "dirname": "<PROJECT_ROOT>",
-        "options": Object {
+        "options": {
           "special": "options 03",
         },
       },
     },
   ],
-  "preset05Args": Object {
-    "api": Object {},
+  "preset05Args": {
+    "api": {},
     "dirname": "<PROJECT_ROOT>",
-    "options": Object {
+    "options": {
       "special": "options 05",
     },
   },
@@ -825,32 +825,32 @@ Object {
 `;
 
 exports[`does not mutate original config async 1`] = `
-Object {
-  "inside": Array [
-    Array [
+{
+  "inside": [
+    [
       3,
       6,
       3,
     ],
-    Array [
+    [
       1,
       2,
       3,
     ],
   ],
-  "plugins": Array [
-    Array [
-      Object {
-        "imported": Array [
+  "plugins": [
+    [
+      {
+        "imported": [
           "imported plugin-02",
           "mutated imported plugin-02",
         ],
       },
       3,
     ],
-    Array [
-      Object {
-        "imported": Array [
+    [
+      {
+        "imported": [
           "imported plugin-01",
           "mutated imported plugin-01",
         ],
@@ -862,32 +862,32 @@ Object {
 `;
 
 exports[`does not mutate original config sync 1`] = `
-Object {
-  "inside": Array [
-    Array [
+{
+  "inside": [
+    [
       3,
       6,
       3,
     ],
-    Array [
+    [
       1,
       2,
       3,
     ],
   ],
-  "plugins": Array [
-    Array [
-      Object {
-        "imported": Array [
+  "plugins": [
+    [
+      {
+        "imported": [
           "imported plugin-02",
           "mutated imported plugin-02",
         ],
       },
       3,
     ],
-    Array [
-      Object {
-        "imported": Array [
+    [
+      {
+        "imported": [
           "imported plugin-01",
           "mutated imported plugin-01",
         ],
@@ -899,28 +899,28 @@ Object {
 `;
 
 exports[`handle base config as function async 1`] = `
-Object {
-  "args": Object {
-    "api": Object {},
+{
+  "args": {
+    "api": {},
     "dirname": "<PROJECT_ROOT>",
-    "options": Object {},
+    "options": {},
   },
-  "plugins": Array [
-    Object {
+  "plugins": [
+    {
       "imported": "plugin-03",
-      "plugin03Args": Object {
-        "api": Object {},
+      "plugin03Args": {
+        "api": {},
         "dirname": "<PROJECT_ROOT>",
-        "options": Object {
+        "options": {
           "special": "options 03",
         },
       },
     },
   ],
-  "preset05Args": Object {
-    "api": Object {},
+  "preset05Args": {
+    "api": {},
     "dirname": "<PROJECT_ROOT>",
-    "options": Object {
+    "options": {
       "special": "options 05",
     },
   },
@@ -928,28 +928,28 @@ Object {
 `;
 
 exports[`handle base config as function sync 1`] = `
-Object {
-  "args": Object {
-    "api": Object {},
+{
+  "args": {
+    "api": {},
     "dirname": "<PROJECT_ROOT>",
-    "options": Object {},
+    "options": {},
   },
-  "plugins": Array [
-    Object {
+  "plugins": [
+    {
       "imported": "plugin-03",
-      "plugin03Args": Object {
-        "api": Object {},
+      "plugin03Args": {
+        "api": {},
         "dirname": "<PROJECT_ROOT>",
-        "options": Object {
+        "options": {
           "special": "options 03",
         },
       },
     },
   ],
-  "preset05Args": Object {
-    "api": Object {},
+  "preset05Args": {
+    "api": {},
     "dirname": "<PROJECT_ROOT>",
-    "options": Object {
+    "options": {
       "special": "options 05",
     },
   },
@@ -957,14 +957,14 @@ Object {
 `;
 
 exports[`handles es module default exports async 1`] = `
-Object {
-  "inside": Array [
+{
+  "inside": [
     3,
     6,
   ],
-  "plugins": Array [
-    Object {
-      "imported": Array [
+  "plugins": [
+    {
+      "imported": [
         "imported plugin-04",
       ],
     },
@@ -973,14 +973,14 @@ Object {
 `;
 
 exports[`handles es module default exports sync 1`] = `
-Object {
-  "inside": Array [
+{
+  "inside": [
     3,
     6,
   ],
-  "plugins": Array [
-    Object {
-      "imported": Array [
+  "plugins": [
+    {
+      "imported": [
         "imported plugin-04",
       ],
     },
@@ -989,24 +989,24 @@ Object {
 `;
 
 exports[`ignores mutated value async 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     0,
   ],
-  "inside": Array [
+  "inside": [
     1,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       1,
     ],
     "one": true,
     "preset": 1,
   },
   "other": 1,
-  "plugins": Array [
-    Object {
-      "imported": Array [
+  "plugins": [
+    {
+      "imported": [
         "imported plugin-01",
       ],
     },
@@ -1015,24 +1015,24 @@ Object {
 `;
 
 exports[`ignores mutated value sync 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     0,
   ],
-  "inside": Array [
+  "inside": [
     1,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       1,
     ],
     "one": true,
     "preset": 1,
   },
   "other": 1,
-  "plugins": Array [
-    Object {
-      "imported": Array [
+  "plugins": [
+    {
+      "imported": [
         "imported plugin-01",
       ],
     },
@@ -1041,18 +1041,18 @@ Object {
 `;
 
 exports[`mergeObject processor async 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     3,
     2,
     1,
   ],
-  "inside": Array [
+  "inside": [
     3,
     1,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -1069,18 +1069,18 @@ Object {
 `;
 
 exports[`mergeObject processor sync 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     3,
     2,
     1,
   ],
-  "inside": Array [
+  "inside": [
     3,
     1,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -1097,18 +1097,18 @@ Object {
 `;
 
 exports[`merges deep nested presets async 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     3,
     2,
     1,
   ],
-  "inside": Array [
+  "inside": [
     3,
     1,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -1119,9 +1119,9 @@ Object {
     "two": true,
   },
   "other": 1,
-  "plugins": Array [
-    Object {
-      "imported": Array [
+  "plugins": [
+    {
+      "imported": [
         "imported plugin-01",
       ],
     },
@@ -1130,18 +1130,18 @@ Object {
 `;
 
 exports[`merges deep nested presets sync 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     3,
     2,
     1,
   ],
-  "inside": Array [
+  "inside": [
     3,
     1,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -1152,9 +1152,9 @@ Object {
     "two": true,
   },
   "other": 1,
-  "plugins": Array [
-    Object {
-      "imported": Array [
+  "plugins": [
+    {
+      "imported": [
         "imported plugin-01",
       ],
     },
@@ -1163,18 +1163,18 @@ Object {
 `;
 
 exports[`merges deep with custom prefix resolution async 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     3,
     2,
     1,
   ],
-  "inside": Array [
+  "inside": [
     3,
     1,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -1185,25 +1185,25 @@ Object {
     "two": true,
   },
   "other": 1,
-  "plugins": Array [
+  "plugins": [
     "imported backtrack-plugin-01",
   ],
 }
 `;
 
 exports[`merges deep with custom prefix resolution sync 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     3,
     2,
     1,
   ],
-  "inside": Array [
+  "inside": [
     3,
     1,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -1214,32 +1214,32 @@ Object {
     "two": true,
   },
   "other": 1,
-  "plugins": Array [
+  "plugins": [
     "imported backtrack-plugin-01",
   ],
 }
 `;
 
 exports[`plugins processor can be overridden async 1`] = `
-Object {
+{
   "example": false,
   "inside": false,
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       1,
     ],
     "one": true,
     "preset": 1,
   },
   "other": 1,
-  "plugins": Array [
-    Object {
-      "imported": Array [
+  "plugins": [
+    {
+      "imported": [
         "imported plugin-01",
       ],
     },
-    Object {
-      "imported": Array [
+    {
+      "imported": [
         "imported plugin-02",
       ],
     },
@@ -1248,25 +1248,25 @@ Object {
 `;
 
 exports[`plugins processor can be overridden sync 1`] = `
-Object {
+{
   "example": false,
   "inside": false,
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       1,
     ],
     "one": true,
     "preset": 1,
   },
   "other": 1,
-  "plugins": Array [
-    Object {
-      "imported": Array [
+  "plugins": [
+    {
+      "imported": [
         "imported plugin-01",
       ],
     },
-    Object {
-      "imported": Array [
+    {
+      "imported": [
         "imported plugin-02",
       ],
     },
@@ -1275,18 +1275,18 @@ Object {
 `;
 
 exports[`preset object order matter does not matter async 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     3,
     2,
     1,
   ],
-  "inside": Array [
+  "inside": [
     3,
     1,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -1297,9 +1297,9 @@ Object {
     "two": true,
   },
   "other": 1,
-  "plugins": Array [
-    Object {
-      "imported": Array [
+  "plugins": [
+    {
+      "imported": [
         "imported plugin-01",
       ],
     },
@@ -1308,18 +1308,18 @@ Object {
 `;
 
 exports[`preset object order matter does not matter sync 1`] = `
-Object {
-  "example": Array [
+{
+  "example": [
     3,
     2,
     1,
   ],
-  "inside": Array [
+  "inside": [
     3,
     1,
   ],
-  "object": Object {
-    "array": Array [
+  "object": {
+    "array": [
       3,
       2,
       1,
@@ -1330,9 +1330,9 @@ Object {
     "two": true,
   },
   "other": 1,
-  "plugins": Array [
-    Object {
-      "imported": Array [
+  "plugins": [
+    {
+      "imported": [
         "imported plugin-01",
       ],
     },

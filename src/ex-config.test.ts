@@ -763,10 +763,10 @@ describe('validates config', () => {
 		await expect(exConfig(config, options)).rejects
 			.toThrowErrorMatchingInlineSnapshot(`
 "{
-  \\"string\\" [31m[1][0m: 1
+  "string" [31m[1][0m: 1
 }
 [31m
-[1] \\"string\\" must be a string[0m"
+[1] "string" must be a string[0m"
 `);
 	});
 
@@ -774,10 +774,10 @@ describe('validates config', () => {
 		expect(() => exConfigSync(config, options))
 			.toThrowErrorMatchingInlineSnapshot(`
 "{
-  \\"string\\" [31m[1][0m: 1
+  "string" [31m[1][0m: 1
 }
 [31m
-[1] \\"string\\" must be a string[0m"
+[1] "string" must be a string[0m"
 `);
 	});
 });
@@ -808,23 +808,23 @@ describe('validates nested config', () => {
 		await expect(exConfig(config, options)).rejects
 			.toThrowErrorMatchingInlineSnapshot(`
 "{
-  \\"example\\": [
+  "example": [
     1
   ],
-  \\"presets\\": [
-    \\"preset-02\\"
+  "presets": [
+    "preset-02"
   ],
-  \\"object\\": {
-    \\"array\\": [
+  "object": {
+    "array": [
       1
     ],
-    \\"one\\": true,
-    \\"preset\\": 1
+    "one": true,
+    "preset": 1
   },
-  \\"other\\" [31m[1][0m: 1
+  "other" [31m[1][0m: 1
 }
 [31m
-[1] \\"other\\" must be a string[0m
+[1] "other" must be a string[0m
 invalid nested config: <PROJECT_ROOT>/node_modules/preset-01/index.js"
 `);
 	});
@@ -833,23 +833,23 @@ invalid nested config: <PROJECT_ROOT>/node_modules/preset-01/index.js"
 		expect(() => exConfigSync(config, options))
 			.toThrowErrorMatchingInlineSnapshot(`
 "{
-  \\"example\\": [
+  "example": [
     1
   ],
-  \\"presets\\": [
-    \\"preset-02\\"
+  "presets": [
+    "preset-02"
   ],
-  \\"object\\": {
-    \\"array\\": [
+  "object": {
+    "array": [
       1
     ],
-    \\"one\\": true,
-    \\"preset\\": 1
+    "one": true,
+    "preset": 1
   },
-  \\"other\\" [31m[1][0m: 1
+  "other" [31m[1][0m: 1
 }
 [31m
-[1] \\"other\\" must be a string[0m
+[1] "other" must be a string[0m
 invalid nested config: <PROJECT_ROOT>/node_modules/preset-01/index.js"
 `);
 	});
@@ -881,7 +881,7 @@ describe('validates override config', () => {
 	test('async', async () => {
 		await expect(exConfig(config, options)).rejects
 			.toThrowErrorMatchingInlineSnapshot(`
-"\\"value\\" must be a string
+""value" must be a string
 invalid key: string"
 `);
 	});
@@ -889,7 +889,7 @@ invalid key: string"
 	test('sync', () => {
 		expect(() => exConfigSync(config, options))
 			.toThrowErrorMatchingInlineSnapshot(`
-"\\"value\\" must be a string
+""value" must be a string
 invalid key: string"
 `);
 	});
@@ -922,7 +922,7 @@ describe('validates nested override config', () => {
 	test('async', async () => {
 		await expect(exConfig(config, options)).rejects
 			.toThrowErrorMatchingInlineSnapshot(`
-"\\"value\\" must be a string
+""value" must be a string
 invalid key: other
 found in path: <PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03/index.js"
 `);
@@ -931,7 +931,7 @@ found in path: <PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03/inde
 	test('sync', () => {
 		expect(() => exConfigSync(config, options))
 			.toThrowErrorMatchingInlineSnapshot(`
-"\\"value\\" must be a string
+""value" must be a string
 invalid key: other
 found in path: <PROJECT_ROOT>/node_modules/preset-02/node_modules/preset-03/index.js"
 `);
@@ -1227,27 +1227,27 @@ describe('extends must be a string', () => {
 		await expect(exConfig(config)).rejects
 			.toThrowErrorMatchingInlineSnapshot(`
 "{
-  \\"presets\\": [
+  "presets": [
     {
-      \\"example\\": [
+      "example": [
         1
       ],
-      \\"other\\": 1,
-      \\"presets\\": [
-        \\"preset-02\\"
+      "other": 1,
+      "presets": [
+        "preset-02"
       ],
-      \\"object\\": {
-        \\"array\\": [
+      "object": {
+        "array": [
           1
         ],
-        \\"one\\": true,
-        \\"preset\\": 1
+        "one": true,
+        "preset": 1
       }
     }
   ]
 }
 [31m
-[1] \\"presets\\" at position 0 does not match any of the allowed types[0m
+[1] "presets" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string"
 `);
 	});
@@ -1255,27 +1255,27 @@ extends key must be a module expressed as a string"
 	test('sync', () => {
 		expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
 "{
-  \\"presets\\": [
+  "presets": [
     {
-      \\"example\\": [
+      "example": [
         1
       ],
-      \\"other\\": 1,
-      \\"presets\\": [
-        \\"preset-02\\"
+      "other": 1,
+      "presets": [
+        "preset-02"
       ],
-      \\"object\\": {
-        \\"array\\": [
+      "object": {
+        "array": [
           1
         ],
-        \\"one\\": true,
-        \\"preset\\": 1
+        "one": true,
+        "preset": 1
       }
     }
   ]
 }
 [31m
-[1] \\"presets\\" at position 0 does not match any of the allowed types[0m
+[1] "presets" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string"
 `);
 	});
@@ -1290,27 +1290,27 @@ describe('extends must be a string - nested', () => {
 		await expect(exConfig(config)).rejects
 			.toThrowErrorMatchingInlineSnapshot(`
 "{
-  \\"presets\\": [
+  "presets": [
     {
-      \\"example\\": [
+      "example": [
         1
       ],
-      \\"other\\": 1,
-      \\"presets\\": [
-        \\"preset-02\\"
+      "other": 1,
+      "presets": [
+        "preset-02"
       ],
-      \\"object\\": {
-        \\"array\\": [
+      "object": {
+        "array": [
           1
         ],
-        \\"one\\": true,
-        \\"preset\\": 1
+        "one": true,
+        "preset": 1
       }
     }
   ]
 }
 [31m
-[1] \\"presets\\" at position 0 does not match any of the allowed types[0m
+[1] "presets" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-01/index.js"
 `);
@@ -1319,27 +1319,27 @@ found in path: <PROJECT_ROOT>/node_modules/invalid-preset-01/index.js"
 	test('sync', () => {
 		expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
 "{
-  \\"presets\\": [
+  "presets": [
     {
-      \\"example\\": [
+      "example": [
         1
       ],
-      \\"other\\": 1,
-      \\"presets\\": [
-        \\"preset-02\\"
+      "other": 1,
+      "presets": [
+        "preset-02"
       ],
-      \\"object\\": {
-        \\"array\\": [
+      "object": {
+        "array": [
           1
         ],
-        \\"one\\": true,
-        \\"preset\\": 1
+        "one": true,
+        "preset": 1
       }
     }
   ]
 }
 [31m
-[1] \\"presets\\" at position 0 does not match any of the allowed types[0m
+[1] "presets" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-01/index.js"
 `);
@@ -1358,16 +1358,16 @@ describe('resolve must be a string', () => {
 		await expect(exConfig(config)).rejects
 			.toThrowErrorMatchingInlineSnapshot(`
 "{
-  \\"plugins\\": [
+  "plugins": [
     {
-      \\"imported\\": [
-        \\"imported plugin-01\\"
+      "imported": [
+        "imported plugin-01"
       ]
     }
   ]
 }
 [31m
-[1] \\"plugins\\" at position 0 does not match any of the allowed types[0m
+[1] "plugins" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string"
 `);
 	});
@@ -1375,16 +1375,16 @@ extends key must be a module expressed as a string"
 	test('sync', () => {
 		expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
 "{
-  \\"plugins\\": [
+  "plugins": [
     {
-      \\"imported\\": [
-        \\"imported plugin-01\\"
+      "imported": [
+        "imported plugin-01"
       ]
     }
   ]
 }
 [31m
-[1] \\"plugins\\" at position 0 does not match any of the allowed types[0m
+[1] "plugins" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string"
 `);
 	});
@@ -1399,16 +1399,16 @@ describe('resolve must be a string - nested', () => {
 		await expect(exConfig(config)).rejects
 			.toThrowErrorMatchingInlineSnapshot(`
 "{
-  \\"plugins\\": [
+  "plugins": [
     {
-      \\"imported\\": [
-        \\"imported plugin-01\\"
+      "imported": [
+        "imported plugin-01"
       ]
     }
   ]
 }
 [31m
-[1] \\"plugins\\" at position 0 does not match any of the allowed types[0m
+[1] "plugins" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
 `);
@@ -1417,16 +1417,16 @@ found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
 	test('sync', () => {
 		expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
 "{
-  \\"plugins\\": [
+  "plugins": [
     {
-      \\"imported\\": [
-        \\"imported plugin-01\\"
+      "imported": [
+        "imported plugin-01"
       ]
     }
   ]
 }
 [31m
-[1] \\"plugins\\" at position 0 does not match any of the allowed types[0m
+[1] "plugins" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
 `);
@@ -1447,16 +1447,16 @@ describe('resolve must be a string - nested - works as array', () => {
 		await expect(exConfig(config)).rejects
 			.toThrowErrorMatchingInlineSnapshot(`
 "{
-  \\"plugins\\": [
+  "plugins": [
     {
-      \\"imported\\": [
-        \\"imported plugin-01\\"
+      "imported": [
+        "imported plugin-01"
       ]
     }
   ]
 }
 [31m
-[1] \\"plugins\\" at position 0 does not match any of the allowed types[0m
+[1] "plugins" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
 `);
@@ -1465,16 +1465,16 @@ found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
 	test('sync', () => {
 		expect(() => exConfigSync(config)).toThrowErrorMatchingInlineSnapshot(`
 "{
-  \\"plugins\\": [
+  "plugins": [
     {
-      \\"imported\\": [
-        \\"imported plugin-01\\"
+      "imported": [
+        "imported plugin-01"
       ]
     }
   ]
 }
 [31m
-[1] \\"plugins\\" at position 0 does not match any of the allowed types[0m
+[1] "plugins" at position 0 does not match any of the allowed types[0m
 extends key must be a module expressed as a string
 found in path: <PROJECT_ROOT>/node_modules/invalid-preset-02/index.js"
 `);

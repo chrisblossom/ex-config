@@ -1,62 +1,62 @@
 {
-  "name": "ex-config",
-  "version": "4.0.0",
-  "description": "Extendable configuration processor.",
-  "keywords": [
-    "config",
-    "configuration",
-    "extend",
-    "extendable",
-    "cosmiconfig",
-    "rc",
-    "resolve",
-    "prefix",
-    "require",
-    "resolve string",
-    "require string",
-    "string config",
-    "string configuration"
-  ],
-  "license": "MIT",
-  "repository": "chrisblossom/ex-config",
-  "homepage": "https://github.com/chrisblossom/ex-config",
-  "author": "Chris Blossom",
-  "engines": {
-    "node": ">=8.9.0"
-  },
-  "files": [
-    "dist/"
-  ],
-  "main": "dist/ex-config.js",
-  "types": "dist/ex-config.d.ts",
-  "scripts": {
-    "build": "backtrack build --production",
-    "clean": "backtrack clean",
-    "dev": "backtrack dev --development",
-    "format": "backtrack format",
-    "git-pre-commit": "backtrack git-pre-commit",
-    "git-pre-push": "backtrack git-pre-push",
-    "lint": "backtrack lint",
-    "lint.fix": "backtrack lint.fix",
-    "prepublishOnly": "backtrack prepublishOnly",
-    "test": "backtrack test",
-    "test.ci": "backtrack test.ci",
-    "test.ci-pretest": "backtrack test.ci-pretest",
-    "test.update": "jest --update-snapshot",
-    "test.watch": "jest --watch",
-    "typescript": "backtrack typescript"
-  },
-  "devDependencies": {
-    "@backtrack/core": "^0.2.0",
-    "@backtrack/preset-node": "^0.4.3",
-    "@types/hapi__joi": "^15.0.1",
-    "@types/jest": "^24.0.13",
-    "@types/lodash": "^4.14.129",
-    "typescript": "^3.4.5"
-  },
-  "dependencies": {
-    "@hapi/joi": "^15.0.3",
-    "lodash": "^4.17.11",
-    "resolve-with-prefix": "^3.0.0"
-  }
+	"name": "ex-config",
+	"version": "4.0.0",
+	"description": "Extendable configuration processor.",
+	"keywords": [
+		"config",
+		"configuration",
+		"extend",
+		"extendable",
+		"cosmiconfig",
+		"rc",
+		"resolve",
+		"prefix",
+		"require",
+		"resolve string",
+		"require string",
+		"string config",
+		"string configuration"
+	],
+	"license": "MIT",
+	"repository": "chrisblossom/ex-config",
+	"homepage": "https://github.com/chrisblossom/ex-config",
+	"author": "Chris Blossom",
+	"engines": {
+		"node": ">=8.9.0"
+	},
+	"files": [
+		"dist/"
+	],
+	"main": "dist/ex-config.js",
+	"types": "dist/ex-config.d.ts",
+	"scripts": {
+		"build": "backtrack build --production",
+		"clean": "backtrack clean",
+		"dev": "backtrack dev --development",
+		"format": "backtrack format",
+		"git-pre-commit": "backtrack git-pre-commit",
+		"git-pre-push": "backtrack git-pre-push",
+		"lint": "backtrack lint",
+		"lint.fix": "backtrack lint.fix",
+		"prepublishOnly": "backtrack prepublishOnly",
+		"test": "backtrack test",
+		"test.ci": "backtrack test.ci",
+		"test.ci-pretest": "backtrack test.ci-pretest",
+		"test.update": "jest --update-snapshot",
+		"test.watch": "jest --watch",
+		"typescript": "backtrack typescript"
+	},
+	"devDependencies": {
+		"@backtrack/core": "^0.2.0",
+		"@backtrack/preset-node": "^0.4.3",
+		"@types/hapi__joi": "^15.0.1",
+		"@types/jest": "^24.0.13",
+		"@types/lodash": "^4.14.129",
+		"typescript": "^3.4.5"
+	},
+	"dependencies": {
+		"@hapi/joi": "^15.0.3",
+		"lodash": "^4.17.11",
+		"resolve-with-prefix": "^3.0.0"
+	}
 }

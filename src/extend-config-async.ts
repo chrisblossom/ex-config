@@ -7,80 +7,80 @@ import { parseKeysAsync } from './parse-keys-async';
 import { BasicConfig } from './types';
 
 interface Args {
-    baseConfig: BasicConfig;
-    packageIds: string | ReadonlyArray<string>;
-    resolveFunction: ResolveFunctionAsync;
-    dirname: string;
-    context: ContextAsync;
+	baseConfig: BasicConfig;
+	packageIds: string | ReadonlyArray<string>;
+	resolveFunction: ResolveFunctionAsync;
+	dirname: string;
+	context: ContextAsync;
 }
 
 async function extendConfigAsync({
-    baseConfig,
-    packageIds,
-    resolveFunction,
-    dirname,
-    context,
+	baseConfig,
+	packageIds,
+	resolveFunction,
+	dirname,
+	context,
 }: Args): Promise<BasicConfig> {
-    const api = context.api;
-    const normalizedPackageIds = Array.isArray(packageIds)
-        ? packageIds
-        : [packageIds];
+	const api = context.api;
+	const normalizedPackageIds = Array.isArray(packageIds)
+		? packageIds
+		: [packageIds];
 
-    let extendedConfig = baseConfig;
+	let extendedConfig = baseConfig;
 
-    for await (const packageId of normalizedPackageIds) {
-        const {
-            module: LoadedConfig,
-            dirname: updatedDirname,
-            pathname,
-        } = await requireFromStringAsync(
-            packageId,
-            resolveFunction,
-            dirname,
-            api,
-        );
+	for await (const packageId of normalizedPackageIds) {
+		const {
+			module: LoadedConfig,
+			dirname: updatedDirname,
+			pathname,
+		} = await requireFromStringAsync(
+			packageId,
+			resolveFunction,
+			dirname,
+			api,
+		);
 
-        let mergeLoadedConfig = cloneDeep(LoadedConfig);
-        try {
-            if (context.preprocessor) {
-                mergeLoadedConfig = await context.preprocessor({
-                    config: extendedConfig,
-                    value: mergeLoadedConfig,
-                    dirname: updatedDirname,
-                    api,
-                });
-            }
+		let mergeLoadedConfig = cloneDeep(LoadedConfig);
+		try {
+			if (context.preprocessor) {
+				mergeLoadedConfig = await context.preprocessor({
+					config: extendedConfig,
+					value: mergeLoadedConfig,
+					dirname: updatedDirname,
+					api,
+				});
+			}
 
-            /**
-             * Validate config before merging
-             */
-            if (context.validator) {
-                await context.validator({
-                    value: mergeLoadedConfig,
-                    config: extendedConfig,
-                    dirname: updatedDirname,
-                    api,
-                });
-            }
-        } catch (error) {
-            // eslint-disable-next-line no-useless-concat
-            const message = '\n' + `invalid nested config: ${pathname}`;
+			/**
+			 * Validate config before merging
+			 */
+			if (context.validator) {
+				await context.validator({
+					value: mergeLoadedConfig,
+					config: extendedConfig,
+					dirname: updatedDirname,
+					api,
+				});
+			}
+		} catch (error) {
+			// eslint-disable-next-line no-useless-concat
+			const message = '\n' + `invalid nested config: ${pathname}`;
 
-            extendError({ error, pathname, message });
+			extendError({ error, pathname, message });
 
-            throw error;
-        }
+			throw error;
+		}
 
-        extendedConfig = await parseKeysAsync({
-            baseConfig: extendedConfig,
-            config: mergeLoadedConfig,
-            dirname: updatedDirname,
-            packagePath: pathname,
-            context,
-        });
-    }
+		extendedConfig = await parseKeysAsync({
+			baseConfig: extendedConfig,
+			config: mergeLoadedConfig,
+			dirname: updatedDirname,
+			packagePath: pathname,
+			context,
+		});
+	}
 
-    return extendedConfig;
+	return extendedConfig;
 }
 
 export { extendConfigAsync };

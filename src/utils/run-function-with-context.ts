@@ -1,34 +1,34 @@
 import {
-    BasicConfig,
-    ConfigAsync,
-    ConfigFunctionParameters,
-    ConfigSync,
+	BasicConfig,
+	ConfigAsync,
+	ConfigFunctionParameters,
+	ConfigSync,
 } from '../types';
 
 async function runFunctionWithContextAsync(
-    config: ConfigAsync,
-    context: ConfigFunctionParameters,
+	config: ConfigAsync,
+	context: ConfigFunctionParameters,
 ): Promise<BasicConfig> {
-    if (typeof config === 'function') {
-        const basicConfig = await config(context);
+	if (typeof config === 'function') {
+		const basicConfig = await config(context);
 
-        return basicConfig;
-    }
+		return basicConfig;
+	}
 
-    return config;
+	return config;
 }
 
 function runFunctionWithContextSync(
-    config: ConfigSync,
-    context: ConfigFunctionParameters,
+	config: ConfigSync,
+	context: ConfigFunctionParameters,
 ): BasicConfig {
-    if (typeof config === 'function') {
-        const basicConfig = config(context);
+	if (typeof config === 'function') {
+		const basicConfig = config(context);
 
-        return basicConfig;
-    }
+		return basicConfig;
+	}
 
-    return config;
+	return config;
 }
 
 export { runFunctionWithContextAsync, runFunctionWithContextSync };

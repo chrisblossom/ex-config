@@ -2,94 +2,100 @@ import { mergeWith, isPlainObject } from 'lodash';
 import { LifecycleParams, ProcessorAsync, ProcessorSync } from '../types';
 
 function arrayPush({ value, current = [] }: LifecycleParams) {
-    const toArray = Array.isArray(value) ? value : [value];
+	const toArray = Array.isArray(value) ? value : [value];
 
-    return [...current, ...toArray];
+	return [
+		...current,
+		...toArray,
+	];
 }
 
 function arrayConcat({ value, current = [] }: LifecycleParams) {
-    const toArray = Array.isArray(value) ? value : [value];
+	const toArray = Array.isArray(value) ? value : [value];
 
-    return [...toArray, ...current];
+	return [
+		...toArray,
+		...current,
+	];
 }
 
 function mergeDeep({ value, current = {}, ...rest }: LifecycleParams) {
-    const val = Array.isArray(value) ? value : [value];
+	const val = Array.isArray(value) ? value : [value];
 
-    return mergeWith(current, ...val, <N, S>(objValue: N, srcValue: S) => {
-        if (Array.isArray(objValue)) {
-            return objValue.concat(srcValue);
-        }
+	return mergeWith(current, ...val, <N, S>(objValue: N, srcValue: S) => {
+		if (Array.isArray(objValue)) {
+			return objValue.concat(srcValue);
+		}
 
-        if (isPlainObject(objValue)) {
-            return mergeDeep({
-                value: objValue,
-                current: srcValue,
-                ...rest,
-            });
-        }
+		if (isPlainObject(objValue)) {
+			return mergeDeep({
+				value: objValue,
+				current: srcValue,
+				...rest,
+			});
+		}
 
-        return srcValue;
-    });
+		return srcValue;
+	});
 }
 
 function automatic(lifecycleParams: LifecycleParams) {
-    const { current, value } = lifecycleParams;
-    if (current === undefined) {
-        return value;
-    }
+	const { current, value } = lifecycleParams;
+	if (current === undefined) {
+		return value;
+	}
 
-    if (isPlainObject(current)) {
-        return mergeDeep(lifecycleParams);
-    }
+	if (isPlainObject(current)) {
+		return mergeDeep(lifecycleParams);
+	}
 
-    if (Array.isArray(current)) {
-        return arrayPush(lifecycleParams);
-    }
+	if (Array.isArray(current)) {
+		return arrayPush(lifecycleParams);
+	}
 
-    return value;
+	return value;
 }
 
 const builtInProcessors = { automatic, arrayConcat, arrayPush, mergeDeep };
 export type BuiltInProcessors =
-    | 'automatic'
-    | 'arrayConcat'
-    | 'arrayPush'
-    | 'mergeDeep';
+	| 'automatic'
+	| 'arrayConcat'
+	| 'arrayPush'
+	| 'mergeDeep';
 
 function getProcessor(
-    processor: ProcessorAsync | ProcessorSync | BuiltInProcessors,
+	processor: ProcessorAsync | ProcessorSync | BuiltInProcessors,
 ) {
-    if (typeof processor === 'function') {
-        return processor;
-    }
+	if (typeof processor === 'function') {
+		return processor;
+	}
 
-    const matched = builtInProcessors[processor];
+	const matched = builtInProcessors[processor];
 
-    return matched;
+	return matched;
 }
 
 function getProcessorAsync(
-    processor: ProcessorAsync | BuiltInProcessors = 'automatic',
+	processor: ProcessorAsync | BuiltInProcessors = 'automatic',
 ): ProcessorAsync {
-    const matchedProcessor: ProcessorAsync = getProcessor(processor);
+	const matchedProcessor: ProcessorAsync = getProcessor(processor);
 
-    return matchedProcessor;
+	return matchedProcessor;
 }
 
 function getProcessorSync(
-    processor: ProcessorSync | BuiltInProcessors = 'automatic',
+	processor: ProcessorSync | BuiltInProcessors = 'automatic',
 ): ProcessorSync {
-    const matchedProcessor: ProcessorSync = getProcessor(processor);
+	const matchedProcessor: ProcessorSync = getProcessor(processor);
 
-    return matchedProcessor;
+	return matchedProcessor;
 }
 
 export {
-    getProcessorSync,
-    getProcessorAsync,
-    automatic,
-    arrayConcat,
-    arrayPush,
-    mergeDeep,
+	getProcessorSync,
+	getProcessorAsync,
+	automatic,
+	arrayConcat,
+	arrayPush,
+	mergeDeep,
 };

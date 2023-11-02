@@ -7,80 +7,80 @@ import { BasicConfig } from './types';
 import { parseKeysSync } from './parse-keys-sync';
 
 interface Args {
-    baseConfig: BasicConfig;
-    packageIds: string | ReadonlyArray<string>;
-    resolveFunction: ResolveFunctionSync;
-    dirname: string;
-    context: ContextSync;
+	baseConfig: BasicConfig;
+	packageIds: string | ReadonlyArray<string>;
+	resolveFunction: ResolveFunctionSync;
+	dirname: string;
+	context: ContextSync;
 }
 
 function extendConfigSync({
-    baseConfig,
-    packageIds,
-    resolveFunction,
-    dirname,
-    context,
+	baseConfig,
+	packageIds,
+	resolveFunction,
+	dirname,
+	context,
 }: Args): BasicConfig {
-    const api = context.api;
-    const normalizedPackageIds = Array.isArray(packageIds)
-        ? packageIds
-        : [packageIds];
+	const api = context.api;
+	const normalizedPackageIds = Array.isArray(packageIds)
+		? packageIds
+		: [packageIds];
 
-    let extendedConfig = baseConfig;
+	let extendedConfig = baseConfig;
 
-    for (const packageId of normalizedPackageIds) {
-        const {
-            module: LoadedConfig,
-            dirname: updatedDirname,
-            pathname,
-        } = requireFromStringSync({
-            pkg: packageId,
-            resolveFunction,
-            dirname,
-            api,
-        });
+	for (const packageId of normalizedPackageIds) {
+		const {
+			module: LoadedConfig,
+			dirname: updatedDirname,
+			pathname,
+		} = requireFromStringSync({
+			pkg: packageId,
+			resolveFunction,
+			dirname,
+			api,
+		});
 
-        let mergeLoadedConfig = cloneDeep(LoadedConfig);
-        try {
-            if (context.preprocessor) {
-                mergeLoadedConfig = context.preprocessor({
-                    config: extendedConfig,
-                    value: mergeLoadedConfig,
-                    dirname: updatedDirname,
-                    api,
-                });
-            }
+		let mergeLoadedConfig = cloneDeep(LoadedConfig);
+		try {
+			if (context.preprocessor) {
+				mergeLoadedConfig = context.preprocessor({
+					config: extendedConfig,
+					value: mergeLoadedConfig,
+					dirname: updatedDirname,
+					api,
+				});
+			}
 
-            /**
-             * Validate config before merging
-             */
-            if (context.validator) {
-                context.validator({
-                    value: mergeLoadedConfig,
-                    config: extendedConfig,
-                    dirname: updatedDirname,
-                    api,
-                });
-            }
-        } catch (error) {
-            // eslint-disable-next-line no-useless-concat
-            const message = '\n' + `invalid nested config: ${pathname}`;
+			/**
+			 * Validate config before merging
+			 */
+			if (context.validator) {
+				context.validator({
+					value: mergeLoadedConfig,
+					config: extendedConfig,
+					dirname: updatedDirname,
+					api,
+				});
+			}
+		} catch (error) {
+			// eslint-disable-next-line no-useless-concat
+			const message = '\n' + `invalid nested config: ${pathname}`;
 
-            extendError({ error, pathname, message });
+			extendError({ error, pathname, message });
 
-            throw error;
-        }
+			throw error;
+		}
 
-        extendedConfig = parseKeysSync({
-            baseConfig: extendedConfig,
-            config: mergeLoadedConfig,
-            dirname: updatedDirname,
-            packagePath: pathname,
-            context,
-        });
-    }
+		extendedConfig = parseKeysSync({
+			baseConfig: extendedConfig,
+			config: mergeLoadedConfig,
+			dirname: updatedDirname,
+			packagePath: pathname,
+			context,
+		});
+	}
 
-    return extendedConfig;
+	return extendedConfig;
 }
 
 export { extendConfigSync };

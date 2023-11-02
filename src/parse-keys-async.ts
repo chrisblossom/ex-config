@@ -9,148 +9,148 @@ import { extendConfigAsync } from './extend-config-async';
 import { getProcessorAsync } from './utils/get-processor';
 
 interface Args {
-    baseConfig: BasicConfig;
-    config: BasicConfig;
-    dirname: string;
-    packagePath?: string;
-    context: ContextAsync;
+	baseConfig: BasicConfig;
+	config: BasicConfig;
+	dirname: string;
+	packagePath?: string;
+	context: ContextAsync;
 }
 
 async function parseKeysAsync({
-    baseConfig,
-    config,
-    dirname,
-    packagePath,
-    context,
+	baseConfig,
+	config,
+	dirname,
+	packagePath,
+	context,
 }: Args): Promise<BasicConfig> {
-    validateResolveKeys(config, context.resolveSchema, packagePath);
+	validateResolveKeys(config, context.resolveSchema, packagePath);
 
-    let currentConfig = baseConfig;
+	let currentConfig = baseConfig;
 
-    const api = context.api;
+	const api = context.api;
 
-    /**
-     * Handle presets first so object-key order does not matter
-     */
-    if (context.presets && config[context.presets]) {
-        const presets: string | ReadonlyArray<string> = config[context.presets];
+	/**
+	 * Handle presets first so object-key order does not matter
+	 */
+	if (context.presets && config[context.presets]) {
+		const presets: string | ReadonlyArray<string> = config[context.presets];
 
-        /* eslint-disable no-param-reassign */
-        delete config[context.presets];
-        /* eslint-enable */
+		/* eslint-disable no-param-reassign */
+		delete config[context.presets];
+		/* eslint-enable */
 
-        const overrides: OverridesAsync =
-            context.overrides[context.presets] || {};
-        const resolveFunction = getResolveFunctionAsync({
-            key: context.presets,
-            prefixOptions: overrides.resolve,
-            context,
-        });
+		const overrides: OverridesAsync =
+			context.overrides[context.presets] || {};
+		const resolveFunction = getResolveFunctionAsync({
+			key: context.presets,
+			prefixOptions: overrides.resolve,
+			context,
+		});
 
-        currentConfig = await extendConfigAsync({
-            baseConfig: currentConfig,
-            packageIds: presets,
-            resolveFunction,
-            dirname,
-            context,
-        });
-    }
+		currentConfig = await extendConfigAsync({
+			baseConfig: currentConfig,
+			packageIds: presets,
+			resolveFunction,
+			dirname,
+			context,
+		});
+	}
 
-    for await (const key of Object.keys(config)) {
-        let value = config[key];
-        const previousValue = currentConfig[key];
-        const overrides = context.overrides[key] || {};
+	for await (const key of Object.keys(config)) {
+		let value = config[key];
+		const previousValue = currentConfig[key];
+		const overrides = context.overrides[key] || {};
 
-        // eslint-disable-next-line no-useless-concat
-        const errorMessage = '\n' + `invalid key: ${key}`;
+		// eslint-disable-next-line no-useless-concat
+		const errorMessage = '\n' + `invalid key: ${key}`;
 
-        if (overrides.preprocessor) {
-            try {
-                value = await overrides.preprocessor({
-                    value,
-                    current: previousValue,
-                    config: currentConfig,
-                    dirname,
-                    api,
-                });
-            } catch (error) {
-                error.message += errorMessage;
+		if (overrides.preprocessor) {
+			try {
+				value = await overrides.preprocessor({
+					value,
+					current: previousValue,
+					config: currentConfig,
+					dirname,
+					api,
+				});
+			} catch (error) {
+				error.message += errorMessage;
 
-                extendError({ error });
+				extendError({ error });
 
-                throw error;
-            }
-        }
+				throw error;
+			}
+		}
 
-        /**
-         * Handle extendable configurations. Typically key extends or presets
-         */
-        try {
-            /**
-             * Handle non-extendable packageIds. Typically a plugin
-             */
-            if (context.plugins === key) {
-                const normalizedPluginValue = Array.isArray(value)
-                    ? value
-                    : [value];
-                const resolve = getResolveFunctionAsync({
-                    key,
-                    prefixOptions: overrides.resolve,
-                    context,
-                });
+		/**
+		 * Handle extendable configurations. Typically key extends or presets
+		 */
+		try {
+			/**
+			 * Handle non-extendable packageIds. Typically a plugin
+			 */
+			if (context.plugins === key) {
+				const normalizedPluginValue = Array.isArray(value)
+					? value
+					: [value];
+				const resolve = getResolveFunctionAsync({
+					key,
+					prefixOptions: overrides.resolve,
+					context,
+				});
 
-                value = [];
-                for await (const packageId of normalizedPluginValue) {
-                    const { module: plugin } = await requireFromStringAsync(
-                        packageId,
-                        resolve,
-                        dirname,
-                        api,
-                    );
+				value = [];
+				for await (const packageId of normalizedPluginValue) {
+					const { module: plugin } = await requireFromStringAsync(
+						packageId,
+						resolve,
+						dirname,
+						api,
+					);
 
-                    value.push(cloneDeep(plugin));
-                }
-            }
+					value.push(cloneDeep(plugin));
+				}
+			}
 
-            if (overrides.validator) {
-                await overrides.validator({
-                    value,
-                    current: previousValue,
-                    config: currentConfig,
-                    dirname,
-                    api,
-                });
-            }
+			if (overrides.validator) {
+				await overrides.validator({
+					value,
+					current: previousValue,
+					config: currentConfig,
+					dirname,
+					api,
+				});
+			}
 
-            /**
-             * run processor on value
-             */
-            const processor =
-                context.overrides[key] && context.overrides[key].processor
-                    ? getProcessorAsync(context.overrides[key].processor)
-                    : context.processor;
+			/**
+			 * run processor on value
+			 */
+			const processor =
+				context.overrides[key] && context.overrides[key].processor
+					? getProcessorAsync(context.overrides[key].processor)
+					: context.processor;
 
-            const currentValue = currentConfig[key];
+			const currentValue = currentConfig[key];
 
-            const processedValue = await processor({
-                value,
-                current: currentValue,
-                config,
-                dirname,
-                api,
-            });
+			const processedValue = await processor({
+				value,
+				current: currentValue,
+				config,
+				dirname,
+				api,
+			});
 
-            currentConfig[key] = processedValue;
-        } catch (error) {
-            error.message += errorMessage;
+			currentConfig[key] = processedValue;
+		} catch (error) {
+			error.message += errorMessage;
 
-            extendError({ error, pathname: packagePath });
+			extendError({ error, pathname: packagePath });
 
-            throw error;
-        }
-    }
+			throw error;
+		}
+	}
 
-    return currentConfig;
+	return currentConfig;
 }
 
 export { parseKeysAsync };

@@ -2,7 +2,7 @@
  * This file is managed by backtrack
  *
  * source: @backtrack/preset-style
- * namespace: prettier
+ * namespace: lintStaged
  *
  * DO NOT MODIFY
  */
@@ -13,15 +13,11 @@ const { Backtrack } = require('@backtrack/core');
 
 const { configManager } = new Backtrack();
 
-const prettier = {
-    semi: true,
-    tabWidth: 4,
-    singleQuote: true,
-    trailingComma: 'all',
-    arrowParens: 'always',
+const lintStaged = {
+	'*': ['prettier --ignore-unknown --write'],
 };
 
 module.exports = configManager({
-    namespace: 'prettier',
-    config: prettier,
+	namespace: 'lintStaged',
+	config: lintStaged,
 });

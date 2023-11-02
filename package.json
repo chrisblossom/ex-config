@@ -18,19 +18,22 @@
 		"string configuration"
 	],
 	"license": "MIT",
+	"private": false,
 	"repository": "chrisblossom/ex-config",
 	"homepage": "https://github.com/chrisblossom/ex-config",
 	"author": "Chris Blossom",
 	"engines": {
-		"node": ">=8.9.0"
+		"node": ">=18.12.0"
 	},
 	"files": [
 		"dist/"
 	],
 	"main": "dist/ex-config.js",
+	"module": "commonjs",
 	"types": "dist/ex-config.d.ts",
 	"scripts": {
 		"build": "backtrack build --production",
+		"check.all": "backtrack check.all",
 		"clean": "backtrack clean",
 		"dev": "backtrack dev --development",
 		"format": "backtrack format",
@@ -39,24 +42,25 @@
 		"lint": "backtrack lint",
 		"lint.fix": "backtrack lint.fix",
 		"prepublishOnly": "backtrack prepublishOnly",
+		"release": "backtrack release",
 		"test": "backtrack test",
 		"test.ci": "backtrack test.ci",
 		"test.ci-pretest": "backtrack test.ci-pretest",
 		"test.update": "jest --update-snapshot",
-		"test.watch": "jest --watch",
+		"test.watch": "jest --watch --pass-with-no-tests",
 		"typescript": "backtrack typescript"
 	},
 	"devDependencies": {
-		"@backtrack/core": "^0.2.0",
-		"@backtrack/preset-node": "^0.4.3",
-		"@types/hapi__joi": "^15.0.1",
-		"@types/jest": "^24.0.13",
-		"@types/lodash": "^4.14.129",
-		"typescript": "^3.4.5"
+		"@backtrack/core": "^0.2.1",
+		"@backtrack/preset-node": "^0.10.3",
+		"@types/hapi__joi": "^15.0.4",
+		"@types/jest": "^29.5.7",
+		"@types/lodash": "^4.14.200",
+		"typescript": "^5.2.2"
 	},
 	"dependencies": {
 		"@hapi/joi": "^15.0.3",
-		"lodash": "^4.17.11",
-		"resolve-with-prefix": "^3.0.0"
+		"lodash": "^4.17.21",
+		"resolve-with-prefix": "^4.0.1"
 	}
 }

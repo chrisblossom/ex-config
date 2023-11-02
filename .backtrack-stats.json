@@ -2,43 +2,49 @@
     "fileManager": {
         "directories": [
             ".circleci",
+            ".husky",
             "dist",
             "src"
         ],
         "files": {
-            ".babelrc.js": "46ec57ee7ace7a0f86672ab17e78a9b89b288971d0200abd50cfa78d229d9749",
-            ".circleci/config.yml": "ed700b1e1ed715aaa370a41a40f8236df1886fa35913c644e8cc82580997e327",
-            ".editorconfig": "ec4ed6b0bd85bf29162eccef4420c8b03bd330e8abd84d7a14b2cae3079f1fd9",
-            ".eslintignore": "df678e7a458aba93c115564cfd4a701bdf4397e943de8745d37f2798c1dc5c11",
-            ".eslintrc.js": "3aa22828e051343c67e77b871d094ad536208e8cce15fc270abf97444c68fef9",
+            ".babelrc.cjs": "019e7706d3c07df6ce9844b563507f3a989b3ef0958533ccc8be91914ea8907a",
+            ".circleci/config.yml": "8c0cfd70d0df0bcc72810dda6b2e99a5fffa2545ac9a9827e0f5fbcd9e2feae5",
+            ".editorconfig": "c8e06355ec368086c1313bda19033a9e5d8a920d27dbf91a97fc509a0d2d8e3b",
+            ".eslintignore": "cc67305578620b791ded1c8aed0f3c39db17c4643c760d09408e18eadb1d7a37",
+            ".eslintrc.cjs": "fdb4499d6fbf4441b57b0e540a981c0db9f58023d756278d41d79a9292a544d2",
+            ".gitattributes": "f511b169e2a0b7529ac2887dffad3b04a16b954209edf18fec7f8911a81ad17d",
             ".gitignore": "8791c419e79de53e5c2eefa59ab16b52b5413bd08da46be94e9e6cc3153a17a0",
-            ".huskyrc.js": "d41c387b0d3f16730829f444ef7bc0665cc52e92847c548c5166ebb7597bc69a",
-            ".lintstagedrc.js": "5398a6883c9332018fa32fdac8989989eef1eca27c0e2d92ccf35bb13381e7e7",
+            ".husky/pre-commit": "e4add719772b9da7940f03a22d607f8c8c86a543b9260739f9a8143b89007597",
+            ".husky/pre-push": "bd2849b7a84e41755e4c74b1a3d0640914f2cf1a1a4373640aa8d6308a3c53ee",
+            ".lintstagedrc.cjs": "bc49af6b82be36d6b1ef246bd20ce41a5726b59701584ad6fc57ce28c8ea6785",
+            ".np-config.cjs": "f1e82191dea83526e85a98a48c5b974b59e6e99293e864d0a1d02d5999e6a675",
             ".npmrc": "f535d8452d57a9d969bc54c2eaa831f3e20ccb5c3dbeeabc6f613d27a4b5a28a",
-            ".prettierignore": "df678e7a458aba93c115564cfd4a701bdf4397e943de8745d37f2798c1dc5c11",
-            ".prettierrc.js": "f76ed92bea30dd6cb22675cedc0044614a9220be9b74859b5750a54ef4745a99",
+            ".prettierignore": "cc67305578620b791ded1c8aed0f3c39db17c4643c760d09408e18eadb1d7a37",
+            ".prettierrc.cjs": "105ba088ab96fe3b965231970dc8db9904de34ff9a9febff5a071d8220b74701",
             ".yarnrc": "feed5a1b1413c2d27507ed09e7d1c21fb40e0f8aca947c0620793b7e187e8ba4",
-            "CHANGELOG.md": "ignoreUpdates",
             "README.md": "ignoreUpdates",
-            "appveyor.yml": "5dcc891d04c8131f9a5782771c5fecd04af5a6cc6c22f4090a63b3b4583bafaa",
+            "appveyor.yml": "6aa9016d30e25bc337b46ce7a9e7dd84272410415dfa539a0dda7070c1f41259",
             "global.d.ts": "ignoreUpdates",
-            "jest.config.js": "996d179962a5518ff433880e9d7586c4d960c66112aa28698801d73347af4d00",
+            "jest.config.cjs": "849190b5138d25fa0849678fb4a3c818fb0dccffbe6a86732713a18c4cc06b6d",
             "src/ex-config.ts": "ignoreUpdates",
-            "tsconfig.json": "82c59a9bda4362ae308e013465028a04e97edb9ff0ed6f2c500c69effd6ae12d",
-            "tsconfig.types.json": "5fcb969aef44ee0d4c94c53572433f558d49cc1b4b05257fc6a0765cc1afa737",
-            "wallaby.config.js": "3968a28638500fa170681791a468b61a051969f7c202fe8f30823a22779a55ac"
+            "tsconfig.json": "b7765222162bd7b9dc3a36be44a3c4e64098eca46b8d5d9b5763ebf57c0afde0",
+            "tsconfig.types.json": "4db21ced8c953cdf3e915864b7fac1c6cf5efdead1c33957a474bd00ac313aa2",
+            "wallaby.config.cjs": "1685bb89c5e60c303b9a319b3ee52766bfc0c0b7cf5a2c0e5f8e67a0e8febeba"
         }
     },
     "packageJson": {
         "engines": {
-            "node": ">=8.9.0"
+            "node": ">=18.12.0"
         },
         "files": [
             "dist/"
         ],
         "main": "dist/ex-config.js",
+        "module": "commonjs",
+        "private": false,
         "scripts": {
             "build": "backtrack build --production",
+            "check.all": "backtrack check.all",
             "clean": "backtrack clean",
             "dev": "backtrack dev --development",
             "format": "backtrack format",
@@ -47,11 +53,12 @@
             "lint": "backtrack lint",
             "lint.fix": "backtrack lint.fix",
             "prepublishOnly": "backtrack prepublishOnly",
+            "release": "backtrack release",
             "test": "backtrack test",
             "test.ci": "backtrack test.ci",
             "test.ci-pretest": "backtrack test.ci-pretest",
             "test.update": "jest --update-snapshot",
-            "test.watch": "jest --watch",
+            "test.watch": "jest --watch --pass-with-no-tests",
             "typescript": "backtrack typescript"
         },
         "types": "dist/ex-config.d.ts"

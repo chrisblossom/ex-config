@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash.clonedeep';
 import { extendError } from './utils/extend-error';
 import { requireFromStringAsync } from './utils/require-from-string';
 import { ResolveFunctionAsync } from './utils/get-resolve-function';

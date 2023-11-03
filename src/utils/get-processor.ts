@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type,@typescript-eslint/explicit-module-boundary-types */
 
-import { mergeWith, isPlainObject } from 'lodash';
+import mergeWith from 'lodash.mergewith';
+import isPlainObject from 'lodash.isplainobject';
 import { LifecycleParams, ProcessorAsync, ProcessorSync } from '../types';
 
 function arrayPush({ value, current = [] }: LifecycleParams) {

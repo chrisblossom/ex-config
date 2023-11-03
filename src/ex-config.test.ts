@@ -1,7 +1,8 @@
 /* eslint-disable jest/expect-expect,@typescript-eslint/ban-ts-comment */
 
 import path from 'path';
-import { cloneDeep, isPlainObject } from 'lodash';
+import cloneDeep from 'lodash.clonedeep';
+import isPlainObject from 'lodash.isplainobject';
 import Joi from 'joi';
 import { exConfig, exConfigSync } from './ex-config';
 import {

@@ -6,9 +6,13 @@ interface Args {
 	message?: string;
 }
 
-function extendError({ error, pathname, message }: Args) {
-	if (pathname) {
-		error.message += message || '\n' + `found in path: ${pathname}`;
+// TODO: refactor by renaming to extendErrorMessage and make Args more explicit
+function extendError({ error, pathname, message }: Args): void {
+	if (pathname != null) {
+		error.message +=
+			message != null && message !== ''
+				? message
+				: '\n' + `found in path: ${pathname}`;
 	}
 }
 

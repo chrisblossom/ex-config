@@ -1,29 +1,30 @@
 import path from 'path';
+import { Api, ConfigFunctionParameters } from '../types';
 import {
 	ResolveFunctionAsync,
 	ResolveFunctionSync,
 } from './get-resolve-function';
 import { extendError } from './extend-error';
-import { Api, ConfigFunctionParameters } from '../types';
 import {
 	runFunctionWithContextAsync,
 	runFunctionWithContextSync,
 } from './run-function-with-context';
 
-type RequireFromString = {
+interface RequireFromString {
 	module: any;
 	dirname: string;
 	pathname: string;
-};
+}
 
-function interopRequireDefault(packagePath: string) {
-	const module = require(packagePath);
+function interopRequireDefault(packagePath: string): any {
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	const module: any = require(packagePath);
 
 	/**
 	 * Handle ES Modules
 	 */
-	if (typeof module === 'object' && module.__esModule) {
-		if (module.default) {
+	if (typeof module === 'object' && module.__esModule != null) {
+		if (module.default !== undefined) {
 			return module.default;
 		}
 

@@ -35,9 +35,8 @@ function parseKeysSync({
 	if (context.presets && config[context.presets]) {
 		const presets: string | ReadonlyArray<string> = config[context.presets];
 
-		/* eslint-disable no-param-reassign */
+		// eslint-disable-next-line @typescript-eslint/no-dynamic-delete,no-param-reassign
 		delete config[context.presets];
-		/* eslint-enable */
 
 		const overrides: OverridesSync =
 			context.overrides[context.presets] || {};
@@ -107,6 +106,7 @@ function parseKeysSync({
 						api,
 					});
 
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 					value.push(cloneDeep(plugin));
 				}
 			}
@@ -124,10 +124,9 @@ function parseKeysSync({
 			/**
 			 * run processor on value
 			 */
-			const processor =
-				context.overrides[key] && context.overrides[key].processor
-					? getProcessorSync(context.overrides[key].processor)
-					: context.processor;
+			const processor = context.overrides[key]?.processor
+				? getProcessorSync(context.overrides[key].processor)
+				: context.processor;
 
 			const currentValue = currentConfig[key];
 			const processedValue = processor({

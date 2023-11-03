@@ -1,7 +1,11 @@
+/* eslint-disable no-use-before-define */
+
 import { PrefixOptions } from 'resolve-with-prefix';
 import { BuiltInProcessors } from './utils/get-processor';
 
-export type BasicConfig = { [key: string]: any };
+export interface BasicConfig {
+	[key: string]: any;
+}
 
 type ConfigFnAsync = (
 	args: ConfigFunctionParameters,
@@ -13,7 +17,9 @@ export type ConfigAsync = BasicConfig | ConfigFnAsync;
 type ConfigFnSync = (args: ConfigFunctionParameters) => BasicConfig;
 export type ConfigSync = BasicConfig | ConfigFnSync;
 
-export type Api = { [key: string]: any };
+export interface Api {
+	[key: string]: any;
+}
 
 export interface LifecycleParams {
 	// actionable item
@@ -52,25 +58,25 @@ export type PostProcessorSync = (
 	lifecycleParams: LifecycleParams,
 ) => BasicConfig;
 
-export type ConfigFunctionParameters = {
+export interface ConfigFunctionParameters {
 	options: any;
 	dirname: string;
 	api: Api;
-};
+}
 
-export type OverridesAsync = {
+export interface OverridesAsync {
 	resolve?: PrefixOptions;
 	processor?: ProcessorAsync | BuiltInProcessors;
 	validator?: ValidatorAsync;
 	preprocessor?: PreprocessorAsync;
-};
+}
 
-export type OverridesSync = {
+export interface OverridesSync {
 	resolve?: PrefixOptions;
 	processor?: ProcessorSync | BuiltInProcessors;
 	validator?: ValidatorSync;
 	preprocessor?: PreprocessorSync;
-};
+}
 
 export interface OptionsAsync {
 	api?: Api;

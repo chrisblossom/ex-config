@@ -1,3 +1,5 @@
+/* eslint-disable jest/expect-expect,@typescript-eslint/ban-ts-comment */
+
 import path from 'path';
 import { cloneDeep, isPlainObject } from 'lodash';
 import Joi from 'joi';
@@ -20,7 +22,10 @@ import { automatic as automaticProcessor } from './utils/get-processor';
 const cwd = process.cwd();
 const app1Dir = path.resolve(__dirname, '__sandbox__/app1/');
 
-const sleep = (ms = 50) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = async (ms = 50) =>
+	new Promise((resolve) => {
+		setTimeout(resolve, ms);
+	});
 
 beforeEach(() => {
 	process.chdir(app1Dir);
@@ -179,7 +184,7 @@ describe('ignores mutated value', () => {
 		value = {};
 		return clone;
 	};
-	/* eslint-enable */
+	/* eslint-enable no-param-reassign */
 
 	const options = {
 		preprocessor,
@@ -2091,6 +2096,7 @@ describe('api option', () => {
 
 	let api = new Api();
 	let options = {};
+
 	beforeEach(() => {
 		api = new Api();
 

@@ -1,11 +1,11 @@
 import Joi from 'joi';
-import { extendError } from './extend-error';
 import { BasicConfig } from '../types';
+import { extendError } from './extend-error';
 
 function generateResolveValidator(
 	presets?: string | false,
 	plugins?: string | false,
-) {
+): Joi.ObjectSchema | null {
 	const schema = Joi.array().items(
 		Joi.string(),
 		Joi.array().ordered(Joi.string().required(), Joi.any()).max(2),
@@ -27,11 +27,13 @@ function generateResolveValidator(
 	return Joi.object(obj);
 }
 
+export type ResolveSchema = ReturnType<typeof generateResolveValidator>;
+
 function validateResolveKeys(
 	config: BasicConfig,
 	schema: ResolveSchema,
 	packagePath?: string,
-) {
+): void {
 	if (schema === null) {
 		return;
 	}
@@ -53,7 +55,5 @@ function validateResolveKeys(
 		throw error;
 	}
 }
-
-export type ResolveSchema = ReturnType<typeof generateResolveValidator>;
 
 export { generateResolveValidator, validateResolveKeys };

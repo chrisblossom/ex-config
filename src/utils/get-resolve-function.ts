@@ -21,7 +21,6 @@ function getResolveFunctionAsync({
 	let resolve = context.resolve[key];
 
 	if (resolve === undefined) {
-		// eslint-disable-next-line no-param-reassign
 		context.resolve[key] = createResolver(prefixOptions);
 
 		resolve = context.resolve[key];
@@ -46,7 +45,6 @@ function getResolveFunctionSync({
 	let resolve = context.resolve[key];
 
 	if (resolve === undefined) {
-		// eslint-disable-next-line no-param-reassign
 		context.resolve[key] = createResolverSync(prefixOptions);
 
 		resolve = context.resolve[key];

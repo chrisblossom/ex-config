@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type,@typescript-eslint/explicit-module-boundary-types */
+
 import { mergeWith, isPlainObject } from 'lodash';
 import { LifecycleParams, ProcessorAsync, ProcessorSync } from '../types';
 

@@ -53,6 +53,7 @@ interface GetContextParameters {
 	sync: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function getContext({ options, sync }: GetContextParameters) {
 	// prettier-ignore
 	const presets = options.presets

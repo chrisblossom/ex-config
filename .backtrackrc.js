@@ -22,6 +22,14 @@ module.exports = {
 		eslint: {
 			rules: {
 				'import/no-cycle': 'off',
+				'@typescript-eslint/no-require-imports': 'off',
+
+				'@typescript-eslint/no-explicit-any': 'off',
+				'@typescript-eslint/no-unsafe-assignment': 'off',
+				'@typescript-eslint/no-unsafe-return': 'off',
+				'@typescript-eslint/no-unsafe-member-access': 'off',
+
+				'@typescript-eslint/strict-boolean-expressions': 'off',
 			},
 		},
 

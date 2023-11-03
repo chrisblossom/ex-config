@@ -2,7 +2,6 @@
 
 import path from 'path';
 import cloneDeep from 'lodash.clonedeep';
-import isPlainObject from 'lodash.isplainobject';
 import Joi from 'joi';
 import { exConfig, exConfigSync } from './ex-config';
 import {
@@ -18,6 +17,7 @@ import {
 	PostProcessorSync,
 	ValidatorSync,
 } from './types';
+import { isPlainObject } from './utils/is-plain-object';
 import { automatic as automaticProcessor } from './utils/get-processor';
 
 const cwd = process.cwd();

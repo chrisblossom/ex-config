@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type,@typescript-eslint/explicit-module-boundary-types */
 
 import mergeWith from 'lodash.mergewith';
-import isPlainObject from 'lodash.isplainobject';
-import { LifecycleParams, ProcessorAsync, ProcessorSync } from '../types';
+import type { LifecycleParams, ProcessorAsync, ProcessorSync } from '../types';
+import { isPlainObject } from './is-plain-object';
 
 function arrayPush({ value, current = [] }: LifecycleParams) {
 	const toArray = Array.isArray(value) ? value : [value];
